@@ -1,0 +1,30 @@
+{
+  "name": "conlang-web-components",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "license": "UNLICENSED",
+  "author": "Emilia Kond",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "react-string-replace": "^1.1.1"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "react-router-dom": "^6.0.0 || ^7.0.0"
+  },
+  "devDependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.0",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "prettier-no-jsx-parens": "^3.4.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.3.1"
+  }
+}

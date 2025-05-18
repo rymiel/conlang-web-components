@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "sourceMap": true,
+    "module": "NodeNext",
+    "target": "es2021",
+    "jsx": "react-jsx",
+    "outDir": "build/",
+    "moduleResolution": "nodenext",
+    "noErrorTruncation": true,
+    "declaration": true
+  },
+  "include": ["./src/**/*", "./test/**/*"],
+  "exclude": ["./build/**/*"]
+}
