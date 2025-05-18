@@ -3,19 +3,19 @@ import { Context, ReactNode, useContext } from "react";
 import { Dictionary, DictionaryData } from "./dictionary";
 import { Lang, LangData } from "./langConfig";
 
-export function SharedProvider<D extends DictionaryData, L extends LangData>({
+export function ConlangProvider<D extends DictionaryData, L extends LangData>({
   children,
   dictionary,
-  langConfig,
+  lang,
 }: {
   children: ReactNode;
   dictionary: Context<D>;
-  langConfig: Context<L>;
+  lang: Context<L>;
 }) {
   const dictionaryValue = useContext(dictionary);
-  const langConfigValue = useContext(langConfig);
+  const langValue = useContext(lang);
 
-  return <Lang.Provider value={langConfigValue}>
+  return <Lang.Provider value={langValue}>
     <Dictionary.Provider value={dictionaryValue}>{children}</Dictionary.Provider>
   </Lang.Provider>;
 }
