@@ -9,7 +9,8 @@
   "types": "build/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "prepack": "tsc"
+    "prepack": "npm run build",
+    "preinstall": "npm run build"
   },
   "files": ["build/"],
   "dependencies": {
