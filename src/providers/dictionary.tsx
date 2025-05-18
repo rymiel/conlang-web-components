@@ -1,15 +1,15 @@
 import { createContext } from "react";
 
-interface SharedEntry {
+interface Entry {
   hash: string;
   sol: string;
   link: string;
 }
 
-export interface SharedDictionaryData {
-  entries: SharedEntry[] | null;
+export interface DictionaryData {
+  entries: Entry[] | null;
 }
 
-export const SharedDictionary = createContext<SharedDictionaryData>({
+export const Dictionary = createContext<DictionaryData>({
   entries: null,
 });

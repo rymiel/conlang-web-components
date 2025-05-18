@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 
-import { SharedDictionary } from "../providers/dictionary";
+import { Dictionary } from "../providers/dictionary";
 
 const LINK_WRAPPER = /(\[[^\]]+\])/g;
 const SIMPLE_LINK = /\[([A-Za-z0-9_-]+)\]/;
@@ -10,7 +10,7 @@ const COMPLEX_LINK = /\[([A-Za-z0-9_-]+)\(([^)]+)\)\]/;
 const NON_LINK = /\[\(([^)]+)\)\]/;
 
 export function RichText({ text, on }: { text: string; on?: string }) {
-  const { entries } = useContext(SharedDictionary);
+  const { entries } = useContext(Dictionary);
   const highlighted = reactStringReplace(text, LINK_WRAPPER, (m) => {
     let id;
     let label = null;

@@ -1,7 +1,7 @@
 import { ReactNode, useContext } from "react";
 import { Link } from "react-router-dom";
 
-import { SharedLangConfig } from "../providers/langConfig";
+import { Lang } from "../providers/langConfig";
 import { uri } from "../util";
 
 export interface InterlinearData {
@@ -109,7 +109,7 @@ export function InterlinearGloss({
   script?: boolean;
   extra?: ReactNode;
 }) {
-  const lang = useContext(SharedLangConfig);
+  const lang = useContext(Lang);
   const solParts = data.solSep.split(" ");
   const engParts = data.engSep.split(" ");
   const numParts = Math.max(solParts.length, engParts.length);

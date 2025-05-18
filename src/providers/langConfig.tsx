@@ -1,11 +1,11 @@
 import { createContext } from "react";
 
-export interface SharedLangConfigData {
+export interface LangData {
   ipa: (sentence: string) => string;
   script: (sentence: string) => string;
 }
 
-export const SharedLangConfig = createContext<SharedLangConfigData>({
+export const Lang = createContext<LangData>({
   ipa: () => {
     throw new Error("No SharedLangConfig context provided");
   },
@@ -13,4 +13,3 @@ export const SharedLangConfig = createContext<SharedLangConfigData>({
     throw new Error("No SharedLangConfig context provided");
   },
 });
-
