@@ -31,10 +31,6 @@ class ApiClient {
     this.#version = config.version;
   }
 
-  get base(): string {
-    return this.#base;
-  }
-
   async general<T>(endpoint: string, method?: HTTPMethod, body?: Body): Promise<T> {
     return this.#baseFetch(`/api/v0/${normalize(endpoint)}`, method, body);
   }
@@ -77,6 +73,11 @@ class ApiClient {
         throw error;
       }
     }
+  }
+
+  async version(): Promise<string> {
+    const req = await fetch(`${this.#base}/version`);
+    return req.text();
   }
 }
 
