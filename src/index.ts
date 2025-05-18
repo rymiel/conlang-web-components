@@ -1,4 +1,4 @@
-export * from "./components/richText";
-export * from "./components/interlinear";
+export { Abbr, InterlinearData, InterlinearGloss } from "./components/interlinear";
+export { RichText } from "./components/richText";
 export { SharedProvider } from "./providers/shared";
-export * from "./util";
+export { gsub, GSubMap, sub, SubMap, uri, zip } from "./util";
