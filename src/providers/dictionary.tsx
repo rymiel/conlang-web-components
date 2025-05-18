@@ -1,9 +1,15 @@
 import { createContext } from "react";
 
-interface Entry {
+interface Meaning {
+  eng: string;
+}
+
+export interface Entry {
   hash: string;
   sol: string;
   link: string;
+  extra: string;
+  meanings: Meaning[];
 }
 
 export interface DictionaryData {
