@@ -11,7 +11,10 @@
     "build": "tsc",
     "prepare": "npm run build"
   },
-  "files": ["build/"],
+  "files": [
+    "build/",
+    "src/"
+  ],
   "dependencies": {
     "react-string-replace": "^1.1.1"
   },
