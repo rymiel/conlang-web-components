@@ -1,4 +1,4 @@
-import { Context, createContext, ReactNode, useContext } from "react";
+import { createContext } from "react";
 
 interface SharedEntry {
   hash: string;
@@ -6,22 +6,10 @@ interface SharedEntry {
   link: string;
 }
 
-interface SharedDictionaryData {
+export interface SharedDictionaryData {
   entries: SharedEntry[] | null;
 }
 
 export const SharedDictionary = createContext<SharedDictionaryData>({
   entries: null,
 });
-
-export function SharedDictionaryProvider<T extends SharedDictionaryData>({
-  children,
-  sourceContext,
-}: {
-  children: ReactNode;
-  sourceContext: Context<T>;
-}) {
-  const sourceValue = useContext(sourceContext);
-
-  return <SharedDictionary.Provider value={sourceValue}>{children}</SharedDictionary.Provider>;
-}

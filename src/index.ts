@@ -1,2 +1,4 @@
 export * from "./components/richText";
-export * from "./providers/dictionary";
+export * from "./components/interlinear";
+export { SharedProvider } from "./providers/shared";
+export * from "./util";
