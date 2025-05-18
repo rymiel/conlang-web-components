@@ -9,7 +9,7 @@
   "types": "build/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "prepare": "tsc"
+    "prepack": "tsc"
   },
   "dependencies": {
     "react-string-replace": "^1.1.1"
@@ -24,8 +24,6 @@
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.0",
     "@types/react": "^19.1.4",
-    "@types/react-dom": "^19.1.5",
-    "prettier-no-jsx-parens": "^3.4.0",
-    "@ianvs/prettier-plugin-sort-imports": "^4.3.1"
+    "@types/react-dom": "^19.1.5"
   }
 }
