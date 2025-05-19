@@ -8,3 +8,4 @@ export { ApiVersion } from "./providers/apiVersion";
 export { ConlangProvider } from "./providers/shared";
 export { Title, useTitle } from "./providers/title";
 export { gsub, GSubMap, sub, SubMap, uri, zip } from "./util";
+export { GenerationConfig, GenerationInstance } from "./lang/generation"
