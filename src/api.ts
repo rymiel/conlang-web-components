@@ -20,7 +20,7 @@ interface ApiClientConfig {
   version: string;
 }
 
-class ApiClient {
+export class ApiClient {
   #base: string;
   #language: string;
   #version: string;
