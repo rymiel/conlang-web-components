@@ -27,10 +27,14 @@ export interface ApiSection extends ApiBase {
   content: string;
 }
 
+export interface ApiConfig {
+  readonly [key: string]: unknown;
+}
+
 export interface ApiData {
   words: ApiWord[];
   meanings: ApiMeaning[];
   sections: ApiSection[];
   etag?: string;
-  config?: Record<string, unknown>;
+  config?: ApiConfig;
 }
