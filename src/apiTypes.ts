@@ -27,9 +27,10 @@ export interface ApiSection extends ApiBase {
   content: string;
 }
 
-export interface ApiDictionary {
+export interface ApiData {
   words: ApiWord[];
   meanings: ApiMeaning[];
   sections: ApiSection[];
   etag?: string;
+  config?: Record<string, unknown>;
 }
