@@ -4,6 +4,7 @@ export { Abbr, InterlinearData, InterlinearGloss } from "./components/interlinea
 export { RichText } from "./components/richText";
 export { entryHasMatch, WordSelect } from "./components/wordSelect";
 export { default as ErrorPage } from "./pages/ErrorPage";
+export { default as ConfigPage } from "./pages/ConfigPage";
 export { useApi, ApiVersion } from "./providers/api";
 export { ConlangProvider } from "./providers/shared";
 export { Title, useTitle } from "./providers/title";

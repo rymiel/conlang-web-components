@@ -1,6 +1,6 @@
 {
   "name": "conlang-web-components",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "private": true,
   "description": "",
   "license": "UNLICENSED",
@@ -16,23 +16,24 @@
     "src/"
   ],
   "dependencies": {
+    "json-edit-react": "^1.26.2",
     "react-string-replace": "^1.1.1"
   },
   "peerDependencies": {
+    "@blueprintjs/core": "^5.0.0",
+    "@blueprintjs/select": "^5.0.0",
     "react": "<19",
     "react-dom": "<19",
-    "react-router-dom": "^6.0.0 || ^7.0.0",
-    "@blueprintjs/core": "^5.0.0",
-    "@blueprintjs/select": "^5.0.0"
+    "react-router-dom": "^6.0.0 || ^7.0.0"
   },
   "devDependencies": {
-    "react": "<19",
-    "react-dom": "<19",
-    "react-router-dom": "^7.6.0",
     "@blueprintjs/core": "^5.19.0",
     "@blueprintjs/select": "^5.3.20",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
+    "react": "<19",
+    "react-dom": "<19",
+    "react-router-dom": "^7.6.0",
     "typescript": "^5.4.5"
   }
 }
