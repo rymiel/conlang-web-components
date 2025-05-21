@@ -1,7 +1,7 @@
 import { Context, ReactNode, useContext, useState } from "react";
 
 import { ApiClient } from "../api";
-import { ApiVersionProvider } from "./apiVersion";
+import { ApiProvider } from "./api";
 import { Dictionary, DictionaryData } from "./dictionary";
 import { Lang, LangData } from "./langConfig";
 import { Title } from "./title";
@@ -21,11 +21,11 @@ export function ConlangProvider<D extends DictionaryData, L extends LangData>({
   const langValue = useContext(lang);
   const [title, setTitle] = useState<string | null>(null);
 
-  return <Lang.Provider value={langValue}>
-    <Dictionary.Provider value={dictionaryValue}>
-      <Title.Provider value={{ title, setTitle }}>
-        <ApiVersionProvider api={api}>{children}</ApiVersionProvider>
-      </Title.Provider>
-    </Dictionary.Provider>
-  </Lang.Provider>;
+  return <ApiProvider api={api}>
+    <Lang.Provider value={langValue}>
+      <Dictionary.Provider value={dictionaryValue}>
+        <Title.Provider value={{ title, setTitle }}>{children}</Title.Provider>
+      </Dictionary.Provider>
+    </Lang.Provider>
+  </ApiProvider>;
 }
