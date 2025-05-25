@@ -1,13 +1,13 @@
-type WeightedChoices = readonly (readonly [string, number])[];
-type Weighted = string | readonly string[] | WeightedChoices;
-type Groups = Readonly<Record<string, Weighted>>;
+export type WeightedChoices = readonly (readonly [string, number])[];
+export type Weighted = string | readonly string[] | WeightedChoices;
+export type WeightedGroups = Readonly<Record<string, Weighted>>;
 
 function equalChoiceRandom(s: string | readonly string[]): string {
   return s[Math.floor(s.length * Math.random())];
 }
 
-function arrayIsEqualWeight(w: Weighted): w is readonly string[] {
-  return typeof w[0] === "string";
+export function arrayIsEqualWeight(w: Weighted): w is readonly string[] {
+  return w.length === 0 || typeof w[0] === "string";
 }
 
 function weightedRandom(choices: Weighted): string {
@@ -35,11 +35,11 @@ function weightedRandom(choices: Weighted): string {
 
 export interface GenerationConfig {
   structure: readonly string[];
-  parts: Readonly<Record<string, Weighted>>;
-  groups: Groups;
+  parts: WeightedGroups;
+  groups: WeightedGroups;
 }
 
-function resolve(w: Weighted, g: Groups): string {
+function resolve(w: Weighted, g: WeightedGroups): string {
   const choice = weightedRandom(w);
   return choice.startsWith("\\")
     ? choice.substring(1)
