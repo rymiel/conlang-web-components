@@ -1,0 +1,40 @@
+/* DefaultEditor */
+
+.bp5-dark .jer-editor-container textarea,
+.bp5-dark .jer-editor-container input {
+  background-color: whitesmoke;
+}
+
+/* WeightedGroupsEditor */
+
+.weighted-groups-editor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.weighted-groups-editor .bp5-section-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 0.25rem;
+}
+
+.weighted-groups-editor .bp5-section {
+  width: fit-content;
+  height: fit-content;
+}
+
+/* WeightedEditor */
+
+.weighted-editor .bp5-control-group {
+  width: fit-content;
+}
+
+.weighted-editor .bp5-input-group input {
+  font-family: monospace;
+  width: calc(52px + 3ch);
+}
+
+.weighted-editor .bp5-numeric-input .bp5-input-group input {
+  width: calc(20px + 3ch);
+}

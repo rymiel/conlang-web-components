@@ -18,12 +18,6 @@ import { ApiConfig } from "../apiTypes";
 import { arrayIsEqualWeight, GenerationConfig, Weighted, WeightedChoices, WeightedGroups } from "../lang/generation";
 import { useApi } from "../providers/api";
 
-// TODO: css fix
-// .jer-editor-container textarea,
-// .jer-editor-container input {
-//   background-color: whitesmoke;
-// }
-
 interface EditorProps<T> {
   data: T;
   setData: (data: T) => void; // Dispatch<SetStateAction<T>>;
@@ -59,20 +53,6 @@ function normalizeWeighted(w: Weighted): WeightedChoices {
   }
 }
 
-// TODO: css
-// .weighted-editor .bp5-control-group {
-//   width: fit-content;
-// }
-
-// .weighted-editor .bp5-input-group input {
-//   font-family: monospace;
-//   width: calc(52px + 3ch);
-// }
-
-// .weighted-editor .bp5-numeric-input .bp5-input-group input {
-//   width: calc(20px + 3ch);
-// }
-
 function WeightedEditor({ data, setData }: EditorProps<Weighted>) {
   const weighted = normalizeWeighted(data);
 
@@ -97,28 +77,10 @@ function WeightedEditor({ data, setData }: EditorProps<Weighted>) {
   </>;
 }
 
-// TODO: css
-// .weighted-group-editor {
-//   display: flex;
-//   flex-wrap: wrap;
-//   gap: 0.5rem;
-// }
-
-// .weighted-group-editor .bp5-section-card {
-//   display: flex;
-//   flex-wrap: wrap;
-//   gap: 1rem 0.25rem;
-// }
-
-// .weighted-group-editor .bp5-section {
-//   width: fit-content;
-//   height: fit-content;
-// }
-
 function WeightedGroupsEditor({ data, setData }: EditorProps<WeightedGroups>) {
   const [name, setName] = useState("");
 
-  return <div className="weighted-group-editor">
+  return <div className="weighted-groups-editor">
     {Object.entries(data).map(([k, v]) => <Section title={k} key={k} collapsible compact>
       <SectionCard>
         <WeightedEditor
