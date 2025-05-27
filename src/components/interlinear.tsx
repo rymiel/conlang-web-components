@@ -141,7 +141,7 @@ export function InterlinearGloss({
 
   const body = <>
     {...parts}
-    <p className="bottom">{lang.ipa(solClean)}</p>
+    <p className="bottom">{lang ? lang.ipa(solClean) : "/.../"}</p>
     <p className="bottom">{eng}</p>
   </>;
 
@@ -150,7 +150,7 @@ export function InterlinearGloss({
       {sol}
       {extra}
     </p>
-    {script && <p className="original sol fit-width">{lang.script(solClean)}</p>}
+    {script && <p className="original sol fit-width">{lang ? lang.script(solClean) : "<...>"}</p>}
     {indent ? (
       <dl>
         <dd>{body}</dd>

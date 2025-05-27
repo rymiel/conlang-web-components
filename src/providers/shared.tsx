@@ -14,7 +14,7 @@ export function ConlangProvider<D extends DictionaryData, L extends LangData>({
 }: {
   children: ReactNode;
   dictionary: Context<D>;
-  lang: Context<L>;
+  lang: Context<L | null>;
   api: ApiClient;
 }) {
   const dictionaryValue = useContext(dictionary);

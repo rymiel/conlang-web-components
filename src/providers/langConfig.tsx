@@ -5,11 +5,4 @@ export interface LangData {
   script: (sentence: string) => string;
 }
 
-export const Lang = createContext<LangData>({
-  ipa: () => {
-    throw new Error("No SharedLangConfig context provided");
-  },
-  script: () => {
-    throw new Error("No SharedLangConfig context provided");
-  },
-});
+export const Lang = createContext<LangData | null>(null);
