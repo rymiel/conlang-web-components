@@ -5,6 +5,7 @@ import { ApiProvider } from "./api";
 import { Dictionary, DictionaryData } from "./dictionary";
 import { Lang, LangData } from "./langConfig";
 import { Title } from "./title";
+import { UserProvider } from "./user";
 
 export type ErrorHandler = (error: unknown) => void;
 
@@ -26,10 +27,12 @@ export function ConlangProvider<D extends DictionaryData, L extends LangData>({
   const [title, setTitle] = useState<string | null>(null);
 
   return <ApiProvider api={api} error={error}>
-    <Lang.Provider value={langValue}>
-      <Dictionary.Provider value={dictionaryValue}>
-        <Title.Provider value={{ title, setTitle }}>{children}</Title.Provider>
-      </Dictionary.Provider>
-    </Lang.Provider>
+    <UserProvider>
+      <Lang.Provider value={langValue}>
+        <Dictionary.Provider value={dictionaryValue}>
+          <Title.Provider value={{ title, setTitle }}>{children}</Title.Provider>
+        </Dictionary.Provider>
+      </Lang.Provider>
+    </UserProvider>
   </ApiProvider>;
 }

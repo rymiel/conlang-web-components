@@ -5,8 +5,9 @@ export { RichText } from "./components/richText";
 export { entryHasMatch, WordSelect } from "./components/wordSelect";
 export { default as ErrorPage } from "./pages/ErrorPage";
 export { default as ConfigPage } from "./pages/ConfigPage";
-export { useApi, ApiVersion } from "./providers/api";
+export { useApi, useErrorHandler, ApiVersion } from "./providers/api";
 export { ConlangProvider } from "./providers/shared";
 export { Title, useTitle } from "./providers/title";
+export { User } from "./providers/user";
 export { gsub, GSubMap, sub, SubMap, uri, zip } from "./util";
-export { GenerationConfig, GenerationInstance } from "./lang/generation"
+export { GenerationConfig, GenerationInstance } from "./lang/generation";
