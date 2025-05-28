@@ -3,6 +3,7 @@ export * from "./apiTypes";
 export { Abbr, InterlinearData, InterlinearGloss } from "./components/interlinear";
 export { RichText } from "./components/richText";
 export { entryHasMatch, WordSelect } from "./components/wordSelect";
+export { default as UserOnly } from "./components/UserOnly";
 export { default as ErrorPage } from "./pages/ErrorPage";
 export { default as ConfigPage } from "./pages/ConfigPage";
 export { useApi, useErrorHandler, ApiVersion } from "./providers/api";
