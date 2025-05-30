@@ -15,18 +15,20 @@ export function ConlangProvider<D extends DictionaryData, L extends LangData>({
   lang,
   api,
   error,
+  tag,
 }: {
   children: ReactNode;
   dictionary: Context<D>;
   lang: Context<L | null>;
   api: ApiClient;
   error: ErrorHandler;
+  tag: string;
 }) {
   const dictionaryValue = useContext(dictionary);
   const langValue = useContext(lang);
   const [title, setTitle] = useState<string | null>(null);
 
-  return <ApiProvider api={api} error={error}>
+  return <ApiProvider client={api} error={error} tag={tag}>
     <UserProvider>
       <Lang.Provider value={langValue}>
         <Dictionary.Provider value={dictionaryValue}>

@@ -8,19 +8,20 @@ export const ApiVersion = createContext<string | null>(null);
 interface ApiData {
   client: ApiClient;
   error: ErrorHandler;
+  tag: string;
 }
 const Api = createContext<ApiData | null>(null);
 
-export function ApiProvider({ children, api, error }: PropsWithChildren<{ api: ApiClient; error: ErrorHandler }>) {
+export function ApiProvider({ children, client, error, tag }: PropsWithChildren<ApiData>) {
   const [version, setVersion] = useState<string | null>(null);
   useEffect(() => {
-    api
+    client
       .version()
       .then((text) => setVersion(text))
       .catch((err) => error(err));
   }, []);
 
-  return <Api.Provider value={{ client: api, error }}>
+  return <Api.Provider value={{ client, error, tag }}>
     <ApiVersion.Provider value={version}>{children}</ApiVersion.Provider>
   </Api.Provider>;
 }
@@ -39,4 +40,12 @@ export function useErrorHandler(): ErrorHandler {
     throw new Error("No API initialized");
   }
   return api.error;
+}
+
+export function useLanguageTag(): string {
+  const api = useContext(Api);
+  if (api === null) {
+    throw new Error("No API initialized");
+  }
+  return api.tag;
 }

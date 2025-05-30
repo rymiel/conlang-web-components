@@ -1,6 +1,7 @@
 import { ReactNode, useContext } from "react";
 import { Link } from "react-router-dom";
 
+import { useLanguageTag } from "../providers/api";
 import { Lang } from "../providers/langConfig";
 import { uri } from "../util";
 
@@ -110,6 +111,8 @@ export function InterlinearGloss({
   extra?: ReactNode;
 }) {
   const lang = useContext(Lang);
+  const tag = useLanguageTag();
+
   const solParts = data.solSep.split(" ");
   const engParts = data.engSep.split(" ");
   const numParts = Math.max(solParts.length, engParts.length);
@@ -150,7 +153,9 @@ export function InterlinearGloss({
       {sol}
       {extra}
     </p>
-    {script && <p className="original sol fit-width">{lang ? lang.script(solClean) : "<...>"}</p>}
+    {script && <p className="original fit-width" lang={tag}>
+      {lang ? lang.script(solClean) : "<...>"}
+    </p>}
     {indent ? (
       <dl>
         <dd>{body}</dd>

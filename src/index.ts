@@ -6,7 +6,7 @@ export { entryHasMatch, WordSelect } from "./components/wordSelect";
 export { default as UserOnly } from "./components/UserOnly";
 export { default as ErrorPage } from "./pages/ErrorPage";
 export { default as ConfigPage } from "./pages/ConfigPage";
-export { useApi, useErrorHandler, ApiVersion } from "./providers/api";
+export { useApi, useErrorHandler, useLanguageTag, ApiVersion } from "./providers/api";
 export { ConlangProvider } from "./providers/shared";
 export { Title, useTitle } from "./providers/title";
 export { User } from "./providers/user";

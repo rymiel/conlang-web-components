@@ -1,3 +1,31 @@
+/* Abbr */
+
+abbr.il {
+  font-variant: small-caps;
+  font-variant-numeric: lining-nums;
+  text-transform: lowercase;
+}
+
+/* InterlinearGloss */
+
+.interlinear p.original {
+  font-style: italic;
+}
+
+.interlinear p.bottom {
+  clear: left;
+}
+
+.interlinear div.box {
+  float: left;
+  margin-bottom: 0.3rem;
+  margin-right: 0.7em;
+}
+
+.interlinear div.box p {
+  margin: 0;
+}
+
 /* DefaultEditor */
 
 .bp5-dark .jer-editor-container textarea,
