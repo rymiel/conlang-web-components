@@ -1,6 +1,7 @@
 export { createApiClient, CustomApiError } from "./api";
 export * from "./apiTypes";
 export { Abbr, InterlinearData, InterlinearGloss } from "./components/interlinear";
+export { InfoTag, InfoSection, BaseData, EditWordPageContent, useEditContext } from "./components/editor";
 export { RichText } from "./components/richText";
 export { entryHasMatch, WordSelect } from "./components/wordSelect";
 export { default as UserOnly } from "./components/UserOnly";
