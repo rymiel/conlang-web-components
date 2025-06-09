@@ -2,7 +2,7 @@ import { ReactNode, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import { useLanguageTag } from "../providers/api";
-import { Lang } from "../providers/langConfig";
+import { useConfig } from "../providers/data";
 import { uri } from "../util";
 
 export interface InterlinearData {
@@ -110,7 +110,7 @@ export function InterlinearGloss({
   script?: boolean;
   extra?: ReactNode;
 }) {
-  const lang = useContext(Lang);
+  const config = useConfig();
   const tag = useLanguageTag();
 
   const solParts = data.solSep.split(" ");
@@ -144,7 +144,7 @@ export function InterlinearGloss({
 
   const body = <>
     {...parts}
-    <p className="bottom">{lang ? lang.ipa(solClean) : "/.../"}</p>
+    <p className="bottom">{config ? config.ipa(solClean) : "/.../"}</p>
     <p className="bottom">{eng}</p>
   </>;
 
@@ -154,7 +154,7 @@ export function InterlinearGloss({
       {extra}
     </p>
     {script && <p className="original fit-width" lang={tag}>
-      {lang ? lang.script(solClean) : "<...>"}
+      {config ? config.script(solClean) : "<...>"}
     </p>}
     {indent ? (
       <dl>

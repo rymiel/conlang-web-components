@@ -1,8 +1,8 @@
 import { Button, MenuItem } from "@blueprintjs/core";
 import { ItemPredicate, ItemRenderer, Select } from "@blueprintjs/select";
-import { useContext } from "react";
 
-import { Dictionary, Entry } from "../providers/dictionary";
+import { useDictionary } from "../providers/data";
+import { Entry } from "../providers/dictionary";
 
 // TODO: perf
 
@@ -48,7 +48,7 @@ const renderEntry: ItemRenderer<Entry> = (entry, { handleClick, handleFocus, mod
 //       the dictionary manually.
 
 export function WordSelect({ onSelect }: { onSelect: (entry: Entry) => void }) {
-  const { entries } = useContext(Dictionary);
+  const { entries } = useDictionary();
   return <Select<Entry>
     items={entries || []}
     itemPredicate={filterEntry}

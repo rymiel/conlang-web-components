@@ -1,5 +1,3 @@
-import { createContext } from "react";
-
 interface Meaning {
   eng: string;
 }
@@ -18,13 +16,10 @@ export interface Entry {
   meanings: Meaning[];
 }
 
-export interface DictionaryData {
-  entries: Entry[] | null;
+export interface DictionaryData<E = Entry> {
+  entries: E[] | null;
+  refresh: () => void;
 }
-
-export const Dictionary = createContext<DictionaryData>({
-  entries: null,
-});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const compare = (a: string, b: string): number => (((a as any) > b) as any) - (((a as any) < b) as any);

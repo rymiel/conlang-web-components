@@ -8,7 +8,7 @@ export { default as UserOnly } from "./components/UserOnly";
 export { default as ErrorPage } from "./pages/ErrorPage";
 export { default as ConfigPage } from "./pages/ConfigPage";
 export { useApi, useErrorHandler, useLanguageTag, ApiVersion } from "./providers/api";
-export { ConlangProvider } from "./providers/shared";
+export { ConlangProvider } from "./providers/conlang";
 export { Title, useTitle } from "./providers/title";
 export { User } from "./providers/user";
 export { entrySort } from "./providers/dictionary";

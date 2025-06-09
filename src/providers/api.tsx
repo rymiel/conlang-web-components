@@ -1,7 +1,7 @@
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
 
 import { ApiClient } from "../api";
-import { ErrorHandler } from "./shared";
+import { ErrorHandler } from "./conlang";
 
 export const ApiVersion = createContext<string | null>(null);
 
