@@ -38,6 +38,8 @@ const ABBREVIATIONS: Record<string, string> = {
   IMP: "imperative",
   INF: "infinitive",
   GER: "gerund",
+  ANTIP: "antipassive",
+  AP: "antipassive",
 
   NEG: "negative",
   ADV: "adverb",
