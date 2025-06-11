@@ -40,6 +40,7 @@ const ABBREVIATIONS: Record<string, string> = {
   GER: "gerund",
   ANTIP: "antipassive",
   AP: "antipassive",
+  REFL: "reflexive",
 
   NEG: "negative",
   ADV: "adverb",
