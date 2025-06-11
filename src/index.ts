@@ -10,7 +10,7 @@ export { default as ConfigPage } from "./pages/ConfigPage";
 export { useApi, useErrorHandler, useLanguageTag, ApiVersion } from "./providers/api";
 export { ConlangProvider } from "./providers/conlang";
 export { Title, useTitle } from "./providers/title";
-export { User } from "./providers/user";
+export { User, Login, Logout } from "./providers/user";
 export { entrySort } from "./providers/dictionary";
 export { gsub, GSubMap, sub, SubMap, uri, zip } from "./util";
 export { GenerationConfig, GenerationInstance } from "./lang/generation";
