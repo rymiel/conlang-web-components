@@ -15,8 +15,9 @@ import { JsonEditor, monoDarkTheme } from "json-edit-react";
 import { useEffect, useState } from "react";
 
 import { ApiConfig } from "../apiTypes";
+import { Abbreviations } from "../components/interlinear";
 import { arrayIsEqualWeight, GenerationConfig, Weighted, WeightedChoices, WeightedGroups } from "../lang/generation";
-import { useApi } from "../providers/api";
+import { useApi, useErrorHandler } from "../providers/api";
 
 interface EditorProps<T> {
   data: T;
@@ -128,9 +129,9 @@ const GENERATION_EMPTY: GenerationConfig = {
   groups: {},
 };
 
-function GenerationEditor({ data: content, setData: setContent }: EditorProps<unknown>) {
-  const value = isEmptyObject(content) ? GENERATION_EMPTY : (content as GenerationConfig);
-  const setValue = (newValue: GenerationConfig) => setContent(newValue);
+function GenerationEditor({ data, setData }: EditorProps<unknown>) {
+  const value = isEmptyObject(data) ? GENERATION_EMPTY : (data as GenerationConfig);
+  const setValue = (newValue: GenerationConfig) => setData(newValue);
   return <>
     <FormGroup label="Structure">
       <StringListEditor data={value.structure} setData={(structure) => setValue({ ...value, structure })} />
@@ -144,10 +145,47 @@ function GenerationEditor({ data: content, setData: setContent }: EditorProps<un
   </>;
 }
 
+function AbbrEditor({ data: rawData, setData: setRawData }: EditorProps<unknown>) {
+  const data = rawData as Abbreviations;
+  const setData = (newValue: Abbreviations) => setRawData(newValue);
+  const [newKey, setNewKey] = useState("");
+  const invalid = newKey === "" || newKey in data;
+  return <div className="abbr-editor">
+    {Object.entries(data).map(([key, value]) => <ControlGroup key={key}>
+      <FormGroup label={key} inline>
+        <InputGroup
+          value={value}
+          intent={value === undefined ? "danger" : "none"}
+          onValueChange={(v) => setData({ ...data, [key]: v === "" ? undefined : v })}
+        />
+      </FormGroup>
+    </ControlGroup>)}
+    <ControlGroup>
+      <InputGroup
+        className="new-key"
+        value={newKey}
+        onValueChange={(v) => setNewKey(v.toUpperCase())}
+        intent={invalid ? "danger" : "none"}
+      />
+      <Button
+        icon="plus"
+        intent={Intent.SUCCESS}
+        onClick={() => {
+          setData({ ...data, [newKey]: undefined });
+          setNewKey("");
+        }}
+        disabled={invalid}
+      />
+    </ControlGroup>
+  </div>;
+}
+
 function Editor(props: TopLevelEditor) {
   switch (props.editorKey) {
     case "generation":
       return <GenerationEditor {...props} />;
+    case "abbr":
+      return <AbbrEditor {...props} />;
     default:
       return <DefaultEditor {...props} />;
   }
@@ -155,39 +193,61 @@ function Editor(props: TopLevelEditor) {
 
 export default function Content({ config, refresh }: { config: ApiConfig; refresh: () => void }) {
   const [key, setKey] = useState("");
-  const [content, setContent] = useState<unknown>({});
+  const [data, setData] = useState<unknown>({});
+  const [loading, setLoading] = useState(false);
+  const [errored, setErrored] = useState(false);
   const api = useApi();
+  const error = useErrorHandler();
 
   useEffect(() => {
     if (key in config) {
-      setContent(config[key]);
+      setData(config[key]);
     } else {
-      setContent({});
+      setData({});
     }
   }, [config, key]);
 
   const submit = () => {
-    api.lang<string>(`/config/${key}`, "POST", JSON.stringify(content)).then(() => {
-      refresh();
-    });
+    setLoading(true);
+    api
+      .lang<string>(`/config/${key}`, "POST", JSON.stringify(data))
+      .then(() => {
+        setErrored(false);
+        refresh();
+      })
+      .catch((err) => {
+        error(err);
+        setErrored(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return <div>
     <ControlGroup className="fit-width fill-height">
       <HTMLSelect
         onChange={(e) => {
+          setData({});
           setKey(e.currentTarget.value);
         }}
         defaultValue=""
       >
         <option value="">Key</option>
         <option value="generation">generation</option>
+        <option value="abbr">abbr</option>
         <option value="sound_change">sound_change</option>
         <option value="syllable">syllable</option>
       </HTMLSelect>
-      {key !== "" && <Button intent="primary" text="Submit" onClick={submit} />}
+      {key !== "" && <Button
+        intent={errored ? "danger" : "primary"}
+        loading={loading}
+        icon={errored ? "cross" : undefined}
+        text={errored ? undefined : "Submit"}
+        onClick={submit}
+      />}
     </ControlGroup>
     <Divider />
-    {key !== "" && <Editor editorKey={key} data={content} setData={setContent} />}
+    {key !== "" && <Editor editorKey={key} data={data} setData={setData} />}
   </div>;
 }

@@ -12,59 +12,16 @@ export interface InterlinearData {
   eng: string;
 }
 
-const ABBREVIATIONS: Record<string, string> = {
-  "1SG": "first person singular",
-  "2SG": "second person singular",
-  "3SG": "third person singular",
-  "1PL": "first person plural",
-  "2PL": "second person plural",
-  "3PL": "third person plural",
-  "1": "first person",
-  "2": "second person",
-  "3": "third person",
-  SG: "singular",
-  PL: "plural",
-
-  PST: "past",
-  PRS: "present",
-
-  NOM: "nominative",
-  ACC: "accusative",
-  GEN: "genitive",
-  DIR: "direct",
-  OBL: "oblique",
-  VOC: "vocative",
-
-  IMP: "imperative",
-  INF: "infinitive",
-  GER: "gerund",
-  ANTIP: "antipassive",
-  AP: "antipassive",
-  REFL: "reflexive",
-
-  NEG: "negative",
-  ADV: "adverb",
-  COP: "copula",
-  POSS: "possessive",
-
-  TAG: "tag question",
-  Q: "polar question",
-
-  M: "masculine",
-  F: "feminine",
-  N: "neuter",
-
-  ECHO: "echo (marks that the subject of the sentence hasn't changed)",
-  NAME: "onomatonym (naming word)",
-};
+export type Abbreviations = { [P in string]?: string };
 const ABBR_SEP = /([-.() ])/;
 const WORD_SEP = /([\u201c\u201d() -])/;
 
 export function Abbr({ children }: { children: string }): ReactNode {
+  const config = useConfig();
   const parts = children.split(ABBR_SEP);
 
   return parts.map((i, j) => {
-    const abbr = ABBREVIATIONS[i] as string | undefined;
+    const abbr = config?.abbreviations[i];
     if (abbr === undefined) {
       return i;
     } else {

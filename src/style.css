@@ -66,3 +66,16 @@ abbr.il {
 .weighted-editor .bp5-numeric-input .bp5-input-group input {
   width: calc(20px + 3ch);
 }
+
+/* AbbrEditor */
+
+.abbr-editor label,
+.abbr-editor .new-key input {
+  font-variant: small-caps;
+  font-variant-numeric: lining-nums;
+  text-transform: lowercase;
+}
+
+.abbr-editor .bp5-form-group {
+  margin: 0
+}
