@@ -24,14 +24,14 @@ export interface DictionaryData<E = Entry> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const compare = (a: string, b: string): number => (((a as any) > b) as any) - (((a as any) < b) as any);
 
-const removePrefix = (eng: string): string => {
-  if (eng.startsWith("(")) {
-    const split = eng.split(")", 2);
-    return (split[1] ?? split[0]).trim();
-  } else {
-    return eng;
-  }
-};
+const PREFIX_REGEX = /^(?:\((.*?)\) )?(.*)$/;
+
+export function prefixSplit(eng: string): [prefix: string | undefined, rest: string] {
+  const [, p, r] = eng.match(PREFIX_REGEX)!;
+  return [p, r];
+}
+
+const removePrefix = (eng: string): string => prefixSplit(eng)[1];
 
 export const entrySort = (a: SortableEntry, b: SortableEntry): number => {
   if (a.tag === undefined && b.tag !== undefined) return -1;

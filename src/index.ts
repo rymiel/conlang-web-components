@@ -11,6 +11,6 @@ export { useApi, useErrorHandler, useLanguageTag, ApiVersion } from "./providers
 export { ConlangProvider } from "./providers/conlang";
 export { Title, useTitle } from "./providers/title";
 export { User, Login, Logout } from "./providers/user";
-export { entrySort } from "./providers/dictionary";
+export { entrySort, prefixSplit } from "./providers/dictionary";
 export { gsub, GSubMap, sub, SubMap, uri, zip } from "./util";
 export { GenerationConfig, GenerationInstance } from "./lang/generation";
