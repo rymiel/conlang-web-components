@@ -1,4 +1,5 @@
 interface Meaning {
+  prefix?: string;
   eng: string;
 }
 
@@ -31,15 +32,13 @@ export function prefixSplit(eng: string): [prefix: string | undefined, rest: str
   return [p, r];
 }
 
-const removePrefix = (eng: string): string => prefixSplit(eng)[1];
-
 export const entrySort = (a: SortableEntry, b: SortableEntry): number => {
   if (a.tag === undefined && b.tag !== undefined) return -1;
   if (a.tag !== undefined && b.tag === undefined) return 1;
   let f = compare(a.extra, b.extra);
   if (f !== 0) return f;
   for (let i = 0; i < a.meanings.length && i < b.meanings.length; i++) {
-    f = compare(removePrefix(a.meanings[i]?.eng ?? ""), removePrefix(b.meanings[i]?.eng ?? ""));
+    f = compare(a.meanings[i]?.eng ?? "", b.meanings[i]?.eng ?? "");
     if (f !== 0) return f;
   }
   return a.meanings.length - b.meanings.length;
