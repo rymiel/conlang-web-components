@@ -5,7 +5,7 @@ interface Meaning {
 
 interface SortableEntry {
   extra: string;
-  tag: string | undefined;
+  tag?: string;
   meanings: Meaning[];
 }
 
@@ -14,6 +14,7 @@ export interface Entry {
   sol: string;
   link: string;
   extra: string;
+  gloss?: string;
   meanings: Meaning[];
 }
 

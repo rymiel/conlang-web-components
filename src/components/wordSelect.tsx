@@ -3,25 +3,23 @@ import { ItemPredicate, ItemRenderer, Select } from "@blueprintjs/select";
 
 import { useDictionary } from "../providers/data";
 import { Entry } from "../providers/dictionary";
+import { Abbr } from "./interlinear";
 
 // TODO: perf
 
 const filterDiacritics = (str: string) => str.normalize("NFD").replace(/\p{Diacritic}/gu, "");
 
-export function entryHasMatch(query: string, entry: Entry, { exact = false }: { exact?: boolean } = {}): boolean {
-  if (!exact && query === "") return true;
+export function entryHasMatch(query: string, entry: Entry): boolean {
+  if (query === "") return true;
   const normalizedEng = entry.meanings.map((i) => i.eng.toLowerCase());
+  const normalizedGloss = entry.gloss?.toLowerCase();
   const normalizedQuery = filterDiacritics(query.toLowerCase());
 
-  if (exact) {
-    return filterDiacritics(entry.sol) === normalizedQuery || normalizedEng.includes(normalizedQuery);
-  } else {
-    return `${filterDiacritics(entry.sol)} ${normalizedEng.join("; ")}`.indexOf(normalizedQuery) >= 0;
-  }
+  return `${filterDiacritics(entry.sol)} ${normalizedGloss} ${normalizedEng.join("; ")}`.indexOf(normalizedQuery) >= 0;
 }
 
-const filterEntry: ItemPredicate<Entry> = (query: string, entry: Entry, _index, exactMatch) => {
-  return entryHasMatch(query, entry, { exact: exactMatch });
+const filterEntry: ItemPredicate<Entry> = (query: string, entry: Entry, _index, _exactMatch) => {
+  return entryHasMatch(query, entry);
 };
 
 const renderEntry: ItemRenderer<Entry> = (entry, { handleClick, handleFocus, modifiers }) => {
@@ -40,7 +38,16 @@ const renderEntry: ItemRenderer<Entry> = (entry, { handleClick, handleFocus, mod
     onClick={handleClick}
     onFocus={handleFocus}
     roleStructure="listoption"
-    text={`${entry.sol}: ${eng}`}
+    text={
+      <>
+        {entry.sol}:
+        {entry.gloss && <>
+          {" "}
+          (<Abbr>{entry.gloss}</Abbr>)
+        </>}{" "}
+        {eng}
+      </>
+    }
   />;
 };
 
