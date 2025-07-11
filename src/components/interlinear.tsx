@@ -12,7 +12,6 @@ export interface InterlinearData {
   eng: string;
 }
 
-export type Abbreviations = { [P in string]?: string };
 const ABBR_SEP = /([-.() ])/;
 const WORD_SEP = /([\u201c\u201d() -])/;
 

@@ -15,9 +15,9 @@ import { JsonEditor, monoDarkTheme } from "json-edit-react";
 import { useEffect, useState } from "react";
 
 import { ApiConfig } from "../apiTypes";
-import { Abbreviations } from "../components/interlinear";
 import { arrayIsEqualWeight, GenerationConfig, Weighted, WeightedChoices, WeightedGroups } from "../lang/generation";
 import { useApi, useErrorHandler } from "../providers/api";
+import { KeyValue } from "../providers/config";
 
 interface EditorProps<T> {
   data: T;
@@ -145,12 +145,22 @@ function GenerationEditor({ data, setData }: EditorProps<unknown>) {
   </>;
 }
 
-function AbbrEditor({ data: rawData, setData: setRawData }: EditorProps<unknown>) {
-  const data = rawData as Abbreviations;
-  const setData = (newValue: Abbreviations) => setRawData(newValue);
+interface KeyValueEditorProps extends EditorProps<unknown> {
+  className?: string;
+  transform?: (key: string) => string;
+}
+const identity = (k: string) => k;
+function KeyValueEditor({
+  data: rawData,
+  setData: setRawData,
+  className = "",
+  transform = identity,
+}: KeyValueEditorProps) {
+  const data = rawData as KeyValue;
+  const setData = (newValue: KeyValue) => setRawData(newValue);
   const [newKey, setNewKey] = useState("");
   const invalid = newKey === "" || newKey in data;
-  return <div className="abbr-editor">
+  return <div className={`kv-editor ${className}`}>
     {Object.entries(data).map(([key, value]) => <ControlGroup key={key}>
       <FormGroup label={key} inline>
         <InputGroup
@@ -164,7 +174,7 @@ function AbbrEditor({ data: rawData, setData: setRawData }: EditorProps<unknown>
       <InputGroup
         className="new-key"
         value={newKey}
-        onValueChange={(v) => setNewKey(v.toUpperCase())}
+        onValueChange={(v) => setNewKey(transform(v))}
         intent={invalid ? "danger" : "none"}
       />
       <Button
@@ -185,7 +195,9 @@ function Editor(props: TopLevelEditor) {
     case "generation":
       return <GenerationEditor {...props} />;
     case "abbr":
-      return <AbbrEditor {...props} />;
+      return <KeyValueEditor className="abbr-editor" transform={(k) => k.toUpperCase()} {...props} />;
+    case "parts":
+      return <KeyValueEditor {...props} />;
     default:
       return <DefaultEditor {...props} />;
   }
@@ -236,6 +248,7 @@ export default function Content({ config, refresh }: { config: ApiConfig; refres
         <option value="">Key</option>
         <option value="generation">generation</option>
         <option value="abbr">abbr</option>
+        <option value="parts">parts</option>
         <option value="sound_change">sound_change</option>
         <option value="syllable">syllable</option>
       </HTMLSelect>

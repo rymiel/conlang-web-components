@@ -1,6 +1,6 @@
 export { createApiClient, CustomApiError } from "./api";
 export * from "./apiTypes";
-export { Abbr, Abbreviations, InterlinearData, InterlinearGloss } from "./components/interlinear";
+export { Abbr, InterlinearData, InterlinearGloss } from "./components/interlinear";
 export { InfoTag, InfoSection, BaseData, EditWordPageContent, useEditContext } from "./components/editor";
 export { RichText } from "./components/richText";
 export { entryHasMatch, WordSelect } from "./components/wordSelect";
@@ -8,6 +8,7 @@ export { default as UserOnly } from "./components/UserOnly";
 export { default as ErrorPage } from "./pages/ErrorPage";
 export { default as ConfigPage } from "./pages/ConfigPage";
 export { useApi, useErrorHandler, useLanguageTag, ApiVersion } from "./providers/api";
+export { KeyValue } from "./providers/config";
 export { ConlangProvider } from "./providers/conlang";
 export { Title, useTitle } from "./providers/title";
 export { User, Login, Logout } from "./providers/user";

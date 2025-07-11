@@ -1,9 +1,12 @@
 import { ApiConfig } from "../apiTypes";
-import { Abbreviations } from "../components/interlinear";
 
+export type KeyValue = {
+  readonly [K in string]?: string;
+};
 export interface LangConfig {
   config: ApiConfig;
   ipa: (sentence: string) => string;
   script: (sentence: string) => string;
-  abbreviations: Abbreviations;
+  abbreviations: KeyValue;
+  parts: KeyValue;
 }
