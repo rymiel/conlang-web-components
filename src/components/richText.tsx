@@ -1,48 +1,83 @@
+import { Literal, PhrasingContent, type Root as RemarkRoot } from "mdast";
+import { findAndReplace } from "mdast-util-find-and-replace";
+import { Handlers } from "mdast-util-to-hast";
+import Markdown, { Components } from "react-markdown";
 import { Link } from "react-router-dom";
-import reactStringReplace from "react-string-replace";
+import { type Plugin } from "unified";
 
 import { useDictionary } from "../providers/data";
 
-const LINK_WRAPPER = /(\[[^\]]+\])/g;
-const SIMPLE_LINK = /\[([A-Za-z0-9_-]+)\]/;
-const COMPLEX_LINK = /\[([A-Za-z0-9_-]+)\(([^)]+)\)\]/;
-const NON_LINK = /\[\(([^)]+)\)\]/;
+interface Missing extends Literal {
+  type: "missing";
+}
+
+declare module "mdast" {
+  interface RootContentMap {
+    missing: Missing;
+  }
+  interface PhrasingContentMap {
+    missing: Missing;
+  }
+}
+
+const WORD_LINK = /\[([A-Za-z0-9_-]+)(?:\(([^)]+)\))?\]/g;
+
+const remarkPlugin: Plugin<[{ on: string }], RemarkRoot> = function ({ on }) {
+  const { entries } = useDictionary();
+
+  return function (tree) {
+    findAndReplace(tree, [
+      WORD_LINK,
+      (m: string, id: string, label: string | undefined) => {
+        const entry = entries?.find((i) => i.hash === id);
+        if (entry === undefined) {
+          return { type: "missing", value: m };
+        }
+
+        const linkText: PhrasingContent[] = [
+          { type: "emphasis", children: [{ type: "text", value: label ?? entry.sol }] },
+        ];
+
+        if (id === on) {
+          return { type: "strong", children: linkText };
+        }
+
+        return { type: "link", url: entry.link, children: linkText };
+      },
+    ]);
+  };
+};
+
+const toHastHandlers: Handlers = {
+  missing(_state, node: Missing) {
+    return {
+      type: "element",
+      tagName: "a",
+      properties: {
+        className: ["missing"],
+      },
+      children: [
+        {
+          type: "text",
+          value: node.value,
+        },
+      ],
+    };
+  },
+};
+
+const components: Components = {
+  a: function aComponentHandler(props) {
+    const { node, href, ...rest } = props;
+    return href ? <Link {...rest} to={href} /> : <a href={href} {...rest} />;
+  },
+};
 
 export function RichText({ text, on }: { text: string; on?: string }) {
-  const { entries } = useDictionary();
-  const highlighted = reactStringReplace(text, LINK_WRAPPER, (m) => {
-    let id;
-    let label = null;
-    const c = COMPLEX_LINK.exec(m);
-    const s = SIMPLE_LINK.exec(m);
-    if (c !== null) {
-      id = c[1];
-      label = c[2];
-    } else if (s != null) {
-      id = s[1];
-    } else {
-      const n = NON_LINK.exec(m);
-      if (n != null) {
-        return <i>{n[1]}</i>;
-      }
-      return m;
-    }
-
-    const entry = entries?.find((i) => i.hash === id);
-    if (entry === undefined) {
-      return <a className="missing">{m}</a>;
-    }
-
-    if (id === on) {
-      return <b>
-        <i>{label ?? entry.sol}</i>
-      </b>;
-    }
-
-    return <Link to={entry.link}>
-      <i>{label ?? entry.sol}</i>
-    </Link>;
-  });
-
-  return <p>{...highlighted}</p>;
+  return <Markdown
+    children={text}
+    remarkPlugins={[[remarkPlugin, { on }]]}
+    remarkRehypeOptions={{ handlers: toHastHandlers }}
+    components={components}
+  />;
 }
