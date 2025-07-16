@@ -28,8 +28,8 @@ abbr.il {
 
 /* DefaultEditor */
 
-.bp5-dark .jer-editor-container textarea,
-.bp5-dark .jer-editor-container input {
+.bp6-dark .jer-editor-container textarea,
+.bp6-dark .jer-editor-container input {
   background-color: whitesmoke;
 }
 
@@ -41,29 +41,29 @@ abbr.il {
   gap: 0.5rem;
 }
 
-.weighted-groups-editor .bp5-section-card {
+.weighted-groups-editor .bp6-section-card {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem 0.25rem;
 }
 
-.weighted-groups-editor .bp5-section {
+.weighted-groups-editor .bp6-section {
   width: fit-content;
   height: fit-content;
 }
 
 /* WeightedEditor */
 
-.weighted-editor .bp5-control-group {
+.weighted-editor .bp6-control-group {
   width: fit-content;
 }
 
-.weighted-editor .bp5-input-group input {
+.weighted-editor .bp6-input-group input {
   font-family: monospace;
   width: calc(52px + 3ch);
 }
 
-.weighted-editor .bp5-numeric-input .bp5-input-group input {
+.weighted-editor .bp6-numeric-input .bp6-input-group input {
   width: calc(20px + 3ch);
 }
 
@@ -76,12 +76,12 @@ abbr.il {
   text-transform: lowercase;
 }
 
-.kv-editor .bp5-form-group {
+.kv-editor .bp6-form-group {
   margin: 0;
 }
 
 /* external links (RichText) */
 
-a[rel~="external"] .bp5-icon {
+a[rel~="external"] .bp6-icon {
   margin: 0.25rem;
 }
