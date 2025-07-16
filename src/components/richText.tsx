@@ -1,3 +1,4 @@
+import { Icon } from "@blueprintjs/core";
 import { Literal, PhrasingContent, type Root as RemarkRoot } from "mdast";
 import { findAndReplace } from "mdast-util-find-and-replace";
 import { Handlers } from "mdast-util-to-hast";
@@ -68,8 +69,18 @@ const toHastHandlers: Handlers = {
 
 const components: Components = {
   a: function aComponentHandler(props) {
-    const { node, href, ...rest } = props;
-    return href ? <Link {...rest} to={href} /> : <a href={href} {...rest} />;
+    const { node, href, children, ...rest } = props;
+    if (href) {
+      const url = new URL(href, document.location.href);
+      if (url.host !== document.location.host) {
+        return <a {...rest} href={href} rel="external nofollow noreferrer" target="_blank">
+          {children}
+          <Icon icon="share" size={18} />
+        </a>;
+      }
+      return <Link {...rest} to={href} children={children} />;
+    }
+    return <a {...rest} href={href} children={children} />;
   },
 };
 
