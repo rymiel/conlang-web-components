@@ -11,7 +11,7 @@ const filterDiacritics = (str: string) => str.normalize("NFD").replace(/\p{Diacr
 
 export function entryHasMatch(query: string, entry: Entry): boolean {
   if (query === "") return true;
-  const normalizedEng = entry.meanings.map((i) => i.eng.toLowerCase());
+  const normalizedEng = entry.meanings.map((i) => `(${i.prefix?.toLowerCase()}) ${i.eng.toLowerCase()}`);
   const normalizedGloss = entry.gloss?.toLowerCase();
   const normalizedQuery = filterDiacritics(query.toLowerCase());
 
