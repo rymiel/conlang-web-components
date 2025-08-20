@@ -5,6 +5,7 @@ import { useLanguageTag } from "../providers/api";
 import { useConfig } from "../providers/data";
 import { uri } from "../util";
 
+// TODO: rename fields
 export interface InterlinearData {
   sol: string;
   solSep: string;

@@ -5,6 +5,7 @@ export { InfoTag, InfoSection, BaseData, EditWordPageContent, useEditContext } f
 export { RichText } from "./components/richText";
 export { entryHasMatch, WordSelect } from "./components/wordSelect";
 export { default as UserOnly } from "./components/UserOnly";
+export { default as GlossSelect } from "./components/GlossSelect";
 export { default as ErrorPage } from "./pages/ErrorPage";
 export { default as ConfigPage } from "./pages/ConfigPage";
 export { useApi, useErrorHandler, useLanguageTag, ApiVersion } from "./providers/api";
