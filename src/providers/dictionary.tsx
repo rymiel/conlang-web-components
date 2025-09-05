@@ -12,6 +12,7 @@ interface SortableEntry {
 export interface Entry {
   hash: string;
   sol: string;
+  disp: string;
   link: string;
   extra: string;
   gloss?: string;
