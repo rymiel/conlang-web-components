@@ -57,7 +57,8 @@ const renderEntry: ItemRenderer<Entry> = (entry, { handleClick, handleFocus, mod
 export function WordSelect({ onSelect }: { onSelect: (entry: Entry) => void }) {
   const { entries } = useDictionary();
   return <Select<Entry>
-    items={entries || []}
+    // https://github.com/palantir/blueprint/pull/6999
+    items={(entries || []) as Entry[]}
     itemPredicate={filterEntry}
     itemRenderer={renderEntry}
     noResults={<MenuItem disabled={true} text="No results." roleStructure="listoption" />}

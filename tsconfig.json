@@ -6,6 +6,7 @@
     "target": "es2021",
     "jsx": "react-jsx",
     "outDir": "build/",
+    "rootDir": "./src",
     "moduleResolution": "nodenext",
     "noErrorTruncation": true,
     "declaration": true

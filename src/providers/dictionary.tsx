@@ -20,7 +20,7 @@ export interface Entry {
 }
 
 export interface DictionaryData<E = Entry> {
-  entries: E[] | null;
+  entries: readonly E[] | null;
   refresh: () => void;
 }
 
