@@ -12,14 +12,14 @@ interface SortableEntry {
 export interface Entry {
   hash: string;
   sol: string;
-  disp: string;
+  disp?: string;
   link: string;
   extra: string;
   gloss?: string;
   meanings: Meaning[];
 }
 
-export interface DictionaryData<E = Entry> {
+export interface DictionaryData<E extends Entry = Entry> {
   entries: readonly E[] | null;
   refresh: () => void;
 }

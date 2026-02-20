@@ -40,7 +40,7 @@ const renderEntry: ItemRenderer<Entry> = (entry, { handleClick, handleFocus, mod
     roleStructure="listoption"
     text={
       <>
-        {entry.disp}:
+        {entry.disp ?? entry.sol}:
         {entry.gloss && <>
           {" "}
           (<Abbr>{entry.gloss}</Abbr>)

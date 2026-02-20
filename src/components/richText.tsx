@@ -36,7 +36,7 @@ const remarkPlugin: Plugin<[{ on: string }], RemarkRoot> = function ({ on }) {
         }
 
         const linkText: PhrasingContent[] = [
-          { type: "emphasis", children: [{ type: "text", value: label ?? entry.disp }] },
+          { type: "emphasis", children: [{ type: "text", value: label ?? entry.disp ?? entry.sol }] },
         ];
 
         if (id === on) {
