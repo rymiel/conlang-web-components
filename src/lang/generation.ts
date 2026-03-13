@@ -39,6 +39,12 @@ export interface GenerationConfig {
   groups: WeightedGroups;
 }
 
+export const DEFAULT_GENERATION: GenerationConfig = {
+  structure: [],
+  parts: {},
+  groups: {},
+};
+
 function resolve(w: Weighted, g: WeightedGroups): string {
   const choice = weightedRandom(w);
   return choice.startsWith("\\")

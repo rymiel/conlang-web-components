@@ -9,11 +9,13 @@ import { Title } from "./title";
 import { UserProvider } from "./user";
 
 export type ErrorHandler = (error: unknown) => void;
+export type SuccessHandler = (message: string) => void;
 
 interface ConlangProviderProps<C extends LangConfig, E extends Entry>
   extends PropsWithChildren<DataProviderProps<C, E>> {
   api: ApiClient;
   error: ErrorHandler;
+  success: SuccessHandler;
   tag: string;
 }
 
@@ -23,13 +25,14 @@ export function ConlangProvider<C extends LangConfig, E extends Entry>({
   config,
   api,
   error,
+  success,
   tag,
   transformConfig,
   transformDictionary,
 }: ConlangProviderProps<C, E>) {
   const [title, setTitle] = useState<string | null>(null);
 
-  return <ApiProvider client={api} error={error} tag={tag}>
+  return <ApiProvider client={api} error={error} success={success} tag={tag}>
     <UserProvider>
       <DataProvider
         dictionary={dictionary}

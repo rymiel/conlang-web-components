@@ -28,60 +28,116 @@ abbr.il {
 
 /* DefaultEditor */
 
-.bp6-dark .jer-editor-container textarea,
-.bp6-dark .jer-editor-container input {
+.bp6-dark .config-page .jer-editor-container textarea,
+.bp6-dark .config-page .jer-editor-container input {
   background-color: whitesmoke;
 }
 
 /* WeightedGroupsEditor */
 
-.weighted-groups-editor {
+.config-page .weighted-groups-editor {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
-.weighted-groups-editor .bp6-section-card {
+.config-page .weighted-groups-editor .bp6-section-card {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem 0.25rem;
 }
 
-.weighted-groups-editor .bp6-section {
+.config-page .weighted-groups-editor .bp6-section {
   width: fit-content;
   height: fit-content;
 }
 
 /* WeightedEditor */
 
-.weighted-editor .bp6-control-group {
+.config-page .weighted-editor .bp6-control-group {
   width: fit-content;
 }
 
-.weighted-editor .bp6-input-group input {
+.config-page .weighted-editor .bp6-input-group input {
   font-family: monospace;
   width: calc(52px + 3ch);
 }
 
-.weighted-editor .bp6-numeric-input .bp6-input-group input {
+.config-page .weighted-editor .bp6-numeric-input .bp6-input-group input {
   width: calc(20px + 3ch);
 }
 
-/* AbbrEditor */
+/* KeyValueEditor abbr */
 
-.abbr-editor label,
-.abbr-editor .new-key input {
+.config-page .abbr-editor label,
+.config-page .abbr-editor .new-key input {
   font-variant: small-caps;
   font-variant-numeric: lining-nums;
   text-transform: lowercase;
 }
 
-.kv-editor .bp6-form-group {
+.config-page .kv-editor .bp6-form-group {
   margin: 0;
+}
+
+/* KeyValueEditor sound_change */
+
+.config-page .sound-change-editor .bp6-input-group input {
+  font-family: monospace;
 }
 
 /* external links (RichText) */
 
 a[rel~="external"] .bp6-icon {
   margin: 0.25rem;
+}
+
+/* SoundChangePage */
+
+.sound-change {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.sound-change .changes .center {
+  text-align: center;
+}
+
+.sound-change .changes .arrow,
+.sound-change .changes .arrow a,
+.sound-change .changes .arrow p {
+  width: 100%;
+}
+
+.sound-change .changes .arrow a {
+  display: inline-flex;
+  gap: 0.2rem;
+  justify-content: space-between;
+}
+
+.sound-change-list.bp6-popover .bp6-popover-content {
+  /* min-width: 600px; */
+  /* max-width: unset; */
+  padding: 20px;
+}
+
+.sound-change-steps {
+  display: grid;
+  width: max-content;
+  height: min-content;
+  column-gap: 1rem;
+  grid-template-columns: repeat(3, auto);
+}
+
+.sound-change-steps .header {
+  grid-column: 1 / span 3;
+}
+
+.sound-change-diff {
+  display: flex;
+}
+
+.sound-change-diff > .sound-change-steps:nth-child(1) .header {
+  text-align: right;
 }

@@ -13,15 +13,32 @@ import {
 } from "@blueprintjs/core";
 import { JsonEditor, monoDarkTheme } from "json-edit-react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { ApiConfig } from "../apiTypes";
-import { arrayIsEqualWeight, GenerationConfig, Weighted, WeightedChoices, WeightedGroups } from "../lang/generation";
-import { useApi, useErrorHandler } from "../providers/api";
-import { KeyValue } from "../providers/config";
+import {
+  arrayIsEqualWeight,
+  DEFAULT_GENERATION,
+  GenerationConfig,
+  Weighted,
+  WeightedChoices,
+  WeightedGroups,
+} from "../lang/generation";
+import { DEFAULT_SOUND_CHANGE, SoundChangeConfig } from "../lang/soundChange";
+import { useApi, useErrorHandler, useSuccessHandler } from "../providers/api";
+import { configOrEmpty, DEFAULT_KEY_VALUE, KeyValue } from "../providers/config";
 
 interface EditorProps<T> {
   data: T;
   setData: (data: T) => void; // Dispatch<SetStateAction<T>>;
+}
+
+function subField<T extends object, K extends keyof T>({ data, setData }: EditorProps<T>, field: K): EditorProps<T[K]> {
+  return { data: data[field], setData: (newData) => setData({ ...data, [field]: newData }) };
+}
+
+function configEntry<T extends object>({ data, setData }: EditorProps<unknown>, def: T): EditorProps<T> {
+  return { data: configOrEmpty(data, def), setData: (newData: T) => setData(newData) };
 }
 
 interface TopLevelEditor extends EditorProps<unknown> {
@@ -115,49 +132,26 @@ function WeightedGroupsEditor({ data, setData }: EditorProps<WeightedGroups>) {
   </div>;
 }
 
-function isEmptyObject(object: unknown): boolean {
-  if (typeof object !== "object") return false;
-  for (const _ in object) {
-    return false;
-  }
-  return true;
-}
-
-const GENERATION_EMPTY: GenerationConfig = {
-  structure: [],
-  parts: {},
-  groups: {},
-};
-
-function GenerationEditor({ data, setData }: EditorProps<unknown>) {
-  const value = isEmptyObject(data) ? GENERATION_EMPTY : (data as GenerationConfig);
-  const setValue = (newValue: GenerationConfig) => setData(newValue);
+function GenerationEditor(props: EditorProps<GenerationConfig>) {
   return <>
     <FormGroup label="Structure">
-      <StringListEditor data={value.structure} setData={(structure) => setValue({ ...value, structure })} />
+      <StringListEditor {...subField(props, "structure")} />
     </FormGroup>
     <FormGroup label="Parts">
-      <WeightedGroupsEditor data={value.parts} setData={(parts) => setValue({ ...value, parts })} />
+      <WeightedGroupsEditor {...subField(props, "parts")} />
     </FormGroup>
     <FormGroup label="Groups">
-      <WeightedGroupsEditor data={value.groups} setData={(groups) => setValue({ ...value, groups })} />
+      <WeightedGroupsEditor {...subField(props, "groups")} />
     </FormGroup>
   </>;
 }
 
-interface KeyValueEditorProps extends EditorProps<unknown> {
+interface KeyValueEditorProps extends EditorProps<KeyValue> {
   className?: string;
   transform?: (key: string) => string;
 }
 const identity = (k: string) => k;
-function KeyValueEditor({
-  data: rawData,
-  setData: setRawData,
-  className = "",
-  transform = identity,
-}: KeyValueEditorProps) {
-  const data = rawData as KeyValue;
-  const setData = (newValue: KeyValue) => setRawData(newValue);
+function KeyValueEditor({ data, setData, className = "", transform = identity }: KeyValueEditorProps) {
   const [newKey, setNewKey] = useState("");
   const invalid = newKey === "" || newKey in data;
   return <div className={`kv-editor ${className}`}>
@@ -190,14 +184,31 @@ function KeyValueEditor({
   </div>;
 }
 
+function SoundChangeEditor(props: EditorProps<SoundChangeConfig>) {
+  return <>
+    <p>
+      <Link to="/sound_changes">Edit sound changes.</Link>
+    </p>
+    <FormGroup label="Groups">
+      <KeyValueEditor className="sound-change-editor" {...subField(props, "groups")} />
+    </FormGroup>
+  </>;
+}
+
 function Editor(props: TopLevelEditor) {
   switch (props.editorKey) {
     case "generation":
-      return <GenerationEditor {...props} />;
+      return <GenerationEditor {...configEntry(props, DEFAULT_GENERATION)} />;
     case "abbr":
-      return <KeyValueEditor className="abbr-editor" transform={(k) => k.toUpperCase()} {...props} />;
+      return <KeyValueEditor
+        className="abbr-editor"
+        transform={(k) => k.toUpperCase()}
+        {...configEntry(props, DEFAULT_KEY_VALUE)}
+      />;
     case "parts":
-      return <KeyValueEditor {...props} />;
+      return <KeyValueEditor {...configEntry(props, DEFAULT_KEY_VALUE)} />;
+    case "sound_change":
+      return <SoundChangeEditor {...configEntry(props, DEFAULT_SOUND_CHANGE)} />;
     default:
       return <DefaultEditor {...props} />;
   }
@@ -210,6 +221,7 @@ export default function Content({ config, refresh }: { config: ApiConfig; refres
   const [errored, setErrored] = useState(false);
   const api = useApi();
   const error = useErrorHandler();
+  const success = useSuccessHandler();
 
   useEffect(() => {
     if (key in config) {
@@ -225,6 +237,7 @@ export default function Content({ config, refresh }: { config: ApiConfig; refres
       .lang<string>(`/config/${key}`, "POST", JSON.stringify(data))
       .then(() => {
         setErrored(false);
+        success("Config saved!");
         refresh();
       })
       .catch((err) => {
@@ -236,7 +249,7 @@ export default function Content({ config, refresh }: { config: ApiConfig; refres
       });
   };
 
-  return <div>
+  return <div className="config-page">
     <ControlGroup className="fit-width fill-height">
       <HTMLSelect
         onChange={(e) => {
