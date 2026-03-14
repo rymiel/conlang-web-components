@@ -1,4 +1,4 @@
-interface Meaning {
+export interface Meaning {
   prefix?: string;
   eng: string;
 }
@@ -10,12 +10,15 @@ interface SortableEntry {
 }
 
 export interface Entry {
+  index: number;
   hash: string;
   sol: string;
   disp?: string;
   link: string;
   extra: string;
   gloss?: string;
+  /** Phonetic IPA transcription (narrow) [ ... ] */
+  ipa: string;
   meanings: Meaning[];
 }
 

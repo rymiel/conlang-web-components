@@ -10,10 +10,11 @@ interface ApiData {
   error: ErrorHandler;
   success: SuccessHandler
   tag: string;
+  language: string;
 }
 const Api = createContext<ApiData | null>(null);
 
-export function ApiProvider({ children, client, error, success, tag }: PropsWithChildren<ApiData>) {
+export function ApiProvider({ children, client, error, success, tag, language }: PropsWithChildren<ApiData>) {
   const [version, setVersion] = useState<string | null>(null);
   useEffect(() => {
     client
@@ -22,11 +23,12 @@ export function ApiProvider({ children, client, error, success, tag }: PropsWith
       .catch((err) => error(err));
   }, []);
 
-  return <Api.Provider value={{ client, error, success, tag }}>
+  return <Api.Provider value={{ client, error, success, tag, language }}>
     <ApiVersion.Provider value={version}>{children}</ApiVersion.Provider>
   </Api.Provider>;
 }
 
+// TODO: clean all this up
 export function useApi(): ApiClient {
   const api = useContext(Api);
   if (api === null) {
@@ -57,4 +59,12 @@ export function useLanguageTag(): string {
     throw new Error("No API initialized");
   }
   return api.tag;
+}
+
+export function useLanguageName(): string {
+  const api = useContext(Api);
+  if (api === null) {
+    throw new Error("No API initialized");
+  }
+  return api.language;
 }

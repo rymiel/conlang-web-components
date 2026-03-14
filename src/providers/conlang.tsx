@@ -17,6 +17,7 @@ interface ConlangProviderProps<C extends LangConfig, E extends Entry>
   error: ErrorHandler;
   success: SuccessHandler;
   tag: string;
+  language: string;
 }
 
 export function ConlangProvider<C extends LangConfig, E extends Entry>({
@@ -27,12 +28,13 @@ export function ConlangProvider<C extends LangConfig, E extends Entry>({
   error,
   success,
   tag,
+  language,
   transformConfig,
   transformDictionary,
 }: ConlangProviderProps<C, E>) {
   const [title, setTitle] = useState<string | null>(null);
 
-  return <ApiProvider client={api} error={error} success={success} tag={tag}>
+  return <ApiProvider client={api} error={error} success={success} tag={tag} language={language}>
     <UserProvider>
       <DataProvider
         dictionary={dictionary}
