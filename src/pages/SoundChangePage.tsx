@@ -6,21 +6,17 @@ import {
   FormGroup,
   H3,
   HTMLTable,
-  NonIdealState,
   Popover,
-  Spinner,
-  SpinnerSize,
   Tag,
   TextArea,
 } from "@blueprintjs/core";
-import { FormEvent, Fragment, ReactNode, useContext, useEffect, useRef, useState } from "react";
+import { FormEvent, Fragment, ReactNode, useEffect, useRef, useState } from "react";
 import reactStringReplace from "react-string-replace";
 
 import { Change, SoundChangeInstance, SoundChangeSteps } from "../lang/soundChange";
 import { useApi, useErrorHandler, useSuccessHandler } from "../providers/api";
-import { useConfig, useDictionary } from "../providers/data";
+import { useDictionary } from "../providers/data";
 import { Entry } from "../providers/dictionary";
-import { useTitle } from "../providers/title";
 
 function tags(s: string | null): ReactNode {
   if (s === null) return null;
