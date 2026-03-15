@@ -5,7 +5,7 @@ export { InfoTag, InfoSection, BaseData, EditWordPageContent, useEditContext } f
 export { RichText } from "./components/richText";
 export { entryHasMatch, WordSelect } from "./components/wordSelect";
 export { AnchorButton } from "./components/button";
-export { DictionaryList, DictionaryRowValues, RowRenderer, Meanings, ExtraCell } from "./components/dictionary"
+export { DictionaryList, DictionaryRowValues, RowRenderer, Meanings, ExtraCell } from "./components/dictionary";
 export { default as UserOnly } from "./components/UserOnly";
 export { default as GlossSelect } from "./components/GlossSelect";
 export { default as ErrorPage } from "./pages/ErrorPage";

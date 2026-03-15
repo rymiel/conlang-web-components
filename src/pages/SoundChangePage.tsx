@@ -42,8 +42,7 @@ function SoundChange({ change }: { change: Change }) {
   }
 }
 
-function soundChangeToString(change: Change): string {
-  let [from, to, left, right] = change;
+function soundChangeToString([from, to, left, right]: Change): string {
   from = from === "" ? "∅" : from;
   to = to === "" ? "∅" : to;
   if (left === null && right === null) {
