@@ -7,8 +7,10 @@ import {
   InputGroup,
   Intent,
   NumericInput,
+  Pre,
   Section,
   SectionCard,
+  Switch,
   TagInput,
 } from "@blueprintjs/core";
 import { JsonEditor, monoDarkTheme } from "json-edit-react";
@@ -219,6 +221,7 @@ export default function Content({ config, refresh }: { config: ApiConfig; refres
   const [data, setData] = useState<unknown>({});
   const [loading, setLoading] = useState(false);
   const [errored, setErrored] = useState(false);
+  const [inspect, setInspect] = useState(false);
   const api = useApi();
   const error = useErrorHandler();
   const success = useSuccessHandler();
@@ -265,7 +268,8 @@ export default function Content({ config, refresh }: { config: ApiConfig; refres
         <option value="sound_change">sound_change</option>
         <option value="syllable">syllable</option>
       </HTMLSelect>
-      {key !== "" && <Button
+      <Switch label="Inspect mode" onChange={(e) => setInspect(e.currentTarget.checked)} />
+      {key !== "" && inspect === false && <Button
         intent={errored ? "danger" : "primary"}
         loading={loading}
         icon={errored ? "cross" : undefined}
@@ -274,6 +278,7 @@ export default function Content({ config, refresh }: { config: ApiConfig; refres
       />}
     </ControlGroup>
     <Divider />
-    {key !== "" && <Editor editorKey={key} data={data} setData={setData} />}
+    {key !== "" && inspect === false && <Editor editorKey={key} data={data} setData={setData} />}
+    {key !== "" && inspect === true && <Pre>{JSON.stringify(data, null, 2)}</Pre>}
   </div>;
 }
