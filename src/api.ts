@@ -31,21 +31,23 @@ export class ApiClient {
     this.#version = config.version;
   }
 
-  async general<T>(endpoint: string, method?: HTTPMethod, body?: Body): Promise<T> {
-    return this.#baseFetch(`/api/v0/${normalize(endpoint)}`, method, body);
+  async general<T>(endpoint: string, method?: HTTPMethod, body?: Body, json?: object): Promise<T> {
+    return this.#baseFetch(`/api/v0/${normalize(endpoint)}`, method, body, json);
   }
-  async lang<T>(endpoint: string, method?: HTTPMethod, body?: Body): Promise<T> {
-    return this.#baseFetch(`/api/v2/${this.#language}/${normalize(endpoint)}`, method, body);
+  async lang<T>(endpoint: string, method?: HTTPMethod, body?: Body, json?: object): Promise<T> {
+    return this.#baseFetch(`/api/v2/${this.#language}/${normalize(endpoint)}`, method, body, json);
   }
 
-  async #baseFetch<T>(endpoint: string, method?: HTTPMethod, body?: Body): Promise<T> {
+  async #baseFetch<T>(endpoint: string, method?: HTTPMethod, body?: Body, json?: object): Promise<T> {
     const headers = new Headers();
     const key = localStorage.getItem("token");
     let formBody;
+
     if (key !== null) {
       headers.set("Authorization", key);
     }
     headers.set("X-Solerian-Client", `cwc/1.0 ${this.#language}/${this.#version} rymiel`);
+
     if (body instanceof FormData) {
       formBody = body;
     } else if (typeof body === "string") {
@@ -61,9 +63,19 @@ export class ApiClient {
         }
       }
     }
+
+    if (json !== undefined) {
+      if (!(formBody instanceof FormData)) {
+        throw new Error(`Must use form data to use json parameter, but received ${typeof formBody}`);
+      }
+      formBody.set("json", JSON.stringify(json));
+    }
+
     method ??= "GET";
+
     const response = await fetch(this.#base + endpoint, { method, body: formBody, headers, credentials: "include" });
     const text = await response.text();
+
     try {
       return JSON.parse(text) as T;
     } catch (error) {
