@@ -35,7 +35,7 @@ export class ApiClient {
     return this.#baseFetch(`/api/v0/${normalize(endpoint)}`, method, body);
   }
   async lang<T>(endpoint: string, method?: HTTPMethod, body?: Body): Promise<T> {
-    return this.#baseFetch(`/api/v1/${this.#language}/${normalize(endpoint)}`, method, body);
+    return this.#baseFetch(`/api/v2/${this.#language}/${normalize(endpoint)}`, method, body);
   }
 
   async #baseFetch<T>(endpoint: string, method?: HTTPMethod, body?: Body): Promise<T> {
