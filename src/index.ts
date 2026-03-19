@@ -20,7 +20,7 @@ export { entrySort, prefixSplit } from "./providers/dictionary";
 export { gsub, GSubMap, sub, SubMap, uri, zip } from "./util";
 export { GenerationConfig, GenerationInstance, DEFAULT_GENERATION } from "./lang/generation";
 export {
-  IPAInitial,
+  IPATransform,
   Change,
   SoundChangeSteps,
   SoundChangeConfig,

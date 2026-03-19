@@ -2,7 +2,10 @@ import { KeyValue } from "../providers/config";
 import { gsub, GSubMap } from "../util";
 import { sentenceConvert } from "./word";
 
-export type IPAInitial = (word: string) => string;
+export type Flags = {
+  readonly [K in string]?: boolean;
+};
+export type IPATransform = (word: string, flags: Flags) => string;
 export type Change = readonly [from: string, to: string, leftContext: string | null, rightContext: string | null];
 export interface SoundChangeConfig {
   readonly groups: KeyValue;
@@ -46,30 +49,33 @@ function recursiveResolve(groups: GSubMap, depth = 20): GSubMap {
 export class SoundChangeInstance {
   readonly #config: SoundChangeConfig;
   readonly #changes: GSubMap;
-  readonly #initial: IPAInitial;
+  readonly #initialize: IPATransform;
+  readonly #finalize: IPATransform;
 
-  constructor(config: SoundChangeConfig, initial: IPAInitial) {
+  constructor(config: SoundChangeConfig, initialize: IPATransform, finalize: IPATransform) {
     this.#config = config;
-    this.#initial = initial;
+    this.#initialize = initialize;
+    this.#finalize = finalize;
     const groups = recursiveResolve(Object.entries(config.groups).map(([k, v]) => [`{${k}}`, v ?? ""] as const));
     this.#changes = config.changes.map((c) => changeToRegex(c, groups));
     console.log(this.#changes, groups);
   }
 
-  public ipaWithoutSoundChange(word: string) {
-    return this.#initial(word);
+  public ipaWithoutSoundChange(word: string, flags: Flags = {}) {
+    return this.#initialize(word, flags);
   }
 
-  private singleWordSoundChange(word: string): string {
-    word = this.ipaWithoutSoundChange(word);
+  private singleWordSoundChange(word: string, flags: Flags = {}): string {
+    word = this.#initialize(word, flags);
     word = gsub(word, this.#changes);
+    word = this.#finalize(word, flags);
     return word;
   }
 
-  public soundChangeStepsIndexed(word: string): SoundChangeSteps {
+  public soundChangeStepsIndexed(word: string, flags: Flags = {}): SoundChangeSteps {
     const steps: string[][] = [];
     const indices: number[] = [];
-    let words = word.split(" ").map((i) => this.ipaWithoutSoundChange(i));
+    let words = word.split(" ").map((i) => this.#initialize(i, flags));
 
     let last = words;
     steps.push(words);
@@ -88,19 +94,19 @@ export class SoundChangeInstance {
     }
 
     return {
-      steps: steps.map((w) => `[${w.join(" ")}]`),
+      steps: steps.map((w) => `[${w.map(i => this.#finalize(i, flags)).join(" ")}]`),
       indices,
     };
   }
 
-  public soundChange(word: string): string {
-    const words = word.split(" ").map((i) => this.singleWordSoundChange(i));
+  public soundChange(word: string, flags: Flags = {}): string {
+    const words = word.split(" ").map((i) => this.singleWordSoundChange(i, flags));
 
     return `[${words.join(" ")}]`;
   }
 
-  public soundChangeSentence(sentence: string): string {
-    const convertWord = (word: string) => this.singleWordSoundChange(word);
+  public soundChangeSentence(sentence: string, flags: Flags = {}): string {
+    const convertWord = (word: string) => this.singleWordSoundChange(word, flags);
     return "[" + sentenceConvert(sentence, convertWord) + "]";
   }
 
@@ -109,6 +115,6 @@ export class SoundChangeInstance {
   }
 
   public copyWithChanges(changes: readonly Change[]) {
-    return new SoundChangeInstance({ ...this.#config, changes }, this.#initial);
+    return new SoundChangeInstance({ ...this.#config, changes }, this.#initialize, this.#finalize);
   }
 }
