@@ -157,7 +157,7 @@ table.bp6-html-table.bp6-compact.dictionary td {
   margin-right: 0.3rem;
 }
 
-.bp6-dark .dictionary td:has(> a.link-fill) {
+.bp6-dark table.bp6-html-table.dictionary td:has(> a.link-fill) {
   padding: 0;
   min-height: 34px;
 }
