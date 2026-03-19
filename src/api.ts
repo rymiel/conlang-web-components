@@ -7,7 +7,8 @@ export class CustomApiError extends Error {
 }
 
 type HTTPMethod = "GET" | "POST" | "DELETE";
-type Body = FormData | Record<string, string | undefined> | string;
+type FormLike = FormData | Record<string, string | undefined>
+type Body = FormLike | string;
 
 const normalize = (endpoint: string) => (endpoint.startsWith("/") ? endpoint.substring(1) : endpoint);
 
@@ -31,9 +32,12 @@ export class ApiClient {
     this.#version = config.version;
   }
 
-  async general<T>(endpoint: string, method?: HTTPMethod, body?: Body, json?: object): Promise<T> {
-    return this.#baseFetch(`/api/v0/${normalize(endpoint)}`, method, body, json);
+  async general<T>(endpoint: string, method?: HTTPMethod, body?: Body): Promise<T> {
+    return this.#baseFetch(`/api/v0/${normalize(endpoint)}`, method, body);
   }
+
+  async lang<T>(endpoint: string, method?: HTTPMethod, body?: Body): Promise<T>
+  async lang<T>(endpoint: string, method?: HTTPMethod, body?: FormLike, json?: object): Promise<T>
   async lang<T>(endpoint: string, method?: HTTPMethod, body?: Body, json?: object): Promise<T> {
     return this.#baseFetch(`/api/v2/${this.#language}/${normalize(endpoint)}`, method, body, json);
   }
