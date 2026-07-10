@@ -1,13 +1,23 @@
 export { createApiClient, CustomApiError } from "./api";
 export * from "./apiTypes";
-export { Abbr, InterlinearData, InterlinearGloss } from "./components/interlinear";
-export { InfoTag, InfoSection, BaseData, EditWordPageContent, useEditContext } from "./components/editor";
+export { Abbr, OldInterlinearData, InterlinearLines, InterlinearGloss } from "./components/interlinear";
+export {
+  InfoTag,
+  InfoSection,
+  BaseData,
+  EditWordPageContent,
+  SectionEditor,
+  OldTranslationSectionEditor,
+  NewTranslationSectionEditor,
+  TranslationSectionEditor,
+  useEditContext,
+} from "./components/editor";
 export { RichText } from "./components/richText";
 export { entryHasMatch, WordSelect } from "./components/wordSelect";
 export { AnchorButton } from "./components/button";
 export { DictionaryList, DictionaryRowValues, RowRenderer, Meanings, ExtraCell } from "./components/dictionary";
 export { default as UserOnly } from "./components/UserOnly";
-export { default as GlossSelect } from "./components/GlossSelect";
+export { default as GlossSelect, OldGlossSelect } from "./components/GlossSelect";
 export { default as ErrorPage } from "./pages/ErrorPage";
 export { default as ConfigPage } from "./pages/ConfigPage";
 export { default as SoundChangePage } from "./pages/SoundChangePage";

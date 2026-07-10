@@ -1,17 +1,21 @@
-import { ReactNode, useContext } from "react";
+import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 import { useLanguageTag } from "../providers/api";
 import { useConfig } from "../providers/data";
 import { uri } from "../util";
 
-// TODO: rename fields
-export interface InterlinearData {
+/** @deprecated */
+export interface OldInterlinearData {
   sol: string;
   solSep: string;
   engSep: string;
   eng: string;
 }
+
+export type InterlinearLines = readonly [source: string, gloss: string, translation: string];
+
+export type AnyInterlinear = OldInterlinearData | InterlinearLines | string;
 
 const ABBR_SEP = /([-.() ])/;
 const WORD_SEP = /([\u201c\u201d() -])/;
@@ -32,17 +36,20 @@ export function Abbr({ children }: { children: string }): ReactNode {
   });
 }
 
-interface ILWord {
+export interface ILWord {
   value: string;
   text: string;
   index: number;
   bold: boolean;
+  ws: boolean;
 }
 const splitIntoWords = (s: string): ILWord[] =>
-  s.split(WORD_SEP).map((i, j) => ({ value: i, text: i.replaceAll("_", " "), index: j, bold: false }));
+  s
+    .split(WORD_SEP)
+    .map((i, j) => ({ value: i, text: i.replaceAll("_", " "), index: j, bold: false, ws: WORD_SEP.test(i) }));
 const elem = (w: ILWord): ReactNode => (w.bold ? <b key={w.index}>{w.text}</b> : w.text);
 const links = (w: ILWord): ReactNode =>
-  WORD_SEP.test(w.value) ? (
+  w.ws ? (
     elem(w)
   ) : (
     <Link key={w.index} to={uri`/reverse/${w.text}`}>
@@ -53,18 +60,85 @@ const links = (w: ILWord): ReactNode =>
 const highlightAsterisk = (w: ILWord[]): ILWord[] =>
   w.map((i) => (i.text.startsWith("*") ? { ...i, text: i.text.slice(1), bold: true } : i));
 
+export function disambiguiateInterlinear(input: AnyInterlinear): OldInterlinearData | InterlinearLines {
+  if (typeof input === "string") {
+    if (input.startsWith("{")) {
+      return JSON.parse(input) as OldInterlinearData;
+    } else {
+      const lines = input.split("\n", 3);
+      if (lines.length === 3) {
+        return lines as unknown as InterlinearLines;
+      } else {
+        throw new Error(`Interlinear data does not have 3 lines: ${lines.toString()}`);
+      }
+    }
+  } else {
+    return input;
+  }
+}
+
+export function coalesceInterlinearData(input: AnyInterlinear): Readonly<{
+  srcParts: string[];
+  engParts: string[];
+  srcWords: ILWord[];
+  engWords: ILWord[];
+  srcText: string;
+  engText: string;
+}> {
+  const data = disambiguiateInterlinear(input);
+
+  // https://github.com/microsoft/TypeScript/issues/53395
+  if ("eng" in data) {
+    const srcParts = data.solSep.split(" ");
+    const engParts = data.engSep.split(" ");
+    const srcWords = highlightAsterisk(splitIntoWords(data.sol));
+    const engWords = highlightAsterisk(splitIntoWords(data.eng));
+    const srcText = data.sol.replaceAll("*", "");
+    const engText = data.eng.replaceAll("*", "");
+
+    return { srcParts, engParts, srcWords, engWords, srcText, engText } as const;
+  } else {
+    const [source, gloss, translation] = data;
+
+    const srcParts = source.replaceAll("*", "").split(" ");
+    const engParts = gloss.split(" ");
+
+    const srcWords = highlightAsterisk(splitIntoWords(source.replaceAll("-", "")));
+    const engWords = highlightAsterisk(splitIntoWords(translation));
+    const srcText = source.replaceAll("-", "").replaceAll("*", "").replaceAll("_", " ");
+    const engText = translation.replaceAll("*", "");
+
+    return { srcParts, engParts, srcWords, engWords, srcText, engText } as const;
+  }
+}
+
 // TODO: css
 
+export function InterlinearGloss(props: {
+  data: InterlinearLines | string;
+  link?: boolean;
+  indent?: boolean;
+  script?: boolean;
+  extra?: ReactNode;
+}): JSX.Element;
+/** @deprecated */
+export function InterlinearGloss(props: {
+  data: OldInterlinearData;
+  asterisk?: boolean;
+  link?: boolean;
+  indent?: boolean;
+  script?: boolean;
+  extra?: ReactNode;
+}): JSX.Element;
 export function InterlinearGloss({
   data,
-  asterisk = false,
   link = false,
   indent = false,
   script = false,
   extra,
 }: {
-  data: InterlinearData;
-  asterisk?: boolean;
+  data: AnyInterlinear;
+  /** @deprecated */ asterisk?: boolean;
   link?: boolean;
   indent?: boolean;
   script?: boolean;
@@ -73,28 +147,21 @@ export function InterlinearGloss({
   const config = useConfig();
   const tag = useLanguageTag();
 
-  const solParts = data.solSep.split(" ");
-  const engParts = data.engSep.split(" ");
-  const numParts = Math.max(solParts.length, engParts.length);
+  const { srcParts, srcWords, srcText, engParts, engWords } = coalesceInterlinearData(data);
+
+  const numParts = Math.max(srcParts.length, engParts.length);
   const parts = [];
 
-  let solWords = splitIntoWords(data.sol);
-  let engWords = splitIntoWords(data.eng);
-  if (asterisk) {
-    solWords = highlightAsterisk(solWords);
-    engWords = highlightAsterisk(engWords);
-  }
-  const sol = solWords.map(link ? links : elem);
+  const src = srcWords.map(link ? links : elem);
   const eng = engWords.map(elem);
-  const solClean = data.sol.replaceAll("*", "");
 
   for (let i = 0; i < numParts; i++) {
-    const eSol = solParts[i];
+    const eSrc = srcParts[i];
     const eEng = engParts[i];
 
     parts.push(
       <div className="box" key={i}>
-        {eSol && <p className="original">{eSol}</p>}
+        {eSrc && <p className="original">{eSrc}</p>}
         {eEng && <p>
           <Abbr>{eEng}</Abbr>
         </p>}
@@ -104,17 +171,17 @@ export function InterlinearGloss({
 
   const body = <>
     {...parts}
-    <p className="bottom">{config ? config.ipa(solClean) : "/.../"}</p>
+    <p className="bottom">{config ? config.ipa(srcText) : "/.../"}</p>
     <p className="bottom">{eng}</p>
   </>;
 
   return <div className="interlinear">
     <p className="original">
-      {sol}
+      {src}
       {extra}
     </p>
     {script && <p className="original fit-width" lang={tag}>
-      {config ? config.script(solClean) : "<...>"}
+      {config ? config.script(srcText) : "<...>"}
     </p>}
     {indent ? (
       <dl>

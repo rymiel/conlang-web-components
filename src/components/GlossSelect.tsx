@@ -10,9 +10,10 @@ function normalizeEng(eng: string): string {
 
 type Setter<T> = React.Dispatch<React.SetStateAction<T>>;
 
-// TODO: rename params (with InterlinearData)
 // TODO: support prefixes?
-export default function GlossSelect({
+
+/** @deprecated */
+export function OldGlossSelect({
   setSol,
   setSolSep,
   setEngSep,
@@ -35,6 +36,32 @@ export default function GlossSelect({
       setSol((c) => append(c, clean));
       setSolSep((c) => append(c, hyphenated));
       setEngSep((c) => append(c, eng));
+    }}
+  />;
+}
+
+export default function GlossSelect({
+  active,
+  setSource,
+  setGloss,
+}: {
+  active?: string;
+  setSource: Setter<string>;
+  setGloss: Setter<string>;
+}) {
+  return <WordSelect
+    onSelect={(t) => {
+      const suffix = t.sol.startsWith("-");
+      const separator = suffix ? "" : " ";
+      const append = (a: string, b: string) => `${a.trimEnd()}${separator}${b}`.trimStart();
+
+      let src = t.sol.replaceAll(" ", "_");
+      let eng = t.gloss ?? normalizeEng(t.meanings[0]?.eng ?? "?");
+      if (suffix) eng = `-${eng}`;
+      if (t.hash === active) src = `*${src}`;
+
+      setSource((c) => append(c, src));
+      setGloss((c) => append(c, eng));
     }}
   />;
 }

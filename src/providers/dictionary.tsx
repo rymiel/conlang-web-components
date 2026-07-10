@@ -24,7 +24,7 @@ export interface Entry {
 
 export interface DictionaryData<E extends Entry = Entry> {
   entries: readonly E[] | null;
-  refresh: () => void;
+  refresh: () => Promise<void>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
