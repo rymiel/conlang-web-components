@@ -275,7 +275,7 @@ export function OldTranslationSectionEditor({
     <InputGroup onValueChange={setEng} value={eng} placeholder="Translation" />
   </>;
   const preview = <>
-    <Button fill icon="exchange" text="Migrate" onClick={doMigrate} />
+    <Button fill icon="exchange" text="Migrate" intent="danger" onClick={doMigrate} />
     <InterlinearGloss data={data} asterisk />
   </>;
 

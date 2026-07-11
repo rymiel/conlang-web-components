@@ -1,9 +1,11 @@
-import { ReactNode } from "react";
+import { ReactNode, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import { useLanguageTag } from "../providers/api";
 import { useConfig } from "../providers/data";
 import { uri } from "../util";
+import { User } from "../providers/user";
+import { Icon } from "@blueprintjs/core";
 
 /** @deprecated */
 export interface OldInterlinearData {
@@ -84,6 +86,7 @@ export function coalesceInterlinearData(input: AnyInterlinear): Readonly<{
   engWords: ILWord[];
   srcText: string;
   engText: string;
+  deprecated: boolean;
 }> {
   const data = disambiguiateInterlinear(input);
 
@@ -96,7 +99,7 @@ export function coalesceInterlinearData(input: AnyInterlinear): Readonly<{
     const srcText = data.sol.replaceAll("*", "");
     const engText = data.eng.replaceAll("*", "");
 
-    return { srcParts, engParts, srcWords, engWords, srcText, engText } as const;
+    return { srcParts, engParts, srcWords, engWords, srcText, engText, deprecated: true } as const;
   } else {
     const [source, gloss, translation] = data;
 
@@ -107,7 +110,7 @@ export function coalesceInterlinearData(input: AnyInterlinear): Readonly<{
     const srcText = source.replaceAll("-", "").replaceAll("=", "-").replaceAll("*", "").replaceAll("_", " ");
     const engText = translation.replaceAll("*", "");
 
-    return { srcParts, engParts, srcWords, engWords, srcText, engText } as const;
+    return { srcParts, engParts, srcWords, engWords, srcText, engText, deprecated: false } as const;
   }
 }
 
@@ -145,8 +148,10 @@ export function InterlinearGloss({
 }) {
   const config = useConfig();
   const tag = useLanguageTag();
+  // TODO: temporary
+  const { user } = useContext(User);
 
-  const { srcParts, srcWords, srcText, engParts, engWords } = coalesceInterlinearData(data);
+  const { srcParts, srcWords, srcText, engParts, engWords, deprecated } = coalesceInterlinearData(data);
 
   const numParts = Math.max(srcParts.length, engParts.length);
   const parts = [];
@@ -176,6 +181,7 @@ export function InterlinearGloss({
 
   return <div className="interlinear">
     <p className="original">
+      {user && deprecated && <Icon intent="danger" icon="warning-sign" size={20} />}
       {src}
       {extra}
     </p>
