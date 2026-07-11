@@ -100,12 +100,11 @@ export function coalesceInterlinearData(input: AnyInterlinear): Readonly<{
   } else {
     const [source, gloss, translation] = data;
 
-    const srcParts = source.replaceAll("*", "").split(" ");
+    const srcParts = source.replaceAll("*", "").replaceAll("=", "-").split(" ");
     const engParts = gloss.split(" ");
-
-    const srcWords = highlightAsterisk(splitIntoWords(source.replaceAll("-", "")));
+    const srcWords = highlightAsterisk(splitIntoWords(source.replaceAll("-", "").replaceAll("=", "-")));
     const engWords = highlightAsterisk(splitIntoWords(translation));
-    const srcText = source.replaceAll("-", "").replaceAll("*", "").replaceAll("_", " ");
+    const srcText = source.replaceAll("-", "").replaceAll("=", "-").replaceAll("*", "").replaceAll("_", " ");
     const engText = translation.replaceAll("*", "");
 
     return { srcParts, engParts, srcWords, engWords, srcText, engText } as const;
