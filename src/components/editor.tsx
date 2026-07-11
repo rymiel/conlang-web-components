@@ -245,7 +245,6 @@ export function OldTranslationSectionEditor({
   as?: string;
   existing?: OldInterlinearData;
 }) {
-  const success = useSuccessHandler();
   const edit = useEditContext();
   const navigate = useNavigate();
   const api = useApi();
@@ -254,12 +253,7 @@ export function OldTranslationSectionEditor({
   const [solSep, setSolSep] = useState(existing?.solSep ?? "");
   const [engSep, setEngSep] = useState(existing?.engSep ?? "");
   const [eng, setEng] = useState(existing?.eng ?? "“”");
-  const data: OldInterlinearData = {
-    sol,
-    solSep,
-    engSep,
-    eng,
-  };
+  const data: OldInterlinearData = { sol, solSep, engSep, eng };
 
   const createData = () => ({
     title: "translation",
@@ -275,34 +269,17 @@ export function OldTranslationSectionEditor({
       });
   };
   const form = <>
-    <ControlGroup fill>
-      <InputGroup onValueChange={setSol} value={sol} placeholder="Sentence" fill />
-      <GlossSelect {...{ setSource: setSol, setSolSep, setGloss: setEngSep }} />
-    </ControlGroup>
+    <InputGroup onValueChange={setSol} value={sol} placeholder="Sentence" />
     <InputGroup onValueChange={setSolSep} value={solSep} placeholder="Interlinearised sentence" />
     <InputGroup onValueChange={setEngSep} value={engSep} placeholder="Interlinearised translation" />
     <InputGroup onValueChange={setEng} value={eng} placeholder="Translation" />
   </>;
-  const copyObsidian = () => copyToClipboard(interlinearToObsidian(data), success);
-  const copyReddit = () => copyToClipboard(interlinearToReddit(data), success);
   const preview = <>
-    <Button fill icon="export" text="Export as Obsidian" onClick={copyObsidian} />
-    <Button fill icon="export" text="Export as Reddit" onClick={copyReddit} />
+    <Button fill icon="exchange" text="Migrate" onClick={doMigrate} />
     <InterlinearGloss data={data} asterisk />
   </>;
-  const migrate = <>
-    <Button fill icon="exchange" text="Migrate" onClick={doMigrate} />
-  </>;
 
-  return <SectionEditor
-    to={to}
-    as={as}
-    name="translation"
-    form={form}
-    preview={preview}
-    buttons={migrate}
-    data={createData}
-  />;
+  return <SectionEditor to={to} as={as} name="translation" form={form} preview={preview} data={createData} />;
 }
 
 export function NewTranslationSectionEditor({
