@@ -46,6 +46,7 @@ export function InfoTag({
   return <>
     <CompoundTag
       leftContent={left}
+      className="info-tag"
       intent={fixed ? "danger" : generated ? "success" : "primary"}
       icon={fixed ? "anchor" : generated ? "generate" : "draw"}
       interactive={editable}
