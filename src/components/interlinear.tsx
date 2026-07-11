@@ -20,7 +20,7 @@ export type InterlinearLines = readonly [source: string, gloss: string, translat
 export type AnyInterlinear = OldInterlinearData | InterlinearLines | string;
 
 const ABBR_SEP = /([-.() ])/;
-const WORD_SEP = /([\u201c\u201d() -])/;
+const WORD_SEP = /([\u201c\u201d() -,])/;
 
 export function Abbr({ children }: { children: string }): ReactNode {
   const config = useConfig();
