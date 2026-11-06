@@ -1,11 +1,11 @@
+import { Icon } from "@blueprintjs/core";
 import { ReactNode, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import { useLanguageTag } from "../providers/api";
 import { useConfig } from "../providers/data";
-import { uri } from "../util";
 import { User } from "../providers/user";
-import { Icon } from "@blueprintjs/core";
+import { uri } from "../util";
 
 /** @deprecated */
 export interface OldInterlinearData {
@@ -19,7 +19,7 @@ export type InterlinearLines = readonly [source: string, gloss: string, translat
 
 export type AnyInterlinear = OldInterlinearData | InterlinearLines | string;
 
-const ABBR_SEP = /([-.() ])/;
+const ABBR_SEP = /([-.()<> ])/;
 const WORD_SEP = /([\u201c\u201d() -,])/;
 
 export function Abbr({ children }: { children: string }): ReactNode {
@@ -105,7 +105,9 @@ export function coalesceInterlinearData(input: AnyInterlinear): Readonly<{
 
     const srcParts = source.replaceAll("*", "").replaceAll("=", "-").split(" ");
     const engParts = gloss.split(" ");
-    const srcWords = highlightAsterisk(splitIntoWords(source.replaceAll("-", "").replaceAll("=", "-")));
+    const srcWords = highlightAsterisk(
+      splitIntoWords(source.replaceAll("-", "").replaceAll("=", "-").replaceAll("<", "").replaceAll(">", "")),
+    );
     const engWords = highlightAsterisk(splitIntoWords(translation));
     const srcText = source.replaceAll("-", "").replaceAll("=", "-").replaceAll("*", "").replaceAll("_", " ");
     const engText = translation.replaceAll("*", "");
