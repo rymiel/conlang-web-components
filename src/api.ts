@@ -97,11 +97,10 @@ export class ApiClient {
   }
 }
 
-const DEFAULT_DEV_BASE = "http://localhost:3000";
 const DEFAULT_PROD_BASE = "https://solerian-api.rymiel.space";
 export function createApiClient(config: ApiClientConfig): ApiClient {
-  const dev = config.base?.dev ?? DEFAULT_DEV_BASE;
+  const dev = config.base?.dev ?? `http://${document.location.hostname}:3000`;
   const prod = config.base?.prod ?? DEFAULT_PROD_BASE;
-  const base = document.location.hostname === "localhost" ? dev : prod;
+  const base = (document.location.hostname === "localhost" || document.location.hostname.startsWith("192.168.")) ? dev : prod;
   return new ApiClient({ ...config, base });
 }
