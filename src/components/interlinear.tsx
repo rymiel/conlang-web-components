@@ -102,14 +102,15 @@ export function coalesceInterlinearData(input: AnyInterlinear): Readonly<{
     return { srcParts, engParts, srcWords, engWords, srcText, engText, deprecated: true } as const;
   } else {
     const [source, gloss, translation] = data;
+    const textSource = source.replaceAll("-", "").replaceAll("=", "-").replaceAll("<", "").replaceAll(">", "");
 
     const srcParts = source.replaceAll("*", "").replaceAll("=", "-").split(" ");
     const engParts = gloss.split(" ");
     const srcWords = highlightAsterisk(
-      splitIntoWords(source.replaceAll("-", "").replaceAll("=", "-").replaceAll("<", "").replaceAll(">", "")),
+      splitIntoWords(textSource),
     );
     const engWords = highlightAsterisk(splitIntoWords(translation));
-    const srcText = source.replaceAll("-", "").replaceAll("=", "-").replaceAll("*", "").replaceAll("_", " ");
+    const srcText = textSource.replaceAll("*", "").replaceAll("_", " ");
     const engText = translation.replaceAll("*", "");
 
     return { srcParts, engParts, srcWords, engWords, srcText, engText, deprecated: false } as const;
