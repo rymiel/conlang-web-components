@@ -61,27 +61,27 @@ function defaultRowValues(e: FullEntry): DictionaryRowValues {
 function DictionaryRow({ entry, index, eng, trans, extra, ipa }: DictionaryRowProps) {
   return <tr>
     <td>
-      <Link to={entry.link} className="link-fill">
+      <Link to={entry.link} className="dictionary-row-link">
         {index}
       </Link>
     </td>
     <td>
-      <Link to={entry.link} className="link-fill">
+      <Link to={entry.link} className="dictionary-row-link">
         {eng}
       </Link>
     </td>
     <td>
-      <Link to={entry.link} className="link-fill">
+      <Link to={entry.link} className="dictionary-row-link">
         {trans}
       </Link>
     </td>
     <td>
-      <Link to={entry.link} className="link-fill">
+      <Link to={entry.link} className="dictionary-row-link">
         {extra}
       </Link>
     </td>
-    <td className="pronunciation">
-      <Link to={entry.link} className="link-fill">
+    <td className="dictionary-pronunciation">
+      <Link to={entry.link} className="dictionary-row-link">
         {ipa}
       </Link>
     </td>
@@ -113,25 +113,25 @@ export function DictionaryList({ entries, row }: DictionaryListProps) {
   }, []);
 
   return <>
-    <div className="around-dictionary" ref={handleSearchContainer}>
+    <div className="dictionary-sticky" ref={handleSearchContainer}>
       <InputGroup type="search" placeholder="Search" onValueChange={setSearch} value={search} size="large" />
     </div>
 
-    <HTMLTable className="dictionary" compact striped interactive>
+    <HTMLTable className="dictionary-table" compact striped interactive>
       <thead>
         <tr>
           <th>#</th>
           <th>English</th>
           <th>{language}</th>
           <th>Extra</th>
-          <th className="pronunciation">Pronunciation</th>
+          <th className="dictionary-pronunciation">Pronunciation</th>
         </tr>
       </thead>
       <tbody>{rows.map(([e, r]) => (entryHasMatch(search, e) ? r : undefined))}</tbody>
     </HTMLTable>
 
     <UserOnly>
-      <div className="around-dictionary" ref={handleAddButton}>
+      <div className="dictionary-sticky" ref={handleAddButton}>
         <AnchorButton to="/new" intent="success" icon="plus" fill>
           Add new entry
         </AnchorButton>

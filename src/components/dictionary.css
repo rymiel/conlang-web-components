@@ -1,34 +1,22 @@
-table.bp6-html-table.bp6-compact.dictionary th,
-table.bp6-html-table.bp6-compact.dictionary td {
+.dictionary-table th,
+.dictionary-table td {
   padding-bottom: 4px;
   padding-top: 4px;
   vertical-align: middle;
 }
 
-.dictionary tr td .bp6-icon {
+.dictionary-table td .bp6-icon {
   vertical-align: bottom;
   margin-left: 0.3rem;
   margin-right: 0.3rem;
 }
 
-.bp6-dark table.bp6-html-table.dictionary td:has(> a.link-fill) {
+.dictionary-table td:has(> .dictionary-row-link) {
   padding: 0;
   min-height: 34px;
 }
 
-@media (max-width: 690px) {
-  .dictionary td a.link-fill {
-    min-height: 34px;
-  }
-}
-
-@media (max-width: 520px) {
-  .dictionary .pronunciation {
-    display: none;
-  }
-}
-
-.bp6-dark .dictionary a.link-fill {
+.dictionary-row-link {
   color: inherit;
   width: 100%;
   height: 100%;
@@ -37,11 +25,23 @@ table.bp6-html-table.bp6-compact.dictionary td {
   align-items: center;
 }
 
-.bp6-dark .dictionary a.link-fill:hover {
+.dictionary-row-link:hover {
   text-decoration: none;
 }
 
-.around-dictionary {
+@media (max-width: 690px) {
+  .dictionary-row-link {
+    min-height: 34px;
+  }
+}
+
+@media (max-width: 520px) {
+  .dictionary-pronunciation {
+    display: none;
+  }
+}
+
+.dictionary-sticky {
   padding: 0.5rem 0;
   margin: 0.5rem 0;
   position: sticky;

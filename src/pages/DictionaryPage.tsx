@@ -34,7 +34,7 @@ export default function DictionaryPage() {
     return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
   }
 
-  return <div className="inter middle">
+  return <div className="page-content dictionary-page">
     <DictionaryList entries={entries} row={rowRender} />
   </div>;
 }

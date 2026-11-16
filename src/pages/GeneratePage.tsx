@@ -80,7 +80,7 @@ export default function GeneratePage() {
   if (lang === null) {
     content = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
   } else {
-    content = <div className="inter">
+    content = <div className="page-content">
       <Content soundChange={lang.soundChange} generation={lang.generation} />
     </div>;
   }

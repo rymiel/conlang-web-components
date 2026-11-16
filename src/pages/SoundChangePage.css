@@ -4,23 +4,23 @@
   gap: 1rem;
 }
 
-.sound-change .changes .center {
+.sound-change-link-cell {
   text-align: center;
 }
 
-.sound-change .changes .arrow,
-.sound-change .changes .arrow a,
-.sound-change .changes .arrow p {
+.sound-change-link,
+.sound-change-link a,
+.sound-change-link p {
   width: 100%;
 }
 
-.sound-change .changes .arrow a {
+.sound-change-link a {
   display: inline-flex;
   gap: 0.2rem;
   justify-content: space-between;
 }
 
-.sound-change-list.bp6-popover .bp6-popover-content {
+.sound-change-popover .bp6-popover-content {
   padding: 20px;
 }
 
@@ -32,7 +32,7 @@
   grid-template-columns: repeat(3, auto);
 }
 
-.sound-change-steps .header {
+.sound-change-steps-title {
   grid-column: 1 / span 3;
 }
 
@@ -40,6 +40,6 @@
   display: flex;
 }
 
-.sound-change-diff > .sound-change-steps:nth-child(1) .header {
+.sound-change-diff > .sound-change-steps:first-child .sound-change-steps-title {
   text-align: right;
 }

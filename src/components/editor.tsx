@@ -63,7 +63,7 @@ export function InfoSection({
 }) {
   return <Callout
     title={title}
-    className="edit-section"
+    className="info-section"
     intent={fixed ? "danger" : generated ? "success" : "primary"}
     icon={fixed ? "anchor" : generated ? "generate" : "draw"}
     compact
@@ -165,7 +165,7 @@ export function SectionEditor({ to, as, name, form, preview, buttons, data }: Se
     });
   };
 
-  return <div className="inter sidebar">
+  return <div className="page-content editor-sidebar">
     {to && <p>
       Adding new {name} section to <Code>{to}</Code>.
     </p>}
@@ -179,7 +179,14 @@ export function SectionEditor({ to, as, name, form, preview, buttons, data }: Se
     </ButtonGroup>
     <Divider />
     {preview}
-    {as && <Button fill className="bottom" intent="danger" icon="trash" text="Delete entry" onClick={doDelete} />}
+    {as && <Button
+      fill
+      className="editor-sidebar-delete"
+      intent="danger"
+      icon="trash"
+      text="Delete entry"
+      onClick={doDelete}
+    />}
   </div>;
 }
 

@@ -28,7 +28,7 @@ function Translation({
     }
   }, [highlighted]);
 
-  return <dd id={section.hash} className={`translation ${highlighted ? "focus" : ""}`} ref={ref}>
+  return <dd id={section.hash} className={`translation-entry ${highlighted ? "translation-focused" : ""}`} ref={ref}>
     <InterlinearGloss
       data={parseInterlinear(section.content)}
       link
@@ -36,7 +36,7 @@ function Translation({
       script={lang?.hasScript}
       extra={
         <UserOnly>
-          <span className="edit">
+          <span className="edit-link">
             [ <Link to={uri`/edit/${entry.hash}/${section.hash}`}>edit</Link> ]
           </span>
         </UserOnly>
@@ -76,7 +76,7 @@ export default function TranslationsPage() {
   let content = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
 
   if (entries) {
-    content = <div className="inter">
+    content = <div className="page-content">
       <Content entries={entries} query={query} />
     </div>;
   }

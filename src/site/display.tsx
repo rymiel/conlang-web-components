@@ -14,7 +14,7 @@ export function shortPartName(parts: KeyValue, extra: string): string {
 
 export function ScriptCell({ entry }: { entry: FullEntry }) {
   const { tag } = useSite();
-  return <span className="dual">
+  return <span className="dual-script">
     <i>{entry.disp}</i>
     <span lang={tag}>{entry.script}</span>
   </span>;

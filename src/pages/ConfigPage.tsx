@@ -161,7 +161,7 @@ const identity = (k: string) => k;
 function KeyValueEditor({ data, setData, className = "", transform = identity }: KeyValueEditorProps) {
   const [newKey, setNewKey] = useState("");
   const invalid = newKey === "" || newKey in data;
-  return <div className={`kv-editor ${className}`}>
+  return <div className={`key-value-editor ${className}`}>
     {Object.entries(data).map(([key, value]) => <ControlGroup key={key}>
       <FormGroup label={key} inline>
         <InputGroup
@@ -173,7 +173,7 @@ function KeyValueEditor({ data, setData, className = "", transform = identity }:
     </ControlGroup>)}
     <ControlGroup>
       <InputGroup
-        className="new-key"
+        className="key-value-new"
         value={newKey}
         onValueChange={(v) => setNewKey(transform(v))}
         intent={invalid ? "danger" : "none"}
@@ -294,7 +294,7 @@ export default function ConfigPage() {
   if (lang === null) {
     return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
   } else {
-    return <div className="inter">
+    return <div className="page-content">
       <Content config={lang.config} refresh={refresh} />
     </div>;
   }

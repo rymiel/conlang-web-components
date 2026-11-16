@@ -190,7 +190,7 @@ function TelephoneGameHelper({ children, onSelect }: PropsWithChildren<{ onSelec
 
   return <Popover
     interactionKind="click"
-    popoverClassName={`${Classes.POPOVER_CONTENT_SIZING} telephone`}
+    popoverClassName={`${Classes.POPOVER_CONTENT_SIZING} telephone-popover`}
     placement="bottom"
     content={
       <div>
@@ -268,7 +268,7 @@ function EntryEditor({ existing }: { existing: FullEntry }) {
     });
   };
 
-  return <div className="inter">
+  return <div className="page-content">
     <p>
       Editing entry <Code>{as}</Code>.
     </p>
@@ -316,7 +316,7 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
     });
   };
 
-  return <div className="inter sidebar">
+  return <div className="page-content editor-sidebar">
     {to && <p>
       Adding new meaning to <Code>{to}</Code>.
     </p>}
@@ -326,7 +326,14 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
     <InputGroup onValueChange={setPrefix} defaultValue={prefix} placeholder="Prefix" />
     <InputGroup onValueChange={setRest} defaultValue={rest} placeholder="English" />
     <Button fill intent="success" text="Submit" onClick={doSubmit} />
-    {as && <Button fill className="bottom" intent="danger" icon="trash" text="Delete entry" onClick={doDelete} />}
+    {as && <Button
+      fill
+      className="editor-sidebar-delete"
+      intent="danger"
+      icon="trash"
+      text="Delete entry"
+      onClick={doDelete}
+    />}
   </div>;
 }
 
@@ -341,7 +348,7 @@ export default function EditWordPage() {
     const entry = entries.find((e) => e.hash === hash);
 
     if (entry) {
-      content = <div className="inter">
+      content = <div className="page-content">
         <EditWordPageContent entry={entry} active={edit}>
           <EntryData v={entry} />
         </EditWordPageContent>

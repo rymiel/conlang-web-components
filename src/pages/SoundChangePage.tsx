@@ -82,7 +82,7 @@ interface StepListProps extends SoundChangeSteps {
 }
 function StepList({ steps, indices, changes, title, flip }: StepListProps) {
   return <div className="sound-change-steps">
-    {title && <H3 className="header">{title}</H3>}
+    {title && <H3 className="sound-change-steps-title">{title}</H3>}
     {steps.map((v, i) => {
       const sound = <span>{v}</span>;
       const index = <em>{i < indices.length && <>{indices[i] + 1}.</>}</em>;
@@ -119,8 +119,8 @@ function StepListChanges(props: StepListProps) {
     <Popover
       interactionKind="click"
       position="top-right"
-      popoverClassName="sound-change-list"
-      className="arrow"
+      popoverClassName="sound-change-popover"
+      className="sound-change-link"
       content={<StepList {...props} />}
     >
       <ChangesLink count={props.indices.length} />
@@ -134,8 +134,8 @@ function StepListDiff({ from, to }: { from: StepListProps; to: StepListProps }) 
   return <Popover
     interactionKind="click"
     position="top-right"
-    popoverClassName="sound-change-list"
-    className="arrow"
+    popoverClassName="sound-change-popover"
+    className="sound-change-link"
     content={
       <div className="sound-change-diff">
         <StepList {...from} title="Old" flip />
@@ -228,7 +228,7 @@ function Content({
   };
 
   return <div className="sound-change">
-    <div className="rules" ref={rulesRef}>
+    <div className="sound-change-rules" ref={rulesRef}>
       {localInstance !== null && <>
         <Button text="Forget changes" icon="trash" intent="danger" fill onClick={clearInstance} />
         <Button text="Save config" icon="cloud-upload" intent="primary" fill onClick={saveConfig} loading={loading} />
@@ -254,7 +254,7 @@ function Content({
         </>
       )}
     </div>
-    <div className="changes">
+    <div className="sound-change-results">
       {localInstance === null ? (
         <FormGroup>
           <CheckboxCard compact onChange={(e) => setIgnoreNoChanges(e.currentTarget.checked)}>
@@ -279,7 +279,7 @@ function Content({
                 if (ignoreNoChanges && steps.steps.length <= 1) return undefined;
                 return <tr key={e.hash}>
                   <td>{e.sol}</td>
-                  <td className="center">
+                  <td className="sound-change-link-cell">
                     <StepListChanges {...steps} changes={changes} />
                   </td>
                   <td>{soundChange.soundChange(e.sol)}</td>
@@ -320,7 +320,7 @@ export default function SoundChangePage() {
     content = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
   } else {
     const makeLocal = (changes: readonly Change[]) => config.soundChange.copyWithChanges(changes);
-    content = <div className="inter">
+    content = <div className="page-content">
       <Content entries={entries} soundChange={config.soundChange} makeLocal={makeLocal} />
     </div>;
   }

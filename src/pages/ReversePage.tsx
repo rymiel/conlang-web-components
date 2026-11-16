@@ -51,7 +51,7 @@ export default function ReversePage() {
     </Fragment>);
   }
 
-  return <div className="inter">
+  return <div className="page-content">
     <form
       onSubmit={(e) => {
         navigate(uri`/reverse/${search}`);

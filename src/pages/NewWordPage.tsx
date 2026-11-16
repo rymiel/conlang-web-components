@@ -30,7 +30,7 @@ function Editor({ lang }: { lang: LangConfigData }) {
     navigate(uri`/edit/${w.hash}`);
   };
 
-  return <div className="inter">
+  return <div className="page-content">
     <p>Creating new entry.</p>
     <ControlGroup vertical className="fit-width">
       <InputGroup onValueChange={setSol} placeholder={language} defaultValue={sol} />
@@ -63,7 +63,7 @@ export default function NewWordPage() {
   if (lang === null) {
     return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
   } else {
-    return <div className="inter">
+    return <div className="page-content">
       <Editor lang={lang} />
     </div>;
   }

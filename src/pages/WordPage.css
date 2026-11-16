@@ -1,15 +1,15 @@
-.space-right {
+.word-pronunciation {
   margin-right: 1rem;
   display: inline;
 }
 
-.word {
+.word-page {
   display: grid;
   grid-template-columns: min-content auto;
   column-gap: 12px;
 }
 
-.word nav {
+.word-page-toc {
   border: 1px solid #aaa;
   padding: 2px 15px 7px;
   height: fit-content;
@@ -18,23 +18,23 @@
   top: 8px;
 }
 
-.word nav ol {
+.word-page-toc ol {
   padding-left: 20px;
 }
 
 @media (max-aspect-ratio: 1/1) {
-  .word {
+  .word-page {
     display: grid;
     grid-template-columns: auto;
   }
 
-  .word nav {
+  .word-page-toc {
     display: none;
   }
 }
 
-.word h3.bp6-heading.meaning,
-.word h4.bp6-heading {
+.word-meaning,
+.word-page h4 {
   scroll-margin-top: 1em;
   margin-top: 1rem;
 }

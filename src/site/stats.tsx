@@ -42,7 +42,7 @@ export function PartsContent() {
     increment(extraTally, e.extra);
   }
 
-  return <div className="stats general">
+  return <div className="stats-section stats-general">
     <div>
       <H4>Parts</H4>
       <HTMLTable compact striped>
@@ -119,7 +119,7 @@ export function SyllableContent({ slots, syllables, matchName }: SyllableContent
     }
   }
 
-  return <div className="stats general">
+  return <div className="stats-section stats-general">
     {slots.map((slot, i) => <div key={slot.key}>
       <H4>{slot.name}</H4>
 

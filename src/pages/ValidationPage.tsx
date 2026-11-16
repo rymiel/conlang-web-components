@@ -49,7 +49,7 @@ export default function ValidationPage() {
     footer = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
   }
 
-  return <div className="inter">
+  return <div className="page-content">
     {header}
     {footer}
   </div>;

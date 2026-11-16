@@ -4,5 +4,5 @@ import { useSite } from "../site/context";
 export default function StatsPage() {
   const { statsSections } = useSite();
   useTitle("Stats");
-  return <div className="inter stats-page">{statsSections.map((Section, i) => <Section key={i} />)}</div>;
+  return <div className="page-content stats-page">{statsSections.map((Section, i) => <Section key={i} />)}</div>;
 }

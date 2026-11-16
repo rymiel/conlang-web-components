@@ -1,3 +1,4 @@
+@import "@blueprintjs/core/lib/css/blueprint.css" layer(blueprint);
 @import "./components/interlinear.css";
 @import "./pages/ConfigPage.css";
 @import "./components/richText.css";
@@ -60,7 +61,7 @@ body {
   font-family: "Andika", sans-serif;
 }
 
-div.inter {
+.page-content {
   padding: 8px 12px;
   scroll-behavior: smooth;
 }
@@ -78,7 +79,7 @@ body.bp6-dark {
   background-color: #252a31;
 }
 
-.sc {
+.small-caps {
   font-variant-caps: small-caps;
 }
 
@@ -102,7 +103,7 @@ h4 .bp6-icon {
   vertical-align: bottom;
 }
 
-span.edit {
+.edit-link {
   font-size: small;
   font-style: normal;
   font-weight: normal;

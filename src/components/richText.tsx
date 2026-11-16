@@ -56,7 +56,7 @@ const toHastHandlers: Handlers = {
       type: "element",
       tagName: "a",
       properties: {
-        className: ["missing"],
+        className: ["missing-link"],
       },
       children: [
         {

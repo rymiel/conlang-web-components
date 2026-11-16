@@ -17,7 +17,7 @@ function SectionContent({ entry, section, on }: { entry: FullEntry; section: Ful
   const simple = SIMPLE_SECTIONS.find(([title]) => section.title === title);
   if (section.title === SectionTitle.TRANSLATION) {
     const extra = <UserOnly>
-      <span className="edit">
+      <span className="edit-link">
         [ <Link to={uri`/edit/${entry.hash}/${section.hash}`}>edit</Link> ]
       </span>
     </UserOnly>;
@@ -41,11 +41,11 @@ function WordPageHeader({ entry }: { entry: FullEntry }) {
   const { tag } = useSite();
   return <>
     <H2>{entry.disp}</H2>
-    {entry.phon !== undefined && <span className="space-right">{entry.phon}</span>}
-    {entry.script !== undefined && <p className="space-right" lang={tag}>
+    {entry.phon !== undefined && <span className="word-pronunciation">{entry.phon}</span>}
+    {entry.script !== undefined && <p className="word-pronunciation" lang={tag}>
       {entry.script}
     </p>}
-    <span className="space-right">{entry.ipa}</span>
+    <span className="word-pronunciation">{entry.ipa}</span>
   </>;
 }
 
@@ -120,10 +120,10 @@ function WordPageContent({ entry, highlighted = false }: { entry: FullEntry; hig
   const partHeader = partName(lang?.parts ?? {}, entry.extra, entry.class);
 
   return <>
-    <H3 className="meaning" ref={ref}>
+    <H3 className="word-meaning" ref={ref}>
       {highlighted ? <mark>{partHeader}</mark> : partHeader}
       <UserOnly>
-        <span className="edit">
+        <span className="edit-link">
           [ <Link to={uri`/edit/${entry.hash}`}>edit</Link> ]
         </span>
       </UserOnly>
@@ -164,8 +164,8 @@ export default function WordPage() {
 
     if (matching.length > 0) {
       const parts = matching.map((i) => shortPartName(lang?.parts ?? {}, i.extra));
-      content = <div className="inter word">
-        <nav>
+      content = <div className="page-content word-page">
+        <nav className="word-page-toc">
           <ol>
             {parts.map((i, j) => <li key={j}>
               <Link to={uri`/w/${word}/${j + 1}`}>{i}</Link>

@@ -18,7 +18,7 @@ export function Abbr({ children }: { children: string }): ReactNode {
     if (abbr === undefined) {
       return i;
     } else {
-      return <abbr key={j} title={abbr} className="il">
+      return <abbr key={j} title={abbr} className="gloss-abbr">
         {i}
       </abbr>;
     }
@@ -110,8 +110,8 @@ export function InterlinearGloss({
     const eEng = engParts[i];
 
     parts.push(
-      <div className="box" key={i}>
-        {eSrc && <p className="original">{eSrc}</p>}
+      <div className="interlinear-word" key={i}>
+        {eSrc && <p className="interlinear-word-source">{eSrc}</p>}
         {eEng && <p>
           <Abbr>{eEng}</Abbr>
         </p>}
@@ -121,16 +121,16 @@ export function InterlinearGloss({
 
   const body = <>
     {...parts}
-    <p className="bottom">{config ? config.ipa(srcText) : "/.../"}</p>
-    <p className="bottom">{eng}</p>
+    <p className="interlinear-ipa">{config ? config.ipa(srcText) : "/.../"}</p>
+    <p className="interlinear-translation">{eng}</p>
   </>;
 
   return <div className="interlinear">
-    <p className="original">
+    <p className="interlinear-text">
       {src}
       {extra}
     </p>
-    {script && <p className="original fit-width" lang={tag}>
+    {script && <p className="interlinear-script fit-width" lang={tag}>
       {config ? config.script(srcText) : "<...>"}
     </p>}
     {indent ? (

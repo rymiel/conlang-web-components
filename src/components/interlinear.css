@@ -1,27 +1,26 @@
-/* Abbr */
-
-abbr.il {
+.gloss-abbr {
   font-variant: small-caps;
   font-variant-numeric: lining-nums;
   text-transform: lowercase;
 }
 
-/* InterlinearGloss */
-
-.interlinear p.original {
+.interlinear-text,
+.interlinear-script,
+.interlinear-word-source {
   font-style: italic;
 }
 
-.interlinear p.bottom {
+.interlinear-ipa,
+.interlinear-translation {
   clear: left;
 }
 
-.interlinear div.box {
+.interlinear-word {
   float: left;
   margin-bottom: 0.3rem;
   margin-right: 0.7em;
 }
 
-.interlinear div.box p {
+.interlinear-word p {
   margin: 0;
 }

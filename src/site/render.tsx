@@ -23,7 +23,7 @@ function Menu() {
   const [isOpen, setOpen] = useState(false);
 
   return <>
-    <Icon className="menu" icon="menu" size={36} onClick={() => setOpen(true)} />
+    <Icon className="header-menu" icon="menu" size={36} onClick={() => setOpen(true)} />
     <Drawer isOpen={isOpen} onClose={() => setOpen(false)} position="left" size={DrawerSize.SMALL}>
       <nav>
         <ul>
@@ -81,20 +81,20 @@ function App({ children, versions }: PropsWithChildren<{ versions: SiteVersions 
     <ScrollRestoration getKey={(location) => (location.pathname === "/" ? location.pathname : location.key)} />
     <header className={Classes.DARK}>
       <Menu />
-      <H1 className="sc">
+      <H1 className="small-caps">
         <Link to="/">{language}</Link>
       </H1>
       {title && <>
         <Divider></Divider>
-        <H2 className="sc">{title}</H2>
+        <H2 className="small-caps">{title}</H2>
       </>}
-      <div id="usertext">{user.user ? <Logout /> : <Login />}</div>
+      <div className="header-user">{user.user ? <Logout /> : <Login />}</div>
     </header>
     <main id="main">{children ?? <Outlet />}</main>
     <footer className={Classes.DARK}>
       <small>
         <p>
-          <span className="sc">{language}</span> by rymiel, web version {versions.webVersion}, cwc version{" "}
+          <span className="small-caps">{language}</span> by rymiel, web version {versions.webVersion}, cwc version{" "}
           {versions.cwcVersion}
           {version && `, api version ${version}`}
         </p>

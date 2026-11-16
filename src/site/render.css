@@ -16,16 +16,12 @@ footer {
   flex-direction: column;
 }
 
-.bp6-dark h1 a,
-.bp6-dark h1 a:visited,
-.bp6-dark h1 a:active,
-.bp6-dark h1 a:hover {
+header h1 a {
   text-decoration: none;
   color: #f6f7f9;
 }
 
-#usertext,
-#usertext:visited {
+.header-user {
   position: absolute;
   top: 0;
   right: 0;
@@ -38,8 +34,8 @@ footer {
   background-color: #452798;
 }
 
-#root.localhost header,
-#root.localhost footer {
+.localhost header,
+.localhost footer {
   background-color: #985e27;
 }
 
@@ -55,16 +51,16 @@ footer {
   bottom: 0;
 }
 
-header h1.bp6-heading,
-header h2.bp6-heading,
-header h3.bp6-heading {
+header h1,
+header h2,
+header h3 {
   display: inline;
   margin-top: 0;
   margin-bottom: 0;
   margin-right: 1rem;
 }
 
-header .menu {
+.header-menu {
   margin-right: 1rem;
   cursor: pointer;
 }
