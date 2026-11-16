@@ -48,9 +48,19 @@ export type {
   ValidationFailure,
   SlotValues,
   SyllableSlot,
+  MenuLink,
+  SiteDefinition,
+  Site,
 } from "./site/types";
-export { Dictionary, LangConfig } from "./site/context";
-export { createTransformConfig, createTransformDictionary } from "./site/transform";
+export { Dictionary, LangConfig, SiteContext, useSite } from "./site/context";
+export { defineSite } from "./site/define";
+export { partName, shortPartName, ScriptCell, StatusIcons, StatusTags } from "./site/display";
+export { SectionTitle, SIMPLE_SECTIONS } from "./site/sections";
+export { columns, increment, PartsContent, seedTally, SyllableContent } from "./site/stats";
+export type { Example } from "./site/translations";
+export { useExamples } from "./site/translations";
+export type { Validate } from "./site/validation";
+export { useValidate } from "./site/validation";
 export { gsub, GSubMap, sub, SubMap, uri, zip } from "./util";
 export { GenerationConfig, GenerationInstance, DEFAULT_GENERATION } from "./lang/generation";
 export {

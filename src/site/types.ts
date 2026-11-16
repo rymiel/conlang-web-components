@@ -1,7 +1,9 @@
 import { IconName, Intent } from "@blueprintjs/core";
-import { ReactElement, ReactNode } from "react";
+import { FC, ReactElement, ReactNode } from "react";
+import { RouteObject } from "react-router-dom";
 
-import { ApiConfig, ApiMeaning, ApiSection, ApiWord } from "../apiTypes";
+import { ApiClient } from "../api";
+import { ApiConfig, ApiData, ApiMeaning, ApiSection, ApiWord } from "../apiTypes";
 import { GenerationInstance } from "../lang/generation";
 import { SoundChangeInstance } from "../lang/soundChange";
 import { KeyValue } from "../providers/config";
@@ -100,4 +102,33 @@ export interface SyllableSlot {
   readonly name: string;
   readonly size: number;
   readonly values: readonly string[];
+}
+
+export type MenuLink = readonly [slug: string, name: string];
+
+export interface SiteDefinition {
+  readonly language: string;
+  readonly tag: string;
+  readonly api: ApiClient;
+  readonly languageConfig: (config: ApiConfig) => LanguageConfig;
+  readonly defaultParts?: KeyValue;
+  readonly deriveFields: (lang: LangConfigData, word: ApiWord) => DerivedFields;
+  readonly menuLinks: readonly MenuLink[];
+  readonly privateMenuLinks: readonly MenuLink[];
+  readonly routes?: readonly RouteObject[];
+  readonly statsSections: readonly FC[];
+  readonly generatedFields?: (entry: FullEntry) => readonly GeneratedField[];
+  readonly extraEditFields?: readonly EditField[];
+  readonly entryStatus?: (entry: FullEntry) => readonly EntryStatus[];
+  readonly EntryContent?: FC<{ entry: FullEntry }>;
+  readonly draftClass?: (sol: string, extra: string) => string | null;
+  readonly useNewWordExtra?: (sol: string, extra: string) => NewWordExtra;
+  readonly useReverseLookup?: (entries: readonly FullEntry[] | null) => ReverseLookup;
+  readonly useValidationCandidates?: () => readonly ValidationCandidate[] | null;
+  readonly validateLocal?: (candidates: readonly ValidationCandidate[]) => ValidationFailure[];
+}
+
+export interface Site extends Required<Omit<SiteDefinition, "languageConfig" | "defaultParts" | "deriveFields">> {
+  readonly transformConfig: (config: ApiConfig) => LangConfigData;
+  readonly transformDictionary: (lang: LangConfigData, data: ApiData) => FullEntry[];
 }
