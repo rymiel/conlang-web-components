@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { type Plugin } from "unified";
 
 import { Dictionary } from "../site/context";
+import { FullEntry } from "../site/types";
 
 interface Missing extends Literal {
   type: "missing";
@@ -24,9 +25,12 @@ declare module "mdast" {
 
 const WORD_LINK = /\[([A-Za-z0-9_-]+)(?:\(([^)]+)\))?\]/g;
 
-const remarkPlugin: Plugin<[{ on: string }], RemarkRoot> = function ({ on }) {
-  const { entries } = useContext(Dictionary);
+interface RemarkPluginOptions {
+  on?: string;
+  entries: readonly FullEntry[] | null;
+}
 
+const remarkPlugin: Plugin<[RemarkPluginOptions], RemarkRoot> = function ({ on, entries }) {
   return function (tree) {
     findAndReplace(tree, [
       WORD_LINK,
@@ -79,17 +83,23 @@ const components: Components = {
           <Icon icon="share" size={18} />
         </a>;
       }
-      return <Link {...rest} to={href} children={children} />;
+      return <Link {...rest} to={href}>
+        {children}
+      </Link>;
     }
-    return <a {...rest} href={href} children={children} />;
+    return <a {...rest} href={href}>
+      {children}
+    </a>;
   },
 };
 
 export function RichText({ text, on }: { text: string; on?: string }) {
+  const { entries } = useContext(Dictionary);
   return <Markdown
-    children={text}
-    remarkPlugins={[[remarkPlugin, { on }]]}
+    remarkPlugins={[[remarkPlugin, { on, entries }]]}
     remarkRehypeOptions={{ handlers: toHastHandlers }}
     components={components}
-  />;
+  >
+    {text}
+  </Markdown>;
 }

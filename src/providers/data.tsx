@@ -36,7 +36,7 @@ export function DataProvider({ children }: PropsWithChildren) {
     } catch (err) {
       showError(err);
     }
-  }, []);
+  }, [api, transformConfig, transformDictionary]);
 
   useEffect(() => {
     refresh();

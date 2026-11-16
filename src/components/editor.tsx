@@ -191,8 +191,8 @@ export function SectionEditor({ to, as, name, form, preview, buttons, data }: Se
 }
 
 function interlinearToObsidian(data: InterlinearLines): string {
-  let { engText, srcText, engParts, srcParts } = coalesceInterlinearData(data);
-  if (engText.at(0) === "“" && engText.at(-1) === "”") engText = engText.slice(1, -1);
+  const { engText: quoted, srcText, engParts, srcParts } = coalesceInterlinearData(data);
+  const engText = quoted.at(0) === "“" && quoted.at(-1) === "”" ? quoted.slice(1, -1) : quoted;
   return [
     "```gloss",
     `\\ex ${srcText}`,

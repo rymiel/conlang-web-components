@@ -1,5 +1,5 @@
 import { Button, Classes, InputGroup, Intent, PopoverNext as Popover } from "@blueprintjs/core";
-import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
+import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useState } from "react";
 
 import { ApiUser } from "../apiTypes";
 import { useSite } from "../site/context";
@@ -21,7 +21,7 @@ export function UserProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<ApiUser | null>(null);
   const { api } = useSite();
 
-  const update = async () => {
+  const update = useCallback(async () => {
     try {
       const u = await api.general<ApiUser | null>("/me");
       setUser(u);
@@ -38,7 +38,7 @@ export function UserProvider({ children }: PropsWithChildren) {
     } catch (err) {
       showError(err);
     }
-  };
+  }, [api]);
 
   useEffect(() => {
     update();
@@ -46,7 +46,7 @@ export function UserProvider({ children }: PropsWithChildren) {
     const id = setInterval(() => update(), 1_000 * 60 * 10);
 
     return () => clearInterval(id);
-  }, []);
+  }, [update]);
 
   useEffect(() => {
     const handle = (e: StorageEvent) => {

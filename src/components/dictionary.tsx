@@ -1,5 +1,5 @@
 import { HTMLTable, InputGroup } from "@blueprintjs/core";
-import { FC, ReactNode, useCallback, useContext, useMemo, useState } from "react";
+import { ReactNode, useCallback, useContext, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Meaning } from "../providers/dictionary";
@@ -9,9 +9,9 @@ import { AnchorButton } from "./button";
 import UserOnly from "./UserOnly";
 import { entryHasMatch } from "./wordSelect";
 
-const DICTIONARY_ROW_KEYS = ["index", "eng", "trans", "extra", "ipa"] as const;
+type DictionaryRowKey = "index" | "eng" | "trans" | "extra" | "ipa";
 export type DictionaryRowValues = {
-  readonly [K in (typeof DICTIONARY_ROW_KEYS)[number]]: ReactNode;
+  readonly [K in DictionaryRowKey]: ReactNode;
 };
 interface DictionaryRowProps extends DictionaryRowValues {
   entry: FullEntry;
@@ -100,7 +100,7 @@ export function DictionaryList({ entries, row }: DictionaryListProps) {
     return entries.map(
       (e) => [e, <DictionaryRow key={e.hash} entry={e} {...{ ...defaultRowValues(e), ...row(e) }} />] as const,
     );
-  }, [entries]);
+  }, [entries, row]);
 
   const handleSearchContainer = useCallback((ref: HTMLDivElement | null) => {
     if (ref === null) return;
