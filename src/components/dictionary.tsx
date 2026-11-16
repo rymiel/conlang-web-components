@@ -35,14 +35,15 @@ export function Meanings({ meanings }: { meanings: Meaning[] }) {
   });
 }
 
-export function ExtraCell({ extra }: { extra: string }) {
+export function ExtraCell({ entry }: { entry: FullEntry }) {
   const config = useConfig();
-  const abbr = config?.parts?.[extra];
+  const name = config?.parts[entry.extra];
+  const text = entry.class ? `${entry.extra}-${entry.class}` : entry.extra;
 
-  if (abbr) {
-    return <abbr title={abbr}>{extra}</abbr>;
+  if (name) {
+    return <abbr title={name.replace("%", entry.class ?? "")}>{text}</abbr>;
   } else {
-    return <span>{extra}</span>;
+    return <span>{text}</span>;
   }
 }
 
@@ -53,7 +54,7 @@ function defaultRowValues(e: FullEntry): DictionaryRowValues {
       <Meanings meanings={e.meanings} />
     </span>,
     trans: <i>{e.disp}</i>,
-    extra: <ExtraCell extra={e.extra} />,
+    extra: <ExtraCell entry={e} />,
     ipa: <span>{e.ipa}</span>,
   };
 }
