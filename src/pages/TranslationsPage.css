@@ -1,0 +1,7 @@
+.translation {
+  scroll-margin-top: 6rem;
+}
+
+.translation.focus .interlinear > .original {
+  background-color: rgba(255, 255, 0, 0.2);
+}

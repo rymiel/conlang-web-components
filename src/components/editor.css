@@ -1,0 +1,35 @@
+/* InfoSection */
+
+.bp6-callout.bp6-compact.edit-section {
+  width: fit-content;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.bp6-dark .bp6-callout.bp6-intent-primary:not(.bp6-minimal).edit-section {
+  background-color: rgba(45, 114, 210, 0.08);
+  border: 1px solid rgba(45, 114, 210);
+}
+
+/* InfoTag */
+
+.bp6-tag.info-tag {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.bp6-tag.info-tag .bp6-compound-tag-right-content {
+  max-width: 70vw;
+}
+
+/* SectionEditor */
+
+.sidebar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar .bottom {
+  margin-top: auto;
+}

@@ -1,219 +1,110 @@
-/* Abbr */
+@import "./components/interlinear.css";
+@import "./pages/ConfigPage.css";
+@import "./components/richText.css";
+@import "./pages/SoundChangePage.css";
+@import "./components/dictionary.css";
+@import "./components/editor.css";
+@import "./site/render.css";
+@import "./site/display.css";
+@import "./site/stats.css";
+@import "./pages/StatsPage.css";
+@import "./pages/WordPage.css";
+@import "./pages/DictionaryPage.css";
+@import "./pages/EditWordPage.css";
+@import "./pages/TranslationsPage.css";
 
-abbr.il {
-  font-variant: small-caps;
-  font-variant-numeric: lining-nums;
-  text-transform: lowercase;
+@font-face {
+  font-family: "Andika";
+  src: url("./site/AndikaNewBasic-Custom-R.ttf") format("truetype");
+  font-display: swap;
 }
 
-/* InterlinearGloss */
+@font-face {
+  font-family: "Andika";
+  src: url("./site/AndikaNewBasic-Custom-B.ttf") format("truetype");
+  font-weight: bold;
+  font-display: swap;
+}
 
-.interlinear p.original {
+@font-face {
+  font-family: "Andika";
+  src: url("./site/AndikaNewBasic-Custom-I.ttf") format("truetype");
   font-style: italic;
+  font-display: swap;
 }
 
-.interlinear p.bottom {
-  clear: left;
+@font-face {
+  font-family: "Andika";
+  src: url("./site/AndikaNewBasic-Custom-BI.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
 }
 
-.interlinear div.box {
-  float: left;
-  margin-bottom: 0.3rem;
-  margin-right: 0.7em;
-}
-
-.interlinear div.box p {
-  margin: 0;
-}
-
-/* DefaultEditor */
-
-.bp6-dark .config-page .jer-editor-container textarea,
-.bp6-dark .config-page .jer-editor-container input {
-  background-color: whitesmoke;
-}
-
-/* WeightedGroupsEditor */
-
-.config-page .weighted-groups-editor {
+#root {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.config-page .weighted-groups-editor .bp6-section-card {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem 0.25rem;
-}
-
-.config-page .weighted-groups-editor .bp6-section {
-  width: fit-content;
-  height: fit-content;
-}
-
-/* WeightedEditor */
-
-.config-page .weighted-editor .bp6-control-group {
-  width: fit-content;
-}
-
-.config-page .weighted-editor .bp6-input-group input {
-  font-family: monospace;
-  width: calc(52px + 3ch);
-}
-
-.config-page .weighted-editor .bp6-numeric-input .bp6-input-group input {
-  width: calc(20px + 3ch);
-}
-
-/* KeyValueEditor abbr */
-
-.config-page .abbr-editor label,
-.config-page .abbr-editor .new-key input {
-  font-variant: small-caps;
-  font-variant-numeric: lining-nums;
-  text-transform: lowercase;
-}
-
-.config-page .kv-editor .bp6-form-group {
-  margin: 0;
-}
-
-/* KeyValueEditor sound_change */
-
-.config-page .sound-change-editor .bp6-input-group input {
-  font-family: monospace;
-}
-
-/* external links (RichText) */
-
-a[rel~="external"] .bp6-icon {
-  margin: 0.25rem;
-}
-
-/* SoundChangePage */
-
-.sound-change {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.sound-change .changes .center {
-  text-align: center;
-}
-
-.sound-change .changes .arrow,
-.sound-change .changes .arrow a,
-.sound-change .changes .arrow p {
-  width: 100%;
-}
-
-.sound-change .changes .arrow a {
-  display: inline-flex;
-  gap: 0.2rem;
-  justify-content: space-between;
-}
-
-.sound-change-list.bp6-popover .bp6-popover-content {
-  /* min-width: 600px; */
-  /* max-width: unset; */
-  padding: 20px;
-}
-
-.sound-change-steps {
-  display: grid;
-  width: max-content;
-  height: min-content;
-  column-gap: 1rem;
-  grid-template-columns: repeat(3, auto);
-}
-
-.sound-change-steps .header {
-  grid-column: 1 / span 3;
-}
-
-.sound-change-diff {
-  display: flex;
-}
-
-.sound-change-diff > .sound-change-steps:nth-child(1) .header {
-  text-align: right;
-}
-
-/* DictionaryList */
-
-table.bp6-html-table.bp6-compact.dictionary th,
-table.bp6-html-table.bp6-compact.dictionary td {
-  padding-bottom: 4px;
-  padding-top: 4px;
-  vertical-align: middle;
-}
-
-.dictionary tr td .bp6-icon {
-  vertical-align: bottom;
-  margin-left: 0.3rem;
-  margin-right: 0.3rem;
-}
-
-.bp6-dark table.bp6-html-table.dictionary td:has(> a.link-fill) {
-  padding: 0;
-  min-height: 34px;
-}
-
-@media (max-width: 690px) {
-  .dictionary td a.link-fill {
-    min-height: 34px;
-  }
-}
-
-@media (max-width: 520px) {
-  .dictionary .pronunciation {
-    display: none;
-  }
-}
-
-.bp6-dark .dictionary a.link-fill {
-  color: inherit;
-  width: 100%;
+  flex-direction: column;
+  flex: 1;
+  font-family: "Andika", sans-serif;
+  overflow: auto;
   height: 100%;
-  display: flex;
-  padding: 4px 11px;
-  align-items: center;
+  min-height: 100vh;
+  margin: 0;
 }
 
-.bp6-dark .dictionary a.link-fill:hover {
-  text-decoration: none;
+body {
+  margin: 0;
 }
 
-.around-dictionary {
-  padding: 0.5rem 0;
-  margin: 0.5rem 0;
-  position: sticky;
+.andika {
+  font-family: "Andika", sans-serif;
+}
+
+div.inter {
+  padding: 8px 12px;
+  scroll-behavior: smooth;
+}
+
+main,
+.bp6-portal {
+  font-size: 18px;
+}
+
+a {
+  transition: all 180ms;
+}
+
+body.bp6-dark {
   background-color: #252a31;
 }
 
-/* InfoSection */
+.sc {
+  font-variant-caps: small-caps;
+}
 
-.bp6-callout.bp6-compact.edit-section {
+.fill-height {
+  height: 100%;
+}
+
+.fit-width {
   width: fit-content;
-  margin-top: 10px;
-  margin-bottom: 10px;
 }
 
-.bp6-dark .bp6-callout.bp6-intent-primary:not(.bp6-minimal).edit-section {
-  background-color: rgba(45, 114, 210, 0.08);
-  border: 1px solid rgba(45, 114, 210);
+abbr {
+  text-decoration: underline dotted;
+  cursor: help;
 }
 
-/* InfoTag */
-
-.edit-section .bp6-tag.info-tag {
-  white-space: pre-wrap;
-  word-wrap: break-word;
+h1 .bp6-icon,
+h2 .bp6-icon,
+h3 .bp6-icon,
+h4 .bp6-icon {
+  vertical-align: bottom;
 }
 
-.edit-section .bp6-tag.info-tag .bp6-compound-tag-right-content {
-  max-width: 70vw;
+span.edit {
+  font-size: small;
+  font-style: normal;
+  font-weight: normal;
+  margin-left: 1rem;
 }

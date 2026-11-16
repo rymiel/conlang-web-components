@@ -1,0 +1,18 @@
+.stats {
+  display: flex;
+  flex-direction: row;
+  column-gap: 1rem;
+  padding-bottom: 1rem;
+}
+
+.stats h4 {
+  text-align: center;
+}
+
+.stats.general table tr :nth-child(odd) {
+  text-align: right;
+}
+
+.stats.general table td:nth-child(even):not(:last-child) {
+  border-right: solid rgba(255, 255, 255, 0.2);
+}

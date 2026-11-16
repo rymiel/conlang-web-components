@@ -1,0 +1,57 @@
+/* DefaultEditor */
+
+.bp6-dark .config-page .jer-editor-container textarea,
+.bp6-dark .config-page .jer-editor-container input {
+  background-color: whitesmoke;
+}
+
+/* WeightedGroupsEditor */
+
+.config-page .weighted-groups-editor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.config-page .weighted-groups-editor .bp6-section-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 0.25rem;
+}
+
+.config-page .weighted-groups-editor .bp6-section {
+  width: fit-content;
+  height: fit-content;
+}
+
+/* WeightedEditor */
+
+.config-page .weighted-editor .bp6-input-group input {
+  font-family: monospace;
+  width: calc(52px + 3ch);
+}
+
+.config-page .weighted-editor .bp6-numeric-input .bp6-input-group input {
+  width: calc(20px + 3ch);
+}
+
+/* KeyValueEditor */
+
+.config-page .kv-editor .bp6-form-group {
+  margin: 0;
+}
+
+/* KeyValueEditor abbr */
+
+.config-page .abbr-editor label,
+.config-page .abbr-editor .new-key input {
+  font-variant: small-caps;
+  font-variant-numeric: lining-nums;
+  text-transform: lowercase;
+}
+
+/* KeyValueEditor sound_change */
+
+.config-page .sound-change-editor .bp6-input-group input {
+  font-family: monospace;
+}

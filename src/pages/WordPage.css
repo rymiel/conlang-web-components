@@ -1,0 +1,40 @@
+.space-right {
+  margin-right: 1rem;
+  display: inline;
+}
+
+.word {
+  display: grid;
+  grid-template-columns: min-content auto;
+  column-gap: 12px;
+}
+
+.word nav {
+  border: 1px solid #aaa;
+  padding: 2px 15px 7px;
+  height: fit-content;
+  display: table;
+  position: sticky;
+  top: 8px;
+}
+
+.word nav ol {
+  padding-left: 20px;
+}
+
+@media (max-aspect-ratio: 1/1) {
+  .word {
+    display: grid;
+    grid-template-columns: auto;
+  }
+
+  .word nav {
+    display: none;
+  }
+}
+
+.word h3.bp6-heading.meaning,
+.word h4.bp6-heading {
+  scroll-margin-top: 1em;
+  margin-top: 1rem;
+}

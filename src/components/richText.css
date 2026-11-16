@@ -1,0 +1,15 @@
+a[rel~="external"] .bp6-icon {
+  margin: 0.25rem;
+}
+
+.bp6-dark a.missing {
+  color: #ff4242;
+}
+
+.bp6-dark a.missing:hover {
+  color: #ef8174;
+}
+
+.bp6-dark a.missing:active {
+  color: #f8a397;
+}

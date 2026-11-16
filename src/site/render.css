@@ -1,0 +1,84 @@
+header,
+nav,
+footer,
+main {
+  padding: 8px 12px;
+  scroll-behavior: smooth;
+}
+
+main {
+  flex: 1;
+  padding: 0;
+}
+
+footer {
+  display: flex;
+  flex-direction: column;
+}
+
+.bp6-dark h1 a,
+.bp6-dark h1 a:visited,
+.bp6-dark h1 a:active,
+.bp6-dark h1 a:hover {
+  text-decoration: none;
+  color: #f6f7f9;
+}
+
+#usertext,
+#usertext:visited {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px 24px;
+  display: flex;
+}
+
+header,
+footer {
+  background-color: #452798;
+}
+
+#root.localhost header,
+#root.localhost footer {
+  background-color: #985e27;
+}
+
+header {
+  padding-top: 4px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+footer {
+  position: sticky;
+  bottom: 0;
+}
+
+header h1.bp6-heading,
+header h2.bp6-heading,
+header h3.bp6-heading {
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-right: 1rem;
+}
+
+header .menu {
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+header .bp6-divider {
+  display: inline-block;
+  height: 2rem;
+  margin-top: -0.5rem;
+  margin-bottom: -0.5rem;
+  margin-right: 1rem;
+}
+
+footer p {
+  display: inline-block;
+  padding-right: 0.6rem;
+  margin: 0;
+}
