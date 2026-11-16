@@ -51,9 +51,6 @@ const renderEntry: ItemRenderer<FullEntry> = (entry, { handleClick, handleFocus,
   />;
 };
 
-// TODO: Callback type might be problematic, but this seems like a component that wouldn't be that bad to just pass
-//       the dictionary manually.
-
 export function WordSelect({ onSelect }: { onSelect: (entry: FullEntry) => void }) {
   const { entries } = useDictionary();
   return <Select<FullEntry>
