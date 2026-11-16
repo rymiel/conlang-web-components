@@ -16,7 +16,7 @@ import { ApiBase, ApiSection } from "../apiTypes";
 import { useApi, useSuccessHandler } from "../providers/api";
 import { SuccessHandler } from "../providers/conlang";
 import { useDictionary } from "../providers/data";
-import { Entry } from "../providers/dictionary";
+import { FullEntry } from "../site/types";
 import { uri } from "../util";
 import GlossSelect from "./GlossSelect";
 import {
@@ -112,7 +112,7 @@ export function EditWordPageContent({
   children,
   entry,
   active,
-}: PropsWithChildren<{ entry: Pick<Entry, "hash" | "link">; active: string | undefined }>) {
+}: PropsWithChildren<{ entry: Pick<FullEntry, "hash" | "link">; active: string | undefined }>) {
   const [isOpen, setOpen] = useState(false);
   const [element, setElement] = useState<React.ReactNode>(null);
   const navigate = useNavigate();

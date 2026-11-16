@@ -1,34 +1,18 @@
-import { Context, createContext, PropsWithChildren, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { PropsWithChildren, useCallback, useContext, useEffect, useRef, useState } from "react";
 
 import { ApiConfig, ApiData } from "../apiTypes";
+import { Dictionary, LangConfig } from "../site/context";
+import { DictionaryData, FullEntry, LangConfigData } from "../site/types";
 import { useApi, useErrorHandler } from "./api";
-import { LangConfig } from "./config";
-import { DictionaryData, Entry } from "./dictionary";
 
-interface DataSetupProps {
-  dictionary: () => DictionaryData;
-  config: () => LangConfig | null;
+export interface DataProviderProps {
+  transformConfig: (data: ApiConfig) => LangConfigData;
+  transformDictionary: (config: LangConfigData, data: ApiData) => FullEntry[];
 }
 
-const DataSetup = createContext<DataSetupProps | null>(null);
-
-// TODO: use dictionary data directly instead of entry?
-export interface DataProviderProps<C extends LangConfig, E extends Entry> {
-  config: Context<C | null>;
-  dictionary: Context<DictionaryData<E>>;
-  transformConfig: (data: ApiConfig) => C;
-  transformDictionary: (config: C, data: ApiData) => E[];
-}
-
-export function DataProvider<C extends LangConfig, E extends Entry>({
-  children,
-  dictionary: dictionaryCtx,
-  config: configCtx,
-  transformConfig,
-  transformDictionary,
-}: PropsWithChildren<DataProviderProps<C, E>>) {
-  const [entries, setEntries] = useState<E[] | null>(null);
-  const [config, setConfig] = useState<C | null>(null);
+export function DataProvider({ children, transformConfig, transformDictionary }: PropsWithChildren<DataProviderProps>) {
+  const [entries, setEntries] = useState<FullEntry[] | null>(null);
+  const [config, setConfig] = useState<LangConfigData | null>(null);
   const etag = useRef(localStorage.getItem("etag") ?? "undefined");
   const api = useApi();
   const error = useErrorHandler();
@@ -75,32 +59,15 @@ export function DataProvider<C extends LangConfig, E extends Entry>({
     return () => removeEventListener("storage", handle);
   }, [refresh]);
 
-  return <dictionaryCtx.Provider value={{ entries, refresh }}>
-    <configCtx.Provider value={config}>
-      <DataSetup.Provider
-        value={{
-          dictionary: () => useContext(dictionaryCtx),
-          config: () => useContext(configCtx),
-        }}
-      >
-        {children}
-      </DataSetup.Provider>
-    </configCtx.Provider>
-  </dictionaryCtx.Provider>;
+  return <Dictionary.Provider value={{ entries, refresh }}>
+    <LangConfig.Provider value={config}>{children}</LangConfig.Provider>
+  </Dictionary.Provider>;
 }
 
 export function useDictionary(): DictionaryData {
-  const setup = useContext(DataSetup);
-  if (setup === null) {
-    throw new Error("No DataSetup");
-  }
-  return setup.dictionary();
+  return useContext(Dictionary);
 }
 
-export function useConfig(): LangConfig | null {
-  const setup = useContext(DataSetup);
-  if (setup === null) {
-    throw new Error("No DataSetup");
-  }
-  return setup.config();
+export function useConfig(): LangConfigData | null {
+  return useContext(LangConfig);
 }

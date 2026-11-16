@@ -9,24 +9,6 @@ interface SortableEntry {
   meanings: Meaning[];
 }
 
-export interface Entry {
-  index: number;
-  hash: string;
-  sol: string;
-  disp?: string;
-  link: string;
-  extra: string;
-  gloss?: string;
-  /** Phonetic IPA transcription (narrow) [ ... ] */
-  ipa: string;
-  meanings: Meaning[];
-}
-
-export interface DictionaryData<E extends Entry = Entry> {
-  entries: readonly E[] | null;
-  refresh: () => Promise<void>;
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const compare = (a: string, b: string): number => (((a as any) > b) as any) - (((a as any) < b) as any);
 

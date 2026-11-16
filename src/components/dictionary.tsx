@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 
 import { useLanguageName } from "../providers/api";
 import { useConfig } from "../providers/data";
-import { Entry, Meaning } from "../providers/dictionary";
+import { Meaning } from "../providers/dictionary";
+import { FullEntry } from "../site/types";
 import { AnchorButton } from "./button";
 import UserOnly from "./UserOnly";
 import { entryHasMatch } from "./wordSelect";
@@ -14,10 +15,10 @@ export type DictionaryRowValues = {
   readonly [K in (typeof DICTIONARY_ROW_KEYS)[number]]: ReactNode;
 };
 interface DictionaryRowProps extends DictionaryRowValues {
-  entry: Entry;
+  entry: FullEntry;
 }
 
-export type RowRenderer<T = Entry> = (entry: T) => Partial<DictionaryRowValues>;
+export type RowRenderer = (entry: FullEntry) => Partial<DictionaryRowValues>;
 
 export function Meanings({ meanings }: { meanings: Meaning[] }) {
   let toBe = false;
@@ -45,13 +46,13 @@ export function ExtraCell({ extra }: { extra: string }) {
   }
 }
 
-function defaultRowValues(e: Entry): DictionaryRowValues {
+function defaultRowValues(e: FullEntry): DictionaryRowValues {
   return {
     index: <span>{e.index}</span>,
     eng: <span>
       <Meanings meanings={e.meanings} />
     </span>,
-    trans: <i>{e.disp ?? e.sol}</i>,
+    trans: <i>{e.disp}</i>,
     extra: <ExtraCell extra={e.extra} />,
     ipa: <span>{e.ipa}</span>,
   };
@@ -87,11 +88,11 @@ function DictionaryRow({ entry, index, eng, trans, extra, ipa }: DictionaryRowPr
   </tr>;
 }
 
-interface DictionaryListProps<T> {
-  entries: readonly T[];
-  row: RowRenderer<T>;
+interface DictionaryListProps {
+  entries: readonly FullEntry[];
+  row: RowRenderer;
 }
-export function DictionaryList<T extends Entry = Entry>({ entries, row }: DictionaryListProps<T>) {
+export function DictionaryList({ entries, row }: DictionaryListProps) {
   const [search, setSearch] = useState("");
   const language = useLanguageName();
 

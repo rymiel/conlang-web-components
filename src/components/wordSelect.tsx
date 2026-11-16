@@ -2,14 +2,14 @@ import { Button, MenuItem } from "@blueprintjs/core";
 import { ItemPredicate, ItemRenderer, Select } from "@blueprintjs/select";
 
 import { useDictionary } from "../providers/data";
-import { Entry } from "../providers/dictionary";
+import { FullEntry } from "../site/types";
 import { Abbr } from "./interlinear";
 
 // TODO: perf
 
 const filterDiacritics = (str: string) => str.normalize("NFD").replace(/\p{Diacritic}/gu, "");
 
-export function entryHasMatch(query: string, entry: Entry): boolean {
+export function entryHasMatch(query: string, entry: FullEntry): boolean {
   if (query === "") return true;
   const normalizedEng = entry.meanings.map((i) => `(${i.prefix?.toLowerCase() ?? ""}) ${i.eng.toLowerCase()}`);
   const normalizedGloss = entry.gloss?.toLowerCase();
@@ -18,11 +18,11 @@ export function entryHasMatch(query: string, entry: Entry): boolean {
   return `${filterDiacritics(entry.sol)} ${normalizedGloss} ${normalizedEng.join("; ")}`.indexOf(normalizedQuery) >= 0;
 }
 
-const filterEntry: ItemPredicate<Entry> = (query: string, entry: Entry, _index, _exactMatch) => {
+const filterEntry: ItemPredicate<FullEntry> = (query: string, entry: FullEntry, _index, _exactMatch) => {
   return entryHasMatch(query, entry);
 };
 
-const renderEntry: ItemRenderer<Entry> = (entry, { handleClick, handleFocus, modifiers }) => {
+const renderEntry: ItemRenderer<FullEntry> = (entry, { handleClick, handleFocus, modifiers }) => {
   if (!modifiers.matchesPredicate) {
     return null;
   }
@@ -40,7 +40,7 @@ const renderEntry: ItemRenderer<Entry> = (entry, { handleClick, handleFocus, mod
     roleStructure="listoption"
     text={
       <>
-        {entry.disp ?? entry.sol}:
+        {entry.disp}:
         {entry.gloss && <>
           {" "}
           (<Abbr>{entry.gloss}</Abbr>)
@@ -54,11 +54,11 @@ const renderEntry: ItemRenderer<Entry> = (entry, { handleClick, handleFocus, mod
 // TODO: Callback type might be problematic, but this seems like a component that wouldn't be that bad to just pass
 //       the dictionary manually.
 
-export function WordSelect({ onSelect }: { onSelect: (entry: Entry) => void }) {
+export function WordSelect({ onSelect }: { onSelect: (entry: FullEntry) => void }) {
   const { entries } = useDictionary();
-  return <Select<Entry>
+  return <Select<FullEntry>
     // https://github.com/palantir/blueprint/pull/6999
-    items={(entries || []) as Entry[]}
+    items={(entries || []) as FullEntry[]}
     itemPredicate={filterEntry}
     itemRenderer={renderEntry}
     noResults={<MenuItem disabled={true} text="No results." roleStructure="listoption" />}

@@ -2,17 +2,14 @@ import { PropsWithChildren, useState } from "react";
 
 import { ApiClient } from "../api";
 import { ApiProvider } from "./api";
-import { LangConfig } from "./config";
 import { DataProvider, DataProviderProps } from "./data";
-import { Entry } from "./dictionary";
 import { Title } from "./title";
 import { UserProvider } from "./user";
 
 export type ErrorHandler = (error: unknown) => void;
 export type SuccessHandler = (message: string) => void;
 
-interface ConlangProviderProps<C extends LangConfig, E extends Entry>
-  extends PropsWithChildren<DataProviderProps<C, E>> {
+interface ConlangProviderProps extends PropsWithChildren<DataProviderProps> {
   api: ApiClient;
   error: ErrorHandler;
   success: SuccessHandler;
@@ -20,10 +17,8 @@ interface ConlangProviderProps<C extends LangConfig, E extends Entry>
   language: string;
 }
 
-export function ConlangProvider<C extends LangConfig, E extends Entry>({
+export function ConlangProvider({
   children,
-  dictionary,
-  config,
   api,
   error,
   success,
@@ -31,17 +26,12 @@ export function ConlangProvider<C extends LangConfig, E extends Entry>({
   language,
   transformConfig,
   transformDictionary,
-}: ConlangProviderProps<C, E>) {
+}: ConlangProviderProps) {
   const [title, setTitle] = useState<string | null>(null);
 
   return <ApiProvider client={api} error={error} success={success} tag={tag} language={language}>
     <UserProvider>
-      <DataProvider
-        dictionary={dictionary}
-        config={config}
-        transformConfig={transformConfig}
-        transformDictionary={transformDictionary}
-      >
+      <DataProvider transformConfig={transformConfig} transformDictionary={transformDictionary}>
         <Title.Provider value={{ title, setTitle }}>{children}</Title.Provider>
       </DataProvider>
     </UserProvider>

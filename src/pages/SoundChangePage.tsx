@@ -16,7 +16,7 @@ import reactStringReplace from "react-string-replace";
 import { Change, SoundChangeInstance, SoundChangeSteps } from "../lang/soundChange";
 import { useApi, useErrorHandler, useSuccessHandler } from "../providers/api";
 import { useDictionary } from "../providers/data";
-import { Entry } from "../providers/dictionary";
+import { FullEntry } from "../site/types";
 
 function tags(s: string | null): ReactNode {
   if (s === null) return null;
@@ -158,7 +158,7 @@ export default function Content({
   soundChange,
   makeLocal,
 }: {
-  entries: readonly Entry[];
+  entries: readonly FullEntry[];
   soundChange: SoundChangeInstance;
   makeLocal: MakeLocalSoundChange;
 }) {

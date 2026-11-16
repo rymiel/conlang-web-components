@@ -27,6 +27,30 @@ export { ConlangProvider } from "./providers/conlang";
 export { Title, useTitle } from "./providers/title";
 export { User, Login, Logout } from "./providers/user";
 export { entrySort, prefixSplit } from "./providers/dictionary";
+export type {
+  OptionalEntryFields,
+  LangEntryFields,
+  LangConfigFields,
+  FullEntry,
+  FullMeaning,
+  FullSection,
+  DictionaryData,
+  LangConfigData,
+  LanguageConfig,
+  DerivedFields,
+  GeneratedField,
+  EditField,
+  ReverseResult,
+  ReverseLookup,
+  EntryStatus,
+  NewWordExtra,
+  ValidationCandidate,
+  ValidationFailure,
+  SlotValues,
+  SyllableSlot,
+} from "./site/types";
+export { Dictionary, LangConfig } from "./site/context";
+export { createTransformConfig, createTransformDictionary } from "./site/transform";
 export { gsub, GSubMap, sub, SubMap, uri, zip } from "./util";
 export { GenerationConfig, GenerationInstance, DEFAULT_GENERATION } from "./lang/generation";
 export {
