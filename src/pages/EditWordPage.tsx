@@ -7,7 +7,7 @@ import {
   Divider,
   InputGroup,
   NonIdealState,
-  Popover,
+  PopoverNext as Popover,
   Spinner,
   SpinnerSize,
   Tag,

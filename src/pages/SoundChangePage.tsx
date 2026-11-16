@@ -7,7 +7,7 @@ import {
   H3,
   HTMLTable,
   NonIdealState,
-  Popover,
+  PopoverNext as Popover,
   Spinner,
   SpinnerSize,
   Tag,
@@ -118,7 +118,7 @@ function StepListChanges(props: StepListProps) {
   return props.steps.length > 1 ? (
     <Popover
       interactionKind="click"
-      position="top-right"
+      placement="top-end"
       popoverClassName="sound-change-popover"
       className="sound-change-link"
       content={<StepList {...props} />}
@@ -133,7 +133,7 @@ function StepListChanges(props: StepListProps) {
 function StepListDiff({ from, to }: { from: StepListProps; to: StepListProps }) {
   return <Popover
     interactionKind="click"
-    position="top-right"
+    placement="top-end"
     popoverClassName="sound-change-popover"
     className="sound-change-link"
     content={

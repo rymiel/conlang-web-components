@@ -41,8 +41,8 @@ export function InfoTag({
       icon={fixed ? "anchor" : generated ? "generate" : "draw"}
       interactive={editable}
       onClick={onClick}
-      rightIcon={editable ? "edit" : undefined}
-      large
+      endIcon={editable ? "edit" : undefined}
+      size="large"
     >
       {right === null ? <i>(null)</i> : right === undefined ? <i>(undefined)</i> : right}
     </CompoundTag>

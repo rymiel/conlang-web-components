@@ -22,15 +22,15 @@
     "react-string-replace": "^1.1.1"
   },
   "peerDependencies": {
-    "@blueprintjs/core": "^6.0.0",
-    "@blueprintjs/select": "^6.0.0",
+    "@blueprintjs/core": "^6.23.0",
+    "@blueprintjs/select": "^6.4.2",
     "react": "<19",
     "react-dom": "<19",
     "react-router-dom": "^6.0.0 || ^7.0.0"
   },
   "devDependencies": {
-    "@blueprintjs/core": "^6.0.0",
-    "@blueprintjs/select": "^6.0.0",
+    "@blueprintjs/core": "^6.23.0",
+    "@blueprintjs/select": "^6.4.2",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
     "react": "<19",

@@ -9,7 +9,6 @@ const toaster = (() => {
     if (!promise) {
       promise = OverlayToaster.create({
         position: Position.TOP,
-        usePortal: true,
       });
     }
     return promise;

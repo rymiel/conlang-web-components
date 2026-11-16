@@ -1,4 +1,4 @@
-import { Button, Classes, InputGroup, Intent, Popover } from "@blueprintjs/core";
+import { Button, Classes, InputGroup, Intent, PopoverNext as Popover } from "@blueprintjs/core";
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
 
 import { ApiUser } from "../apiTypes";
@@ -75,6 +75,7 @@ export function Login() {
 
   return <Popover
     interactionKind="click"
+    placement="bottom"
     popoverClassName={Classes.POPOVER_CONTENT_SIZING}
     content={
       <form
@@ -103,6 +104,7 @@ export function Logout() {
 
   return <Popover
     interactionKind="click"
+    placement="bottom"
     popoverClassName={Classes.POPOVER_CONTENT_SIZING}
     content={<Button intent={Intent.DANGER} text="Sign out" onClick={signout} />}
   >
