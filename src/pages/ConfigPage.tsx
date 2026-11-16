@@ -16,7 +16,8 @@ import {
   Switch,
   TagInput,
 } from "@blueprintjs/core";
-import { JsonEditor, monoDarkTheme } from "json-edit-react";
+import { monoDarkTheme } from "@json-edit-react/themes";
+import { JsonEditor } from "json-edit-react";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -53,7 +54,13 @@ interface TopLevelEditor extends EditorProps<unknown> {
 }
 
 function DefaultEditor({ data, setData }: EditorProps<unknown>) {
-  return <JsonEditor data={data} setData={setData} enableClipboard={false} theme={monoDarkTheme} />;
+  return <JsonEditor
+    data={data}
+    setData={setData}
+    showClipboardButton={false}
+    collapse={false}
+    theme={monoDarkTheme}
+  />;
 }
 
 function StringListEditor({ data, setData }: EditorProps<readonly string[]>) {
