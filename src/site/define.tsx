@@ -47,7 +47,7 @@ function useNoNewWordExtra(_sol: string, _extra: string): NewWordExtra {
   return { data: {} };
 }
 
-export function defineSite({ languageConfig, defaultParts, deriveFields, ...site }: SiteDefinition): Site {
+export function defineSite({ languageConfig, deriveFields, ...site }: SiteDefinition): Site {
   return {
     routes: [],
     generatedFields: () => [],
@@ -60,7 +60,7 @@ export function defineSite({ languageConfig, defaultParts, deriveFields, ...site
     useValidationCandidates: useEntryValidationCandidates,
     validateLocal: () => [],
     ...site,
-    transformConfig: createTransformConfig(languageConfig, defaultParts),
+    transformConfig: createTransformConfig(languageConfig),
     transformDictionary: createTransformDictionary(deriveFields),
   };
 }

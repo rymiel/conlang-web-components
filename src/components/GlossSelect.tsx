@@ -12,34 +12,6 @@ type Setter<T> = React.Dispatch<React.SetStateAction<T>>;
 
 // TODO: support prefixes?
 
-/** @deprecated */
-export function OldGlossSelect({
-  setSol,
-  setSolSep,
-  setEngSep,
-}: {
-  setSol: Setter<string>;
-  setSolSep: Setter<string>;
-  setEngSep: Setter<string>;
-}) {
-  return <WordSelect
-    onSelect={(t) => {
-      const suffix = t.sol.startsWith("-");
-      const separator = suffix ? "" : " ";
-      const append = (a: string, b: string) => `${a.trimEnd()}${separator}${b}`.trimStart();
-
-      const clean = suffix ? t.sol.slice(1) : t.sol;
-      const hyphenated = t.sol.replaceAll(" ", "_");
-      let eng = t.gloss ?? normalizeEng(t.meanings[0]?.eng ?? "?");
-      if (suffix) eng = `-${eng}`;
-
-      setSol((c) => append(c, clean));
-      setSolSep((c) => append(c, hyphenated));
-      setEngSep((c) => append(c, eng));
-    }}
-  />;
-}
-
 export default function GlossSelect({
   active,
   setSource,

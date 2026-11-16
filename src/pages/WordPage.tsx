@@ -2,7 +2,7 @@ import { Button, H2, H3, H4, Icon, IconSize, NonIdealState, Spinner, SpinnerSize
 import { Fragment, ReactElement, useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { coalesceInterlinearData, InterlinearGloss } from "../components/interlinear";
+import { coalesceInterlinearData, InterlinearGloss, parseInterlinear } from "../components/interlinear";
 import { RichText } from "../components/richText";
 import UserOnly from "../components/UserOnly";
 import { useTitle } from "../providers/title";
@@ -21,7 +21,7 @@ function SectionContent({ entry, section, on }: { entry: FullEntry; section: Ful
         [ <Link to={uri`/edit/${entry.hash}/${section.hash}`}>edit</Link> ]
       </span>
     </UserOnly>;
-    return <InterlinearGloss data={section.content} link indent extra={extra} />;
+    return <InterlinearGloss data={parseInterlinear(section.content)} link indent extra={extra} />;
   } else if (simple !== undefined) {
     const [, name, iconProps] = simple;
     return <>
@@ -64,7 +64,7 @@ function useTranslationUsages(entry: FullEntry, entries: readonly FullEntry[]): 
   if (lookup === null) return [];
   const translations = examples.flatMap((e) => e.sections.map((s, i) => [e, s, i + 1] as const));
   const relevant = translations.filter(([_, s]) => {
-    const { srcParts } = coalesceInterlinearData(s.content);
+    const { srcParts } = coalesceInterlinearData(parseInterlinear(s.content));
     // TODO: use srcWords instead for multi-word matches?
     return srcParts.some((w) => lookup(w).entries.includes(entry));
   });

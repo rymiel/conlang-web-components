@@ -2,7 +2,7 @@ import { NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
 import { useContext, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { InterlinearGloss } from "../components/interlinear";
+import { InterlinearGloss, parseInterlinear } from "../components/interlinear";
 import UserOnly from "../components/UserOnly";
 import { useTitle } from "../providers/title";
 import { Dictionary, LangConfig } from "../site/context";
@@ -30,7 +30,7 @@ function Translation({
 
   return <dd id={section.hash} className={`translation ${highlighted ? "focus" : ""}`} ref={ref}>
     <InterlinearGloss
-      data={section.content}
+      data={parseInterlinear(section.content)}
       link
       indent
       script={lang?.hasScript}

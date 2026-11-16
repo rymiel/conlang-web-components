@@ -16,17 +16,8 @@ import { ApiBase, ApiSection } from "../apiTypes";
 import { Dictionary, useSite } from "../site/context";
 import { showSuccess } from "../site/toast";
 import { FullEntry } from "../site/types";
-import { uri } from "../util";
 import GlossSelect from "./GlossSelect";
-import {
-  AnyInterlinear,
-  coalesceInterlinearData,
-  disambiguiateInterlinear,
-  ILWord,
-  InterlinearGloss,
-  InterlinearLines,
-  OldInterlinearData,
-} from "./interlinear";
+import { coalesceInterlinearData, ILWord, InterlinearGloss, InterlinearLines, parseInterlinear } from "./interlinear";
 
 export function InfoTag({
   left,
@@ -192,7 +183,7 @@ export function SectionEditor({ to, as, name, form, preview, buttons, data }: Se
   </div>;
 }
 
-function interlinearToObsidian(data: AnyInterlinear): string {
+function interlinearToObsidian(data: InterlinearLines): string {
   let { engText, srcText, engParts, srcParts } = coalesceInterlinearData(data);
   if (engText.at(0) === "“" && engText.at(-1) === "”") engText = engText.slice(1, -1);
   return [
@@ -212,7 +203,7 @@ function italicize(w: ILWord[], bold: string, norm: string): string {
     .replaceAll(/(?<!\*)\* \*(?!\*)/g, " ");
 }
 
-function interlinearToReddit(data: AnyInterlinear): string {
+function interlinearToReddit(data: InterlinearLines): string {
   const { engWords, srcWords, engParts, srcParts } = coalesceInterlinearData(data);
   const boxes: number[] = [];
   for (let i = 0; i < Math.max(srcParts.length, engParts.length); i++) {
@@ -235,65 +226,12 @@ async function copyToClipboard(content: string): Promise<void> {
   showSuccess("Copied to clipboard");
 }
 
-export function OldTranslationSectionEditor({
-  to,
-  as,
-  existing,
-}: {
-  to?: string;
-  as?: string;
-  existing?: OldInterlinearData;
-}) {
+export function TranslationSectionEditor({ to, as, existing }: { to?: string; as?: string; existing?: string }) {
   const edit = useEditContext();
-  const navigate = useNavigate();
-  const { api } = useSite();
-  const dict = useContext(Dictionary);
-  const [sol, setSol] = useState(existing?.sol ?? "");
-  const [solSep, setSolSep] = useState(existing?.solSep ?? "");
-  const [engSep, setEngSep] = useState(existing?.engSep ?? "");
-  const [eng, setEng] = useState(existing?.eng ?? "“”");
-  const data: OldInterlinearData = { sol, solSep, engSep, eng };
-
-  const createData = () => ({
-    title: "translation",
-    content: JSON.stringify(data),
-  });
-  const doMigrate = () => {
-    api
-      .lang("/section", "POST", { to, as }, { title: "translation", content: `${sol} | ${solSep}\n${engSep}\n${eng}` })
-      .then(() => dict.refresh())
-      .then(() => {
-        edit.closeDrawer();
-        navigate(uri`/edit/${edit.page}/${to ?? as ?? ""}`);
-      });
-  };
-  const form = <>
-    <InputGroup onValueChange={setSol} value={sol} placeholder="Sentence" />
-    <InputGroup onValueChange={setSolSep} value={solSep} placeholder="Interlinearised sentence" />
-    <InputGroup onValueChange={setEngSep} value={engSep} placeholder="Interlinearised translation" />
-    <InputGroup onValueChange={setEng} value={eng} placeholder="Translation" />
-  </>;
-  const preview = <>
-    <Button fill icon="exchange" text="Migrate" intent="danger" onClick={doMigrate} />
-    <InterlinearGloss data={data} asterisk />
-  </>;
-
-  return <SectionEditor to={to} as={as} name="translation" form={form} preview={preview} data={createData} />;
-}
-
-export function NewTranslationSectionEditor({
-  to,
-  as,
-  existing,
-}: {
-  to?: string;
-  as?: string;
-  existing?: InterlinearLines;
-}) {
-  const edit = useEditContext();
-  const [source, setSource] = useState(existing?.[0] ?? "");
-  const [gloss, setGloss] = useState(existing?.[1] ?? "");
-  const [translation, setTranslation] = useState(existing?.[2] ?? "“”");
+  const initial = existing === undefined ? undefined : parseInterlinear(existing);
+  const [source, setSource] = useState(initial?.[0] ?? "");
+  const [gloss, setGloss] = useState(initial?.[1] ?? "");
+  const [translation, setTranslation] = useState(initial?.[2] ?? "“”");
   const lines: InterlinearLines = [source, gloss, translation];
 
   const createData = () => ({
@@ -317,17 +255,4 @@ export function NewTranslationSectionEditor({
   </>;
 
   return <SectionEditor to={to} as={as} name="translation" form={form} preview={preview} data={createData} />;
-}
-
-export function TranslationSectionEditor({ to, as, existing }: { to?: string; as?: string; existing?: string }) {
-  if (existing === undefined) {
-    return <NewTranslationSectionEditor to={to} as={as} />;
-  } else {
-    const data = disambiguiateInterlinear(existing);
-    if ("sol" in data) {
-      return <OldTranslationSectionEditor to={to} as={as} existing={data} />;
-    } else {
-      return <NewTranslationSectionEditor to={to} as={as} existing={data} />;
-    }
-  }
 }
