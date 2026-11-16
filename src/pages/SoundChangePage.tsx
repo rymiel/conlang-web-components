@@ -13,7 +13,7 @@ import {
   Tag,
   TextArea,
 } from "@blueprintjs/core";
-import { FormEvent, Fragment, ReactNode, useContext, useEffect, useRef, useState } from "react";
+import { Fragment, ReactNode, SyntheticEvent, useContext, useEffect, useRef, useState } from "react";
 import reactStringReplace from "react-string-replace";
 
 import { Change, SoundChangeInstance, SoundChangeSteps } from "../lang/soundChange";
@@ -196,7 +196,7 @@ function Content({
     setRulesWidth(rulesRef.current?.clientWidth ?? 0);
   };
 
-  const finishEditing = (e: FormEvent<HTMLFormElement>) => {
+  const finishEditing = (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     setEditing(false);
     setRulesWidth(0);
