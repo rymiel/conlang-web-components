@@ -54,6 +54,7 @@ export type {
 } from "./site/types";
 export { Dictionary, LangConfig, SiteContext, useSite } from "./site/context";
 export { defineSite } from "./site/define";
+export { SHARED_ROUTES } from "./site/routes";
 export { partName, shortPartName, ScriptCell, StatusIcons, StatusTags } from "./site/display";
 export { SectionTitle, SIMPLE_SECTIONS } from "./site/sections";
 export { columns, increment, PartsContent, seedTally, SyllableContent } from "./site/stats";

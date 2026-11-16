@@ -1,0 +1,75 @@
+import { Button, ControlGroup, Divider, InputGroup, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
+import { Fragment, memo, ReactNode, useContext, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+import { useTitle } from "../../providers/title";
+import { uri } from "../../util";
+import { Dictionary, useSite } from "../context";
+import { ReverseResult } from "../types";
+
+const ReverseContent = memo(function ReverseContent({
+  lookup,
+  query,
+}: {
+  lookup: (query: string) => ReverseResult;
+  query: string;
+}) {
+  const { items } = lookup(query);
+
+  if (items.length === 0) {
+    return <ul>
+      <li>
+        <i>{query}</i>:{" "}
+        <Tag intent="danger" size="large" icon="cross-circle">
+          Invalid word
+        </Tag>
+      </li>
+    </ul>;
+  } else {
+    return <ul>{items.map((i, j) => <li key={j}>{i}</li>)}</ul>;
+  }
+});
+
+export default function ReversePage() {
+  const { entries } = useContext(Dictionary);
+  const { query } = useParams();
+  const navigate = useNavigate();
+  const [search, setSearch] = useState(query ?? "");
+  const { useReverseLookup } = useSite();
+  const { formsCount, controls, lookup } = useReverseLookup(entries);
+  useTitle("Reverse");
+
+  let content: ReactNode = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
+
+  if (query === undefined) {
+    content = <NonIdealState icon="search" />;
+  } else if (lookup) {
+    // TODO: try to fuse words? not sure if possible to make efficient
+    content = query.split(/[ -]/).map((i, j) => <Fragment key={j}>
+      {j > 0 && <Divider />}
+      <ReverseContent lookup={lookup} query={i} />
+    </Fragment>);
+  }
+
+  return <div className="inter">
+    <form
+      onSubmit={(e) => {
+        navigate(uri`/reverse/${search}`);
+        e.preventDefault();
+      }}
+    >
+      <ControlGroup fill>
+        <InputGroup
+          placeholder={`Reverse search (${formsCount})`}
+          onValueChange={(s) => setSearch(s)}
+          value={search}
+          size="large"
+          fill
+          rightElement={controls}
+        />
+        <Button icon="arrow-right" intent="primary" type="submit" />
+      </ControlGroup>
+    </form>
+    {content}
+  </div>;
+}
