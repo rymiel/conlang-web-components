@@ -111,7 +111,6 @@ export interface SiteDefinition {
   readonly tag: string;
   readonly api: ApiClient;
   readonly languageConfig: (config: ApiConfig) => LanguageConfig;
-  readonly defaultParts?: KeyValue;
   readonly deriveFields: (lang: LangConfigData, word: ApiWord) => DerivedFields;
   readonly menuLinks: readonly MenuLink[];
   readonly privateMenuLinks: readonly MenuLink[];
@@ -128,7 +127,7 @@ export interface SiteDefinition {
   readonly validateLocal?: (candidates: readonly ValidationCandidate[]) => ValidationFailure[];
 }
 
-export interface Site extends Required<Omit<SiteDefinition, "languageConfig" | "defaultParts" | "deriveFields">> {
+export interface Site extends Required<Omit<SiteDefinition, "languageConfig" | "deriveFields">> {
   readonly transformConfig: (config: ApiConfig) => LangConfigData;
   readonly transformDictionary: (lang: LangConfigData, data: ApiData) => FullEntry[];
 }

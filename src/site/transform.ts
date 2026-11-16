@@ -1,6 +1,6 @@
 import { ApiConfig, ApiData, ApiWord } from "../apiTypes";
 import { DEFAULT_GENERATION, GenerationInstance } from "../lang/generation";
-import { configOrEmpty, DEFAULT_KEY_VALUE, KeyValue } from "../providers/config";
+import { configOrEmpty, DEFAULT_KEY_VALUE } from "../providers/config";
 import { entrySort, prefixSplit } from "../providers/dictionary";
 import { uri } from "../util";
 import { DerivedFields, FullEntry, LangConfigData, LanguageConfig } from "./types";
@@ -9,12 +9,11 @@ type ApiDictionary = Pick<ApiData, "words" | "meanings" | "sections">;
 
 export function createTransformConfig(
   languageConfig: (config: ApiConfig) => LanguageConfig,
-  defaultParts: KeyValue = DEFAULT_KEY_VALUE,
 ): (config: ApiConfig) => LangConfigData {
   return (config) => {
     const generation = new GenerationInstance(configOrEmpty(config.generation, DEFAULT_GENERATION));
     const abbreviations = configOrEmpty(config.abbr, DEFAULT_KEY_VALUE);
-    const parts = configOrEmpty(config.parts, defaultParts);
+    const parts = configOrEmpty(config.parts, DEFAULT_KEY_VALUE);
     const lang = languageConfig(config);
     const ipa = (sentence: string) => lang.soundChange.soundChangeSentence(sentence);
 
