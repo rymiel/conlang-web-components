@@ -2,13 +2,13 @@ import { Button, ControlGroup, HTMLSelect, InputGroup, NonIdealState, Spinner, S
 import { useContext, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { ApiMeaning, ApiWord } from "../../apiTypes";
-import { useApi } from "../../providers/api";
-import { useTitle } from "../../providers/title";
-import { uri } from "../../util";
-import { Dictionary, LangConfig, useSite } from "../context";
-import { partName } from "../display";
-import { LangConfigData } from "../types";
+import { ApiMeaning, ApiWord } from "../apiTypes";
+import { useApi } from "../providers/api";
+import { useTitle } from "../providers/title";
+import { Dictionary, LangConfig, useSite } from "../site/context";
+import { partName } from "../site/display";
+import { LangConfigData } from "../site/types";
+import { uri } from "../util";
 
 function Editor({ lang }: { lang: LangConfigData }) {
   const dict = useContext(Dictionary);

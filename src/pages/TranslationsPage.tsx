@@ -2,13 +2,13 @@ import { NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
 import { useContext, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { InterlinearGloss } from "../../components/interlinear";
-import UserOnly from "../../components/UserOnly";
-import { useTitle } from "../../providers/title";
-import { uri } from "../../util";
-import { Dictionary, LangConfig } from "../context";
-import { useExamples } from "../translations";
-import { FullEntry, FullSection } from "../types";
+import { InterlinearGloss } from "../components/interlinear";
+import UserOnly from "../components/UserOnly";
+import { useTitle } from "../providers/title";
+import { Dictionary, LangConfig } from "../site/context";
+import { useExamples } from "../site/translations";
+import { FullEntry, FullSection } from "../site/types";
+import { uri } from "../util";
 
 function Translation({
   entry,

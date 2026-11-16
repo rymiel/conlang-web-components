@@ -16,7 +16,7 @@ import {
 import { PropsWithChildren, ReactElement, useCallback, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { ApiBase, ApiSection } from "../../apiTypes";
+import { ApiBase, ApiSection } from "../apiTypes";
 import {
   BaseData,
   EditWordPageContent,
@@ -25,14 +25,14 @@ import {
   SectionEditor,
   TranslationSectionEditor,
   useEditContext,
-} from "../../components/editor";
-import { RichText } from "../../components/richText";
-import { WordSelect } from "../../components/wordSelect";
-import { useApi, useLanguageTag } from "../../providers/api";
-import { useTitle } from "../../providers/title";
-import { Dictionary, useSite } from "../context";
-import { SectionTitle, SIMPLE_SECTIONS } from "../sections";
-import { FullEntry, FullMeaning, FullSection } from "../types";
+} from "../components/editor";
+import { RichText } from "../components/richText";
+import { WordSelect } from "../components/wordSelect";
+import { useApi, useLanguageTag } from "../providers/api";
+import { useTitle } from "../providers/title";
+import { Dictionary, useSite } from "../site/context";
+import { SectionTitle, SIMPLE_SECTIONS } from "../site/sections";
+import { FullEntry, FullMeaning, FullSection } from "../site/types";
 
 function EntryData({ v }: { v: FullEntry }) {
   const edit = useEditContext();

@@ -6,16 +6,21 @@ import {
   FormGroup,
   H3,
   HTMLTable,
+  NonIdealState,
   Popover,
+  Spinner,
+  SpinnerSize,
   Tag,
   TextArea,
 } from "@blueprintjs/core";
-import { FormEvent, Fragment, ReactNode, useEffect, useRef, useState } from "react";
+import { FormEvent, Fragment, ReactNode, useContext, useEffect, useRef, useState } from "react";
 import reactStringReplace from "react-string-replace";
 
 import { Change, SoundChangeInstance, SoundChangeSteps } from "../lang/soundChange";
 import { useApi, useErrorHandler, useSuccessHandler } from "../providers/api";
 import { useDictionary } from "../providers/data";
+import { useTitle } from "../providers/title";
+import { Dictionary, LangConfig } from "../site/context";
 import { FullEntry } from "../site/types";
 
 function tags(s: string | null): ReactNode {
@@ -153,7 +158,7 @@ function StepListDiff({ from, to }: { from: StepListProps; to: StepListProps }) 
 
 type MakeLocalSoundChange = (changes: readonly Change[]) => SoundChangeInstance;
 
-export default function Content({
+function Content({
   entries,
   soundChange,
   makeLocal,
@@ -305,4 +310,23 @@ export default function Content({
       </HTMLTable>
     </div>
   </div>;
+}
+
+export default function SoundChangePage() {
+  const { entries } = useContext(Dictionary);
+  const config = useContext(LangConfig);
+  useTitle("Sound changes");
+
+  let content;
+
+  if (entries === null || config === null) {
+    content = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
+  } else {
+    const makeLocal = (changes: readonly Change[]) => config.soundChange.copyWithChanges(changes);
+    content = <div className="inter">
+      <Content entries={entries} soundChange={config.soundChange} makeLocal={makeLocal} />
+    </div>;
+  }
+
+  return content;
 }

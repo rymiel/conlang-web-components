@@ -10,11 +10,11 @@ import {
 } from "@blueprintjs/core";
 import { useContext, useEffect, useState } from "react";
 
-import { GenerationInstance } from "../../lang/generation";
-import { SoundChangeInstance } from "../../lang/soundChange";
-import { useTitle } from "../../providers/title";
-import { LangConfig } from "../context";
-import { useValidate } from "../validation";
+import { GenerationInstance } from "../lang/generation";
+import { SoundChangeInstance } from "../lang/soundChange";
+import { useTitle } from "../providers/title";
+import { LangConfig } from "../site/context";
+import { useValidate } from "../site/validation";
 
 function Content({ soundChange, generation }: { soundChange: SoundChangeInstance; generation: GenerationInstance }) {
   const validate = useValidate();

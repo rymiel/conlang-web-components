@@ -6,15 +6,18 @@ import {
   HTMLSelect,
   InputGroup,
   Intent,
+  NonIdealState,
   NumericInput,
   Pre,
   Section,
   SectionCard,
+  Spinner,
+  SpinnerSize,
   Switch,
   TagInput,
 } from "@blueprintjs/core";
 import { JsonEditor, monoDarkTheme } from "json-edit-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { ApiConfig } from "../apiTypes";
@@ -29,6 +32,8 @@ import {
 import { DEFAULT_SOUND_CHANGE, SoundChangeConfig } from "../lang/soundChange";
 import { useApi, useErrorHandler, useSuccessHandler } from "../providers/api";
 import { configOrEmpty, DEFAULT_KEY_VALUE, KeyValue } from "../providers/config";
+import { useTitle } from "../providers/title";
+import { Dictionary, LangConfig } from "../site/context";
 
 interface EditorProps<T> {
   data: T;
@@ -216,7 +221,7 @@ function Editor(props: TopLevelEditor) {
   }
 }
 
-export default function Content({ config, refresh }: { config: ApiConfig; refresh: () => void }) {
+function Content({ config, refresh }: { config: ApiConfig; refresh: () => void }) {
   const [key, setKey] = useState("");
   const [data, setData] = useState<unknown>({});
   const [loading, setLoading] = useState(false);
@@ -281,4 +286,18 @@ export default function Content({ config, refresh }: { config: ApiConfig; refres
     {key !== "" && inspect === false && <Editor editorKey={key} data={data} setData={setData} />}
     {key !== "" && inspect === true && <Pre>{JSON.stringify(data, null, 2)}</Pre>}
   </div>;
+}
+
+export default function ConfigPage() {
+  const { refresh } = useContext(Dictionary);
+  const lang = useContext(LangConfig);
+  useTitle("Config");
+
+  if (lang === null) {
+    return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
+  } else {
+    return <div className="inter">
+      <Content config={lang.config} refresh={refresh} />
+    </div>;
+  }
 }

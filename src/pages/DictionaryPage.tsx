@@ -1,11 +1,11 @@
 import { Icon, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
 import { useContext } from "react";
 
-import { DictionaryList, Meanings, RowRenderer } from "../../components/dictionary";
-import { useTitle } from "../../providers/title";
-import { Dictionary } from "../context";
-import { ScriptCell, StatusIcons } from "../display";
-import { SectionTitle, SIMPLE_SECTIONS } from "../sections";
+import { DictionaryList, Meanings, RowRenderer } from "../components/dictionary";
+import { useTitle } from "../providers/title";
+import { Dictionary } from "../site/context";
+import { ScriptCell, StatusIcons } from "../site/display";
+import { SectionTitle, SIMPLE_SECTIONS } from "../site/sections";
 
 const rowRender: RowRenderer = (e) => ({
   eng: <span>

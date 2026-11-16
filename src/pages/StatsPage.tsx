@@ -1,5 +1,5 @@
-import { useTitle } from "../../providers/title";
-import { useSite } from "../context";
+import { useTitle } from "../providers/title";
+import { useSite } from "../site/context";
 
 export default function StatsPage() {
   const { statsSections } = useSite();

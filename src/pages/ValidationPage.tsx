@@ -2,11 +2,11 @@ import { Button, NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { useTitle } from "../../providers/title";
-import { uri } from "../../util";
-import { LangConfig, useSite } from "../context";
-import { ValidationFailure } from "../types";
-import { useValidate } from "../validation";
+import { useTitle } from "../providers/title";
+import { LangConfig, useSite } from "../site/context";
+import { ValidationFailure } from "../site/types";
+import { useValidate } from "../site/validation";
+import { uri } from "../util";
 
 export default function ValidationPage() {
   const lang = useContext(LangConfig);

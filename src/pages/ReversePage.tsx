@@ -2,10 +2,10 @@ import { Button, ControlGroup, Divider, InputGroup, NonIdealState, Spinner, Spin
 import { Fragment, memo, ReactNode, useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { useTitle } from "../../providers/title";
-import { uri } from "../../util";
-import { Dictionary, useSite } from "../context";
-import { ReverseResult } from "../types";
+import { useTitle } from "../providers/title";
+import { Dictionary, useSite } from "../site/context";
+import { ReverseResult } from "../site/types";
+import { uri } from "../util";
 
 const ReverseContent = memo(function ReverseContent({
   lookup,

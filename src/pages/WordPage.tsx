@@ -2,17 +2,17 @@ import { Button, H2, H3, H4, Icon, IconSize, NonIdealState, Spinner, SpinnerSize
 import { Fragment, ReactElement, useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { coalesceInterlinearData, InterlinearGloss } from "../../components/interlinear";
-import { RichText } from "../../components/richText";
-import UserOnly from "../../components/UserOnly";
-import { useLanguageTag } from "../../providers/api";
-import { useTitle } from "../../providers/title";
-import { uri } from "../../util";
-import { Dictionary, LangConfig, useSite } from "../context";
-import { partName, shortPartName, StatusTags } from "../display";
-import { SectionTitle, SIMPLE_SECTIONS } from "../sections";
-import { useExamples } from "../translations";
-import { FullEntry, FullSection } from "../types";
+import { coalesceInterlinearData, InterlinearGloss } from "../components/interlinear";
+import { RichText } from "../components/richText";
+import UserOnly from "../components/UserOnly";
+import { useLanguageTag } from "../providers/api";
+import { useTitle } from "../providers/title";
+import { Dictionary, LangConfig, useSite } from "../site/context";
+import { partName, shortPartName, StatusTags } from "../site/display";
+import { SectionTitle, SIMPLE_SECTIONS } from "../site/sections";
+import { useExamples } from "../site/translations";
+import { FullEntry, FullSection } from "../site/types";
+import { uri } from "../util";
 
 function SectionContent({ entry, section, on }: { entry: FullEntry; section: FullSection; on: string }) {
   const simple = SIMPLE_SECTIONS.find(([title]) => section.title === title);
