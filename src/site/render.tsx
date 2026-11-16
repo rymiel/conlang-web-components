@@ -1,68 +1,22 @@
-import {
-  BlueprintProvider,
-  Classes,
-  Divider,
-  Drawer,
-  DrawerSize,
-  H1,
-  H2,
-  Icon,
-  Intent,
-  OverlayToaster,
-  Position,
-  Toaster,
-} from "@blueprintjs/core";
+import { BlueprintProvider, Classes, Divider, Drawer, DrawerSize, H1, H2, Icon } from "@blueprintjs/core";
 import { PropsWithChildren, StrictMode, useContext, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, Link, Outlet, RouterProvider, ScrollRestoration, useNavigate } from "react-router-dom";
 
-import { CustomApiError } from "../api";
 import UserOnly from "../components/UserOnly";
 import ErrorPage from "../pages/ErrorPage";
-import { ApiVersion } from "../providers/api";
-import { ConlangProvider } from "../providers/conlang";
-import { Title } from "../providers/title";
-import { Login, Logout, User } from "../providers/user";
+import { DataProvider } from "../providers/data";
+import { Title, TitleProvider } from "../providers/title";
+import { Login, Logout, User, UserProvider } from "../providers/user";
 import { SiteContext, useSite } from "./context";
 import { SHARED_ROUTES } from "./routes";
+import { showError } from "./toast";
 import { Site } from "./types";
-
-const AppToaster = (() => {
-  let promise: Promise<Toaster> | null = null;
-
-  return () => {
-    if (!promise) {
-      promise = OverlayToaster.create({
-        position: Position.TOP,
-        usePortal: true,
-      });
-    }
-    return promise;
-  };
-})();
 
 export interface SiteVersions {
   readonly webVersion: string;
   readonly cwcVersion: string;
 }
-
-const toastErrorHandler = async (error: unknown): Promise<string> => {
-  console.error(error);
-  const toaster = await AppToaster();
-  if (error instanceof CustomApiError) {
-    return toaster.show({ intent: Intent.DANGER, message: `${error.status}: ${error.message}` });
-  } else if (error instanceof Error) {
-    return toaster.show({ intent: Intent.DANGER, message: error.message });
-  } else {
-    return toaster.show({ intent: Intent.DANGER, message: `unknown error ${error}` });
-  }
-};
-
-const toastSuccessHandler = async (message: string): Promise<string> => {
-  console.info(message);
-  const toaster = await AppToaster();
-  return toaster.show({ intent: Intent.SUCCESS, message });
-};
 
 function Menu() {
   const { menuLinks, privateMenuLinks } = useSite();
@@ -95,8 +49,8 @@ function Menu() {
 }
 
 function App({ children, versions }: PropsWithChildren<{ versions: SiteVersions }>) {
-  const { language } = useSite();
-  const version = useContext(ApiVersion);
+  const { language, api } = useSite();
+  const [version, setVersion] = useState<string | null>(null);
   const user = useContext(User);
   const navigate = useNavigate();
   const { title } = useContext(Title);
@@ -105,6 +59,10 @@ function App({ children, versions }: PropsWithChildren<{ versions: SiteVersions 
   } else {
     document.title = `${language} | ${title}`;
   }
+
+  useEffect(() => {
+    api.version().then(setVersion).catch(showError);
+  }, [api]);
 
   // Migrate old paths
   useEffect(() => {
@@ -166,17 +124,13 @@ export function renderSite(site: Site, versions: SiteVersions) {
     <StrictMode>
       <BlueprintProvider>
         <SiteContext.Provider value={site}>
-          <ConlangProvider
-            transformDictionary={site.transformDictionary}
-            transformConfig={site.transformConfig}
-            api={site.api}
-            error={toastErrorHandler}
-            success={toastSuccessHandler}
-            tag={site.tag}
-            language={site.language}
-          >
-            <RouterProvider router={router} />
-          </ConlangProvider>
+          <UserProvider>
+            <DataProvider>
+              <TitleProvider>
+                <RouterProvider router={router} />
+              </TitleProvider>
+            </DataProvider>
+          </UserProvider>
         </SiteContext.Provider>
       </BlueprintProvider>
     </StrictMode>,

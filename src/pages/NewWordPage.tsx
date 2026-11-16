@@ -3,7 +3,6 @@ import { useContext, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { ApiMeaning, ApiWord } from "../apiTypes";
-import { useApi } from "../providers/api";
 import { useTitle } from "../providers/title";
 import { Dictionary, LangConfig, useSite } from "../site/context";
 import { partName } from "../site/display";
@@ -12,8 +11,7 @@ import { uri } from "../util";
 
 function Editor({ lang }: { lang: LangConfigData }) {
   const dict = useContext(Dictionary);
-  const api = useApi();
-  const { language, draftClass, useNewWordExtra } = useSite();
+  const { api, language, draftClass, useNewWordExtra } = useSite();
   const [query, _] = useSearchParams();
   const navigate = useNavigate();
   const [sol, setSol] = useState(query.get("sol") ?? "");

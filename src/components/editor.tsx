@@ -13,9 +13,8 @@ import { createContext, PropsWithChildren, ReactNode, useCallback, useContext, u
 import { useNavigate } from "react-router-dom";
 
 import { ApiBase, ApiSection } from "../apiTypes";
-import { useApi, useSuccessHandler } from "../providers/api";
-import { SuccessHandler } from "../providers/conlang";
-import { useDictionary } from "../providers/data";
+import { Dictionary, useSite } from "../site/context";
+import { showSuccess } from "../site/toast";
 import { FullEntry } from "../site/types";
 import { uri } from "../util";
 import GlossSelect from "./GlossSelect";
@@ -151,8 +150,8 @@ type SectionEditorProps = {
 };
 export function SectionEditor({ to, as, name, form, preview, buttons, data }: SectionEditorProps) {
   const edit = useEditContext();
-  const dict = useDictionary();
-  const api = useApi();
+  const dict = useContext(Dictionary);
+  const { api } = useSite();
 
   if (to === undefined && as === undefined) {
     throw new Error("One of `as` or `to` must be provided");
@@ -231,9 +230,9 @@ function interlinearToReddit(data: AnyInterlinear): string {
   ].join("\n");
 }
 
-async function copyToClipboard(content: string, success: SuccessHandler): Promise<void> {
+async function copyToClipboard(content: string): Promise<void> {
   await navigator.clipboard.writeText(content);
-  success("Copied to clipboard");
+  showSuccess("Copied to clipboard");
 }
 
 export function OldTranslationSectionEditor({
@@ -247,8 +246,8 @@ export function OldTranslationSectionEditor({
 }) {
   const edit = useEditContext();
   const navigate = useNavigate();
-  const api = useApi();
-  const dict = useDictionary();
+  const { api } = useSite();
+  const dict = useContext(Dictionary);
   const [sol, setSol] = useState(existing?.sol ?? "");
   const [solSep, setSolSep] = useState(existing?.solSep ?? "");
   const [engSep, setEngSep] = useState(existing?.engSep ?? "");
@@ -291,7 +290,6 @@ export function NewTranslationSectionEditor({
   as?: string;
   existing?: InterlinearLines;
 }) {
-  const success = useSuccessHandler();
   const edit = useEditContext();
   const [source, setSource] = useState(existing?.[0] ?? "");
   const [gloss, setGloss] = useState(existing?.[1] ?? "");
@@ -310,8 +308,8 @@ export function NewTranslationSectionEditor({
     <InputGroup onValueChange={setGloss} value={gloss} placeholder="Gloss" />
     <InputGroup onValueChange={setTranslation} value={translation} placeholder="Translation" />
   </>;
-  const copyObsidian = () => copyToClipboard(interlinearToObsidian(lines), success);
-  const copyReddit = () => copyToClipboard(interlinearToReddit(lines), success);
+  const copyObsidian = () => copyToClipboard(interlinearToObsidian(lines));
+  const copyReddit = () => copyToClipboard(interlinearToReddit(lines));
   const preview = <>
     <Button fill icon="export" text="Export as Obsidian" onClick={copyObsidian} />
     <Button fill icon="export" text="Export as Reddit" onClick={copyReddit} />

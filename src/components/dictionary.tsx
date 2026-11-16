@@ -1,10 +1,9 @@
 import { HTMLTable, InputGroup } from "@blueprintjs/core";
-import { FC, ReactNode, useCallback, useMemo, useState } from "react";
+import { FC, ReactNode, useCallback, useContext, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { useLanguageName } from "../providers/api";
-import { useConfig } from "../providers/data";
 import { Meaning } from "../providers/dictionary";
+import { LangConfig, useSite } from "../site/context";
 import { FullEntry } from "../site/types";
 import { AnchorButton } from "./button";
 import UserOnly from "./UserOnly";
@@ -36,7 +35,7 @@ export function Meanings({ meanings }: { meanings: Meaning[] }) {
 }
 
 export function ExtraCell({ entry }: { entry: FullEntry }) {
-  const config = useConfig();
+  const config = useContext(LangConfig);
   const name = config?.parts[entry.extra];
   const text = entry.class ? `${entry.extra}-${entry.class}` : entry.extra;
 
@@ -95,7 +94,7 @@ interface DictionaryListProps {
 }
 export function DictionaryList({ entries, row }: DictionaryListProps) {
   const [search, setSearch] = useState("");
-  const language = useLanguageName();
+  const { language } = useSite();
 
   const rows = useMemo(() => {
     return entries.map(

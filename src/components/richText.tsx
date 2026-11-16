@@ -2,11 +2,12 @@ import { Icon } from "@blueprintjs/core";
 import { Literal, PhrasingContent, type Root as RemarkRoot } from "mdast";
 import { findAndReplace } from "mdast-util-find-and-replace";
 import { Handlers } from "mdast-util-to-hast";
+import { useContext } from "react";
 import Markdown, { Components } from "react-markdown";
 import { Link } from "react-router-dom";
 import { type Plugin } from "unified";
 
-import { useDictionary } from "../providers/data";
+import { Dictionary } from "../site/context";
 
 interface Missing extends Literal {
   type: "missing";
@@ -24,7 +25,7 @@ declare module "mdast" {
 const WORD_LINK = /\[([A-Za-z0-9_-]+)(?:\(([^)]+)\))?\]/g;
 
 const remarkPlugin: Plugin<[{ on: string }], RemarkRoot> = function ({ on }) {
-  const { entries } = useDictionary();
+  const { entries } = useContext(Dictionary);
 
   return function (tree) {
     findAndReplace(tree, [

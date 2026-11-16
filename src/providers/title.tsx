@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect } from "react";
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
 
 interface TitleData {
   title: string | null;
@@ -10,6 +10,11 @@ export const Title = createContext<TitleData>({
     throw new Error("No title context provided");
   },
 });
+
+export function TitleProvider({ children }: PropsWithChildren) {
+  const [title, setTitle] = useState<string | null>(null);
+  return <Title.Provider value={{ title, setTitle }}>{children}</Title.Provider>;
+}
 
 export function useTitle(title: string | null) {
   const context = useContext(Title);

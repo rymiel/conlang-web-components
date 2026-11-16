@@ -28,7 +28,6 @@ import {
 } from "../components/editor";
 import { RichText } from "../components/richText";
 import { WordSelect } from "../components/wordSelect";
-import { useApi, useLanguageTag } from "../providers/api";
 import { useTitle } from "../providers/title";
 import { Dictionary, useSite } from "../site/context";
 import { SectionTitle, SIMPLE_SECTIONS } from "../site/sections";
@@ -37,9 +36,7 @@ import { FullEntry, FullMeaning, FullSection } from "../site/types";
 function EntryData({ v }: { v: FullEntry }) {
   const edit = useEditContext();
   const dict = useContext(Dictionary);
-  const tag = useLanguageTag();
-  const api = useApi();
-  const { generatedFields } = useSite();
+  const { tag, api, generatedFields } = useSite();
 
   const doDelete = () => {
     api.lang(`/word/${v.hash}`, "DELETE").then(() => {
@@ -248,8 +245,7 @@ function TextSectionEditor({
 function EntryEditor({ existing }: { existing: FullEntry }) {
   const edit = useEditContext();
   const dict = useContext(Dictionary);
-  const api = useApi();
-  const { language, extraEditFields } = useSite();
+  const { api, language, extraEditFields } = useSite();
   const [sol, setSol] = useState(existing.sol);
   const [extra, setExtra] = useState(existing.extra);
   const [isObsolete, setObsolete] = useState(existing.tag === "obsolete");
@@ -293,7 +289,7 @@ function EntryEditor({ existing }: { existing: FullEntry }) {
 function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }) {
   const edit = useEditContext();
   const dict = useContext(Dictionary);
-  const api = useApi();
+  const { api } = useSite();
   const [rest, setRest] = useState(existing?.eng ?? "");
   const [prefix, setPrefix] = useState(existing?.prefix ?? "");
   const as = existing?.hash;

@@ -17,10 +17,9 @@ import { FormEvent, Fragment, ReactNode, useContext, useEffect, useRef, useState
 import reactStringReplace from "react-string-replace";
 
 import { Change, SoundChangeInstance, SoundChangeSteps } from "../lang/soundChange";
-import { useApi, useErrorHandler, useSuccessHandler } from "../providers/api";
-import { useDictionary } from "../providers/data";
 import { useTitle } from "../providers/title";
-import { Dictionary, LangConfig } from "../site/context";
+import { Dictionary, LangConfig, useSite } from "../site/context";
+import { showError, showSuccess } from "../site/toast";
 import { FullEntry } from "../site/types";
 
 function tags(s: string | null): ReactNode {
@@ -173,10 +172,8 @@ function Content({
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [rulesWidth, setRulesWidth] = useState(0);
-  const { refresh } = useDictionary();
-  const api = useApi();
-  const error = useErrorHandler();
-  const success = useSuccessHandler();
+  const { refresh } = useContext(Dictionary);
+  const { api } = useSite();
 
   const rulesRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -218,12 +215,12 @@ function Content({
     api
       .lang<string>(`/config/sound_change`, "POST", JSON.stringify(newConfig))
       .then(() => {
-        success("Sound changes saved!");
+        showSuccess("Sound changes saved!");
         setLocalInstance(null);
         refresh();
       })
       .catch((err) => {
-        error(err);
+        showError(err);
       })
       .finally(() => {
         setLoading(false);

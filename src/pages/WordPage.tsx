@@ -5,7 +5,6 @@ import { Link, useParams } from "react-router-dom";
 import { coalesceInterlinearData, InterlinearGloss } from "../components/interlinear";
 import { RichText } from "../components/richText";
 import UserOnly from "../components/UserOnly";
-import { useLanguageTag } from "../providers/api";
 import { useTitle } from "../providers/title";
 import { Dictionary, LangConfig, useSite } from "../site/context";
 import { partName, shortPartName, StatusTags } from "../site/display";
@@ -39,7 +38,7 @@ function SectionContent({ entry, section, on }: { entry: FullEntry; section: Ful
 }
 
 function WordPageHeader({ entry }: { entry: FullEntry }) {
-  const tag = useLanguageTag();
+  const { tag } = useSite();
   return <>
     <H2>{entry.disp}</H2>
     {entry.phon !== undefined && <span className="space-right">{entry.phon}</span>}

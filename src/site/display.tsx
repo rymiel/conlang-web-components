@@ -1,6 +1,5 @@
 import { AnchorButton, Icon, Tag } from "@blueprintjs/core";
 
-import { useLanguageTag } from "../providers/api";
 import { KeyValue } from "../providers/config";
 import { useSite } from "./context";
 import { FullEntry } from "./types";
@@ -14,7 +13,7 @@ export function shortPartName(parts: KeyValue, extra: string): string {
 }
 
 export function ScriptCell({ entry }: { entry: FullEntry }) {
-  const tag = useLanguageTag();
+  const { tag } = useSite();
   return <span className="dual">
     <i>{entry.disp}</i>
     <span lang={tag}>{entry.script}</span>

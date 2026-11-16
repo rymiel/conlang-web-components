@@ -1,21 +1,15 @@
-import { PropsWithChildren, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { PropsWithChildren, useCallback, useEffect, useRef, useState } from "react";
 
-import { ApiConfig, ApiData } from "../apiTypes";
-import { Dictionary, LangConfig } from "../site/context";
-import { DictionaryData, FullEntry, LangConfigData } from "../site/types";
-import { useApi, useErrorHandler } from "./api";
+import { ApiData } from "../apiTypes";
+import { Dictionary, LangConfig, useSite } from "../site/context";
+import { showError } from "../site/toast";
+import { FullEntry, LangConfigData } from "../site/types";
 
-export interface DataProviderProps {
-  transformConfig: (data: ApiConfig) => LangConfigData;
-  transformDictionary: (config: LangConfigData, data: ApiData) => FullEntry[];
-}
-
-export function DataProvider({ children, transformConfig, transformDictionary }: PropsWithChildren<DataProviderProps>) {
+export function DataProvider({ children }: PropsWithChildren) {
   const [entries, setEntries] = useState<FullEntry[] | null>(null);
   const [config, setConfig] = useState<LangConfigData | null>(null);
   const etag = useRef(localStorage.getItem("etag") ?? "undefined");
-  const api = useApi();
-  const error = useErrorHandler();
+  const { api, transformConfig, transformDictionary } = useSite();
 
   const refresh = useCallback(async () => {
     try {
@@ -34,13 +28,13 @@ export function DataProvider({ children, transformConfig, transformDictionary }:
         }
       } catch (err) {
         if (err instanceof DOMException) {
-          error(new Error(`Failed to sync: ${err.name}: ${err.message}`));
+          showError(new Error(`Failed to sync: ${err.name}: ${err.message}`));
         } else {
           throw err;
         }
       }
     } catch (err) {
-      error(err);
+      showError(err);
     }
   }, []);
 
@@ -62,12 +56,4 @@ export function DataProvider({ children, transformConfig, transformDictionary }:
   return <Dictionary.Provider value={{ entries, refresh }}>
     <LangConfig.Provider value={config}>{children}</LangConfig.Provider>
   </Dictionary.Provider>;
-}
-
-export function useDictionary(): DictionaryData {
-  return useContext(Dictionary);
-}
-
-export function useConfig(): LangConfigData | null {
-  return useContext(LangConfig);
 }

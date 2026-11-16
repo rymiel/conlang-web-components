@@ -30,10 +30,10 @@ import {
   WeightedGroups,
 } from "../lang/generation";
 import { DEFAULT_SOUND_CHANGE, SoundChangeConfig } from "../lang/soundChange";
-import { useApi, useErrorHandler, useSuccessHandler } from "../providers/api";
 import { configOrEmpty, DEFAULT_KEY_VALUE, KeyValue } from "../providers/config";
 import { useTitle } from "../providers/title";
-import { Dictionary, LangConfig } from "../site/context";
+import { Dictionary, LangConfig, useSite } from "../site/context";
+import { showError, showSuccess } from "../site/toast";
 
 interface EditorProps<T> {
   data: T;
@@ -227,9 +227,7 @@ function Content({ config, refresh }: { config: ApiConfig; refresh: () => void }
   const [loading, setLoading] = useState(false);
   const [errored, setErrored] = useState(false);
   const [inspect, setInspect] = useState(false);
-  const api = useApi();
-  const error = useErrorHandler();
-  const success = useSuccessHandler();
+  const { api } = useSite();
 
   useEffect(() => {
     if (key in config) {
@@ -245,11 +243,11 @@ function Content({ config, refresh }: { config: ApiConfig; refresh: () => void }
       .lang<string>(`/config/${key}`, "POST", JSON.stringify(data))
       .then(() => {
         setErrored(false);
-        success("Config saved!");
+        showSuccess("Config saved!");
         refresh();
       })
       .catch((err) => {
-        error(err);
+        showError(err);
         setErrored(true);
       })
       .finally(() => {

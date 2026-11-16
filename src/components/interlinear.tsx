@@ -2,9 +2,8 @@ import { Icon } from "@blueprintjs/core";
 import { ReactNode, useContext } from "react";
 import { Link } from "react-router-dom";
 
-import { useLanguageTag } from "../providers/api";
-import { useConfig } from "../providers/data";
 import { User } from "../providers/user";
+import { LangConfig, useSite } from "../site/context";
 import { uri } from "../util";
 
 /** @deprecated */
@@ -23,7 +22,7 @@ const ABBR_SEP = /([-.()<> ])/;
 const WORD_SEP = /([\u201c\u201d() \-,?!.])/;
 
 export function Abbr({ children }: { children: string }): ReactNode {
-  const config = useConfig();
+  const config = useContext(LangConfig);
   const parts = children.split(ABBR_SEP);
 
   return parts.map((i, j) => {
@@ -106,9 +105,7 @@ export function coalesceInterlinearData(input: AnyInterlinear): Readonly<{
 
     const srcParts = source.replaceAll("*", "").replaceAll("=", "-").split(" ");
     const engParts = gloss.split(" ");
-    const srcWords = highlightAsterisk(
-      splitIntoWords(textSource),
-    );
+    const srcWords = highlightAsterisk(splitIntoWords(textSource));
     const engWords = highlightAsterisk(splitIntoWords(translation));
     const srcText = textSource.replaceAll("*", "").replaceAll("_", " ");
     const engText = translation.replaceAll("*", "");
@@ -149,8 +146,8 @@ export function InterlinearGloss({
   script?: boolean;
   extra?: ReactNode;
 }) {
-  const config = useConfig();
-  const tag = useLanguageTag();
+  const config = useContext(LangConfig);
+  const { tag } = useSite();
   // TODO: temporary
   const { user } = useContext(User);
 

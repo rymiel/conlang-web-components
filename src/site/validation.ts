@@ -2,9 +2,8 @@ import { useCallback } from "react";
 
 import { ApiClient } from "../api";
 import { SoundChangeInstance } from "../lang/soundChange";
-import { useApi, useErrorHandler } from "../providers/api";
-import { ErrorHandler } from "../providers/conlang";
 import { useSite } from "./context";
+import { showError } from "./toast";
 import { ValidationCandidate, ValidationFailure } from "./types";
 
 export type Validate = (
@@ -16,7 +15,6 @@ async function validateRemote(
   api: ApiClient,
   candidates: readonly ValidationCandidate[],
   soundChange: SoundChangeInstance,
-  error: ErrorHandler,
 ): Promise<ValidationFailure[]> {
   const fail: ValidationFailure[] = [];
   const lookup = candidates.map((c) => [c.sol, soundChange.ipaWithoutSoundChange(c.sol)] as const);
@@ -30,21 +28,19 @@ async function validateRemote(
       fail.push([c, "invalid word"]);
     });
   } catch (e) {
-    error(e);
+    showError(e);
   }
   return fail;
 }
 
 export function useValidate(): Validate {
-  const api = useApi();
-  const error = useErrorHandler();
-  const { validateLocal } = useSite();
+  const { api, validateLocal } = useSite();
 
   return useCallback(
     async (candidates, soundChange) => [
       ...validateLocal(candidates),
-      ...(await validateRemote(api, candidates, soundChange, error)),
+      ...(await validateRemote(api, candidates, soundChange)),
     ],
-    [api, error, validateLocal],
+    [api, validateLocal],
   );
 }

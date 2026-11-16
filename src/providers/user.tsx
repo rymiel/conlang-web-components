@@ -2,7 +2,8 @@ import { Button, Classes, InputGroup, Intent, Popover } from "@blueprintjs/core"
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
 
 import { ApiUser } from "../apiTypes";
-import { useApi, useErrorHandler } from "./api";
+import { useSite } from "../site/context";
+import { showError } from "../site/toast";
 
 interface UserData {
   user: ApiUser | null;
@@ -18,8 +19,7 @@ export const User = createContext<UserData>({
 
 export function UserProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<ApiUser | null>(null);
-  const api = useApi();
-  const error = useErrorHandler();
+  const { api } = useSite();
 
   const update = async () => {
     try {
@@ -30,13 +30,13 @@ export function UserProvider({ children }: PropsWithChildren) {
         localStorage.setItem("user", JSON.stringify(u));
       } catch (err) {
         if (err instanceof DOMException) {
-          error(new Error(`Failed to sync: ${err.name}: ${err.message}`));
+          showError(new Error(`Failed to sync: ${err.name}: ${err.message}`));
         } else {
           throw err;
         }
       }
     } catch (err) {
-      error(err);
+      showError(err);
     }
   };
 
@@ -67,7 +67,7 @@ export function Login() {
   const [username, setUsername] = useState("");
   const [secret, setSecret] = useState("");
   const user = useContext(User);
-  const api = useApi();
+  const { api } = useSite();
 
   const login = () => {
     api.general("/login", "POST", { username, secret }).then(() => user.update());
@@ -95,7 +95,7 @@ export function Login() {
 
 export function Logout() {
   const user = useContext(User);
-  const api = useApi();
+  const { api } = useSite();
 
   const signout = () => {
     api.general("/logout", "POST").then(() => user.update());

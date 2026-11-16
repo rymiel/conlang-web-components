@@ -1,7 +1,8 @@
 import { Button, MenuItem } from "@blueprintjs/core";
 import { ItemPredicate, ItemRenderer, Select } from "@blueprintjs/select";
+import { useContext } from "react";
 
-import { useDictionary } from "../providers/data";
+import { Dictionary } from "../site/context";
 import { FullEntry } from "../site/types";
 import { Abbr } from "./interlinear";
 
@@ -52,7 +53,7 @@ const renderEntry: ItemRenderer<FullEntry> = (entry, { handleClick, handleFocus,
 };
 
 export function WordSelect({ onSelect }: { onSelect: (entry: FullEntry) => void }) {
-  const { entries } = useDictionary();
+  const { entries } = useContext(Dictionary);
   return <Select<FullEntry>
     // https://github.com/palantir/blueprint/pull/6999
     items={(entries || []) as FullEntry[]}
