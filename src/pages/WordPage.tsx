@@ -40,10 +40,10 @@ function WordPageHeader({ entry }: { entry: FullEntry }) {
   const { tag } = useSite();
   return <>
     <H2>{entry.disp}</H2>
-    {entry.phon !== undefined && <span className="word-pronunciation">{entry.phon}</span>}
     {entry.script !== undefined && <p className="word-pronunciation" lang={tag}>
       {entry.script}
     </p>}
+    {entry.phon !== undefined && <span className="word-pronunciation">{entry.phon}</span>}
     <span className="word-pronunciation">{entry.ipa}</span>
   </>;
 }
