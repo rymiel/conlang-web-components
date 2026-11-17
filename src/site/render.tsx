@@ -131,7 +131,7 @@ export function renderSite(site: Site, versions: SiteVersions) {
   ]);
 
   const root = document.getElementById("root")!;
-  if (document.location.hostname === "localhost") {
+  if (document.location.hostname === "localhost" || document.location.hostname.startsWith("192.168.")) {
     root.classList.add("localhost");
   }
 
