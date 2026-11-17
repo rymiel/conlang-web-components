@@ -32,7 +32,6 @@ import {
 } from "../lang/generation";
 import { DEFAULT_SOUND_CHANGE, SoundChangeConfig } from "../lang/soundChange";
 import { configOrEmpty, DEFAULT_KEY_VALUE, KeyValue } from "../providers/config";
-import { useTitle } from "../providers/title";
 import { Dictionary, LangConfig, useSite } from "../site/context";
 import { showError, showSuccess } from "../site/toast";
 
@@ -296,7 +295,6 @@ function Content({ config, refresh }: { config: ApiConfig; refresh: () => void }
 export default function ConfigPage() {
   const { refresh } = useContext(Dictionary);
   const lang = useContext(LangConfig);
-  useTitle("Config");
 
   if (lang === null) {
     return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;

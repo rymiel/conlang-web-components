@@ -13,18 +13,22 @@ import StatsPage from "../pages/StatsPage";
 import TranslationsPage from "../pages/TranslationsPage";
 import ValidationPage from "../pages/ValidationPage";
 import WordPage from "../pages/WordPage";
+import { RouteHandle } from "./types";
 
 export const SHARED_ROUTES: readonly RouteObject[] = [
   {
     path: "/",
+    handle: { title: "Home" } satisfies RouteHandle,
     element: <DictionaryPage />,
   },
   {
     path: "/w/:word",
+    handle: { title: ({ word }) => word } satisfies RouteHandle,
     element: <WordPage />,
   },
   {
     path: "/w/:word/:num",
+    handle: { title: ({ word }) => word } satisfies RouteHandle,
     element: <WordPage />,
   },
   {
@@ -33,62 +37,74 @@ export const SHARED_ROUTES: readonly RouteObject[] = [
   },
   {
     path: "/edit/:hash",
+    handle: { title: "Edit" } satisfies RouteHandle,
     element: <UserOnly error>
       <EditWordPage />
     </UserOnly>,
   },
   {
     path: "/edit/:hash/:edit",
+    handle: { title: "Edit" } satisfies RouteHandle,
     element: <UserOnly error>
       <EditWordPage />
     </UserOnly>,
   },
   {
     path: "/new",
+    handle: { title: "New" } satisfies RouteHandle,
     element: <UserOnly error>
       <NewWordPage />
     </UserOnly>,
   },
   {
     path: "/reverse",
+    handle: { title: "Reverse" } satisfies RouteHandle,
     element: <ReversePage />,
   },
   {
     path: "/reverse/:query",
+    handle: { title: "Reverse" } satisfies RouteHandle,
     element: <ReversePage />,
   },
   {
     path: "/translations",
+    handle: { title: "Translations" } satisfies RouteHandle,
     element: <TranslationsPage />,
   },
   {
     path: "/translations/:query",
+    handle: { title: "Translations" } satisfies RouteHandle,
     element: <TranslationsPage />,
   },
   {
     path: "/stats",
+    handle: { title: "Stats" } satisfies RouteHandle,
     element: <StatsPage />,
   },
   {
     path: "/validate",
+    handle: { title: "Validate" } satisfies RouteHandle,
     element: <UserOnly error>
       <ValidationPage />
     </UserOnly>,
   },
   {
     path: "/sound_changes",
+    handle: { title: "Sound changes" } satisfies RouteHandle,
     element: <UserOnly error>
       <SoundChangePage />
     </UserOnly>,
   },
   {
     path: "/generate",
+    handle: { title: "Generate" } satisfies RouteHandle,
     element: <UserOnly error>
       <GeneratePage />
     </UserOnly>,
   },
   {
     path: "/config",
+    handle: { title: "Config" } satisfies RouteHandle,
     element: <UserOnly error>
       <ConfigPage />
     </UserOnly>,

@@ -1,6 +1,6 @@
 import { IconName, Intent } from "@blueprintjs/core";
 import { FC, ReactElement, ReactNode } from "react";
-import { RouteObject } from "react-router-dom";
+import { Params, RouteObject } from "react-router-dom";
 
 import { ApiClient } from "../api";
 import { ApiConfig, ApiData, ApiMeaning, ApiSection, ApiWord } from "../apiTypes";
@@ -105,6 +105,10 @@ export interface SyllableSlot {
 }
 
 export type MenuLink = readonly [slug: string, name: string];
+
+export interface RouteHandle {
+  readonly title: string | ((params: Params) => string | undefined);
+}
 
 export interface SiteDefinition {
   readonly language: string;

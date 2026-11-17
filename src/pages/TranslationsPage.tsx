@@ -4,7 +4,6 @@ import { Link, useParams } from "react-router-dom";
 
 import { InterlinearGloss, parseInterlinear } from "../components/interlinear";
 import UserOnly from "../components/UserOnly";
-import { useTitle } from "../providers/title";
 import { Dictionary, LangConfig } from "../site/context";
 import { useExamples } from "../site/translations";
 import { FullEntry, FullSection } from "../site/types";
@@ -71,7 +70,6 @@ function Content({ entries, query }: { entries: readonly FullEntry[]; query: str
 export default function TranslationsPage() {
   const { entries } = useContext(Dictionary);
   const { query } = useParams();
-  useTitle("Translations");
 
   let content = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
 

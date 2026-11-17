@@ -17,7 +17,6 @@ export { DictionaryList, DictionaryRowValues, RowRenderer, Meanings, ExtraCell }
 export { default as UserOnly } from "./components/UserOnly";
 export { default as GlossSelect } from "./components/GlossSelect";
 export { KeyValue, configOrEmpty, DEFAULT_KEY_VALUE } from "./providers/config";
-export { Title, useTitle } from "./providers/title";
 export { User, Login, Logout } from "./providers/user";
 export { entrySort, prefixSplit } from "./providers/dictionary";
 export type {
@@ -42,6 +41,7 @@ export type {
   SlotValues,
   SyllableSlot,
   MenuLink,
+  RouteHandle,
   SiteDefinition,
   Site,
 } from "./site/types";

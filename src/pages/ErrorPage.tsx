@@ -1,10 +1,7 @@
 import { NonIdealState } from "@blueprintjs/core";
 import { isRouteErrorResponse, useRouteError } from "react-router-dom";
 
-import { useTitle } from "../providers/title";
-
 export default function ErrorPage() {
-  useTitle(null);
   const error = useRouteError();
   console.error(error);
 

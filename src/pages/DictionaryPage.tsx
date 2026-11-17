@@ -2,7 +2,6 @@ import { Icon, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/cor
 import { useContext } from "react";
 
 import { DictionaryList, Meanings, RowRenderer } from "../components/dictionary";
-import { useTitle } from "../providers/title";
 import { Dictionary } from "../site/context";
 import { ScriptCell, StatusIcons } from "../site/display";
 import { SectionTitle, SIMPLE_SECTIONS } from "../site/sections";
@@ -27,7 +26,6 @@ const rowRender: RowRenderer = (e) => ({
 });
 
 export default function DictionaryPage() {
-  useTitle("Home");
   const { entries } = useContext(Dictionary);
 
   if (!entries) {

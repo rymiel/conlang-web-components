@@ -12,7 +12,6 @@ import { useContext, useEffect, useState } from "react";
 
 import { GenerationInstance } from "../lang/generation";
 import { SoundChangeInstance } from "../lang/soundChange";
-import { useTitle } from "../providers/title";
 import { LangConfig } from "../site/context";
 import { useValidate } from "../site/validation";
 
@@ -73,7 +72,6 @@ function Content({ soundChange, generation }: { soundChange: SoundChangeInstance
 
 export default function GeneratePage() {
   const lang = useContext(LangConfig);
-  useTitle("Generate");
 
   let content;
 

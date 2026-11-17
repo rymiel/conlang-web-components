@@ -17,7 +17,6 @@ import { Fragment, ReactNode, SyntheticEvent, useContext, useEffect, useRef, use
 import reactStringReplace from "react-string-replace";
 
 import { Change, SoundChangeInstance, SoundChangeSteps } from "../lang/soundChange";
-import { useTitle } from "../providers/title";
 import { Dictionary, LangConfig, useSite } from "../site/context";
 import { showError, showSuccess } from "../site/toast";
 import { FullEntry } from "../site/types";
@@ -312,7 +311,6 @@ function Content({
 export default function SoundChangePage() {
   const { entries } = useContext(Dictionary);
   const config = useContext(LangConfig);
-  useTitle("Sound changes");
 
   let content;
 

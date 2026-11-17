@@ -3,7 +3,6 @@ import { useContext, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { ApiMeaning, ApiWord } from "../apiTypes";
-import { useTitle } from "../providers/title";
 import { Dictionary, LangConfig, useSite } from "../site/context";
 import { partName } from "../site/display";
 import { LangConfigData } from "../site/types";
@@ -58,7 +57,6 @@ function Editor({ lang }: { lang: LangConfigData }) {
 
 export default function NewWordPage() {
   const lang = useContext(LangConfig);
-  useTitle("New");
 
   if (lang === null) {
     return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;

@@ -1,17 +1,24 @@
 import { BlueprintProvider, Classes, Divider, Drawer, DrawerSize, H1, H2, Icon } from "@blueprintjs/core";
 import { PropsWithChildren, StrictMode, useContext, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, Link, Outlet, RouterProvider, ScrollRestoration, useNavigate } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Link,
+  Outlet,
+  RouterProvider,
+  ScrollRestoration,
+  useMatches,
+  useNavigate,
+} from "react-router-dom";
 
 import UserOnly from "../components/UserOnly";
 import ErrorPage from "../pages/ErrorPage";
 import { DataProvider } from "../providers/data";
-import { Title, TitleProvider } from "../providers/title";
 import { Login, Logout, User, UserProvider } from "../providers/user";
 import { SiteContext, useSite } from "./context";
 import { SHARED_ROUTES } from "./routes";
 import { showError } from "./toast";
-import { Site } from "./types";
+import { RouteHandle, Site } from "./types";
 
 export interface SiteVersions {
   readonly webVersion: string;
@@ -48,17 +55,24 @@ function Menu() {
   </>;
 }
 
+function usePageTitle(): string | undefined {
+  const matches = useMatches();
+  for (let i = matches.length - 1; i >= 0; i--) {
+    const handle = matches[i].handle as RouteHandle | undefined;
+    if (handle?.title !== undefined) {
+      return typeof handle.title === "string" ? handle.title : handle.title(matches[i].params);
+    }
+  }
+  return undefined;
+}
+
 function App({ children, versions }: PropsWithChildren<{ versions: SiteVersions }>) {
   const { language, api } = useSite();
   const [version, setVersion] = useState<string | null>(null);
   const user = useContext(User);
   const navigate = useNavigate();
-  const { title } = useContext(Title);
-  if (!title) {
-    document.title = language;
-  } else {
-    document.title = `${language} | ${title}`;
-  }
+  const pageTitle = usePageTitle();
+  const title = children ? undefined : pageTitle;
 
   useEffect(() => {
     api.version().then(setVersion).catch(showError);
@@ -78,6 +92,7 @@ function App({ children, versions }: PropsWithChildren<{ versions: SiteVersions 
   }, [navigate]);
 
   return <>
+    <title>{title ? `${language} | ${title}` : language}</title>
     <ScrollRestoration getKey={(location) => (location.pathname === "/" ? location.pathname : location.key)} />
     <header className={Classes.DARK}>
       <Menu />
@@ -126,9 +141,7 @@ export function renderSite(site: Site, versions: SiteVersions) {
         <SiteContext value={site}>
           <UserProvider>
             <DataProvider>
-              <TitleProvider>
-                <RouterProvider router={router} />
-              </TitleProvider>
+              <RouterProvider router={router} />
             </DataProvider>
           </UserProvider>
         </SiteContext>

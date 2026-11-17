@@ -2,7 +2,6 @@ import { Button, NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { useTitle } from "../providers/title";
 import { LangConfig, useSite } from "../site/context";
 import { ValidationFailure } from "../site/types";
 import { useValidate } from "../site/validation";
@@ -15,7 +14,6 @@ export default function ValidationPage() {
   const validate = useValidate();
   const [fail, setFail] = useState<readonly ValidationFailure[] | null>(null);
   const [isLoading, setLoading] = useState(false);
-  useTitle("Validate");
 
   let header;
   let footer;

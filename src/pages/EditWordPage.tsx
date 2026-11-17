@@ -28,7 +28,6 @@ import {
 } from "../components/editor";
 import { RichText } from "../components/richText";
 import { WordSelect } from "../components/wordSelect";
-import { useTitle } from "../providers/title";
 import { Dictionary, useSite } from "../site/context";
 import { SectionTitle, SIMPLE_SECTIONS } from "../site/sections";
 import { FullEntry, FullMeaning, FullSection } from "../site/types";
@@ -340,7 +339,6 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
 export default function EditWordPage() {
   const { entries } = useContext(Dictionary);
   const { hash, edit } = useParams() as { hash: string; edit?: string };
-  useTitle("Edit");
 
   let content = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
 

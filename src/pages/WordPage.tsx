@@ -5,7 +5,6 @@ import { Link, useParams } from "react-router-dom";
 import { coalesceInterlinearData, InterlinearGloss, parseInterlinear } from "../components/interlinear";
 import { RichText } from "../components/richText";
 import UserOnly from "../components/UserOnly";
-import { useTitle } from "../providers/title";
 import { Dictionary, LangConfig, useSite } from "../site/context";
 import { partName, shortPartName, StatusTags } from "../site/display";
 import { SectionTitle, SIMPLE_SECTIONS } from "../site/sections";
@@ -155,7 +154,6 @@ export default function WordPage() {
   const { entries } = useContext(Dictionary);
   const lang = useContext(LangConfig);
   const { word, num } = useParams() as { word: string; num?: string };
-  useTitle(word);
 
   let content = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
 
