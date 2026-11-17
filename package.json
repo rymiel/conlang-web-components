@@ -1,7 +1,6 @@
 {
-  "name": "conlang-web-components",
+  "name": "@rymiel/conlang-web-components",
   "version": "3.0.1",
-  "private": true,
   "description": "",
   "license": "UNLICENSED",
   "author": "Emilia Kond",
@@ -9,7 +8,7 @@
   "types": "build/index.d.ts",
   "scripts": {
     "build": "rm -rf build && tsc",
-    "prepare": "npm run build",
+    "prepack": "npm run build",
     "lint": "eslint --max-warnings 0 src"
   },
   "files": [
@@ -46,5 +45,8 @@
     "react-router-dom": "^7.18.5",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.73.0"
+  },
+  "publishConfig": {
+    "@rymiel:registry": "https://gitlab.com/api/v4/projects/69944965/packages/npm/"
   }
 }
