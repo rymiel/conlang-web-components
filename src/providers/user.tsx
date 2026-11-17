@@ -60,7 +60,7 @@ export function UserProvider({ children }: PropsWithChildren) {
     return () => removeEventListener("storage", handle);
   }, []);
 
-  return <User.Provider value={{ user, update }}>{children}</User.Provider>;
+  return <User value={{ user, update }}>{children}</User>;
 }
 
 export function Login() {

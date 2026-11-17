@@ -53,7 +53,7 @@ export function DataProvider({ children }: PropsWithChildren) {
     return () => removeEventListener("storage", handle);
   }, [refresh]);
 
-  return <Dictionary.Provider value={{ entries, refresh }}>
-    <LangConfig.Provider value={config}>{children}</LangConfig.Provider>
-  </Dictionary.Provider>;
+  return <Dictionary value={{ entries, refresh }}>
+    <LangConfig value={config}>{children}</LangConfig>
+  </Dictionary>;
 }

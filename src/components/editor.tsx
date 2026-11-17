@@ -121,13 +121,13 @@ export function EditWordPageContent({
     navigate(entry.link);
   }, [entry.link, navigate]);
 
-  return <EditContext.Provider value={{ openDrawer, closeDrawer, drawerOpen: isOpen, page: entry.hash, active }}>
+  return <EditContext value={{ openDrawer, closeDrawer, drawerOpen: isOpen, page: entry.hash, active }}>
     <Button text="Back" icon="arrow-left" onClick={back} /> <br />
     {children}
     <Drawer isOpen={isOpen} onClose={closeDrawer}>
       {element}
     </Drawer>
-  </EditContext.Provider>;
+  </EditContext>;
 }
 
 type SectionEditorProps = {

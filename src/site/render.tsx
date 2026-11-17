@@ -123,7 +123,7 @@ export function renderSite(site: Site, versions: SiteVersions) {
   createRoot(root).render(
     <StrictMode>
       <BlueprintProvider>
-        <SiteContext.Provider value={site}>
+        <SiteContext value={site}>
           <UserProvider>
             <DataProvider>
               <TitleProvider>
@@ -131,7 +131,7 @@ export function renderSite(site: Site, versions: SiteVersions) {
               </TitleProvider>
             </DataProvider>
           </UserProvider>
-        </SiteContext.Provider>
+        </SiteContext>
       </BlueprintProvider>
     </StrictMode>,
   );
