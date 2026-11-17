@@ -43,11 +43,21 @@
   font-display: swap;
 }
 
+:root {
+  --bp-typography-family-default: "Andika", blueprint-icons-16, sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
 #root {
   display: flex;
   flex-direction: column;
   flex: 1;
-  font-family: "Andika", sans-serif;
   overflow: auto;
   height: 100%;
   min-height: 100vh;
@@ -56,10 +66,6 @@
 
 body {
   margin: 0;
-}
-
-.andika {
-  font-family: "Andika", sans-serif;
 }
 
 .page-content {
@@ -78,6 +84,10 @@ a {
 
 body.bp6-dark {
   background-color: #252a31;
+}
+
+.bp6-toast-container {
+  position: fixed;
 }
 
 .small-caps {
