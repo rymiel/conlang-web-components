@@ -1,7 +1,10 @@
 import { Button, Classes, InputGroup, Intent, PopoverNext as Popover } from "@blueprintjs/core";
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useState } from "react";
+import { useFormStatus } from "react-dom";
 
 import { ApiUser } from "../apiTypes";
+import PendingFieldset from "../components/PendingFieldset";
+import { toastErrors, useAction } from "../site/action";
 import { useSite } from "../site/context";
 import { showError } from "../site/toast";
 
@@ -63,30 +66,31 @@ export function UserProvider({ children }: PropsWithChildren) {
   return <User value={{ user, update }}>{children}</User>;
 }
 
+function LoginButton() {
+  const { pending } = useFormStatus();
+  return <Button fill intent="success" text="Log in" type="submit" loading={pending} />;
+}
+
 export function Login() {
-  const [username, setUsername] = useState("");
-  const [secret, setSecret] = useState("");
   const user = useContext(User);
   const { api } = useSite();
 
-  const login = () => {
-    api.general("/login", "POST", { username, secret }).then(() => user.update());
-  };
+  const login = toastErrors(async (data: FormData) => {
+    await api.general("/login", "POST", data);
+    await user.update();
+  });
 
   return <Popover
     interactionKind="click"
     placement="bottom"
     popoverClassName={Classes.POPOVER_CONTENT_SIZING}
     content={
-      <form
-        onSubmit={(e) => {
-          login();
-          e.preventDefault();
-        }}
-      >
-        <InputGroup onValueChange={(v) => setUsername(v)} placeholder="Username" />
-        <InputGroup onValueChange={(v) => setSecret(v)} placeholder="Password" type="password" />
-        <Button fill intent="success" text="Log in" type="submit" />
+      <form action={login}>
+        <PendingFieldset>
+          <InputGroup name="username" placeholder="Username" />
+          <InputGroup name="secret" placeholder="Password" type="password" />
+          <LoginButton />
+        </PendingFieldset>
       </form>
     }
   >
@@ -97,16 +101,19 @@ export function Login() {
 export function Logout() {
   const user = useContext(User);
   const { api } = useSite();
+  const [pending, run] = useAction();
 
-  const signout = () => {
-    api.general("/logout", "POST").then(() => user.update());
-  };
+  const signout = () =>
+    run(async () => {
+      await api.general("/logout", "POST");
+      await user.update();
+    });
 
   return <Popover
     interactionKind="click"
     placement="bottom"
     popoverClassName={Classes.POPOVER_CONTENT_SIZING}
-    content={<Button intent={Intent.DANGER} text="Sign out" onClick={signout} />}
+    content={<Button intent={Intent.DANGER} text="Sign out" onClick={signout} loading={pending} />}
   >
     <a>{user.user?.name}</a>
   </Popover>;

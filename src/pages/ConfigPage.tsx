@@ -18,10 +18,11 @@ import {
 } from "@blueprintjs/core";
 import { monoDarkTheme } from "@json-edit-react/themes";
 import { JsonEditor } from "json-edit-react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { ApiConfig } from "../apiTypes";
+import PendingFieldset from "../components/PendingFieldset";
 import {
   arrayIsEqualWeight,
   DEFAULT_GENERATION,
@@ -32,8 +33,9 @@ import {
 } from "../lang/generation";
 import { DEFAULT_SOUND_CHANGE, SoundChangeConfig } from "../lang/soundChange";
 import { configOrEmpty, DEFAULT_KEY_VALUE, KeyValue } from "../providers/config";
+import { useAction } from "../site/action";
 import { Dictionary, LangConfig, useSite } from "../site/context";
-import { showError, showSuccess } from "../site/toast";
+import { showSuccess } from "../site/toast";
 
 interface EditorProps<T> {
   data: T;
@@ -227,68 +229,58 @@ function Editor(props: TopLevelEditor) {
   }
 }
 
-function Content({ config, refresh }: { config: ApiConfig; refresh: () => void }) {
+function Content({ config, refresh }: { config: ApiConfig; refresh: () => Promise<void> }) {
   const [key, setKey] = useState("");
   const [data, setData] = useState<unknown>({});
-  const [loading, setLoading] = useState(false);
+  const [loading, run] = useAction();
   const [errored, setErrored] = useState(false);
   const [inspect, setInspect] = useState(false);
   const { api } = useSite();
 
-  useEffect(() => {
-    if (key in config) {
-      setData(config[key]);
-    } else {
-      setData({});
-    }
-  }, [config, key]);
-
-  const submit = () => {
-    setLoading(true);
-    api
-      .lang<string>(`/config/${key}`, "POST", JSON.stringify(data))
-      .then(() => {
-        setErrored(false);
-        showSuccess("Config saved!");
-        refresh();
-      })
-      .catch((err) => {
-        showError(err);
+  const submit = () =>
+    run(async () => {
+      try {
+        await api.lang<string>(`/config/${key}`, "POST", JSON.stringify(data));
+      } catch (err) {
         setErrored(true);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+        throw err;
+      }
+      setErrored(false);
+      showSuccess("Config saved!");
+      await refresh();
+    });
 
   return <div className="config-page">
-    <ControlGroup className="fit-width fill-height">
-      <HTMLSelect
-        onChange={(e) => {
-          setData({});
-          setKey(e.currentTarget.value);
-        }}
-        defaultValue=""
-      >
-        <option value="">Key</option>
-        <option value="generation">generation</option>
-        <option value="abbr">abbr</option>
-        <option value="parts">parts</option>
-        <option value="sound_change">sound_change</option>
-        <option value="syllable">syllable</option>
-      </HTMLSelect>
-      <Switch label="Inspect mode" onChange={(e) => setInspect(e.currentTarget.checked)} />
-      {key !== "" && inspect === false && <Button
-        intent={errored ? "danger" : "primary"}
-        loading={loading}
-        icon={errored ? "cross" : undefined}
-        text={errored ? undefined : "Submit"}
-        onClick={submit}
-      />}
-    </ControlGroup>
-    <Divider />
-    {key !== "" && inspect === false && <Editor editorKey={key} data={data} setData={setData} />}
-    {key !== "" && inspect === true && <Pre>{JSON.stringify(data, null, 2)}</Pre>}
+    <PendingFieldset pending={loading}>
+      <ControlGroup className="fit-width fill-height">
+        <HTMLSelect
+          onChange={(e) => {
+            const value = e.currentTarget.value;
+            setData(value in config ? config[value] : {});
+            setKey(value);
+          }}
+          defaultValue=""
+        >
+          <option value="">Key</option>
+          <option value="generation">generation</option>
+          <option value="abbr">abbr</option>
+          <option value="parts">parts</option>
+          <option value="sound_change">sound_change</option>
+          <option value="syllable">syllable</option>
+        </HTMLSelect>
+        <Switch label="Inspect mode" onChange={(e) => setInspect(e.currentTarget.checked)} />
+        {key !== "" && inspect === false && <Button
+          intent={errored ? "danger" : "primary"}
+          loading={loading}
+          icon={errored ? "cross" : undefined}
+          text={errored ? undefined : "Submit"}
+          onClick={submit}
+        />}
+      </ControlGroup>
+      <Divider />
+      {key !== "" && inspect === false && <Editor editorKey={key} data={data} setData={setData} />}
+      {key !== "" && inspect === true && <Pre>{JSON.stringify(data, null, 2)}</Pre>}
+    </PendingFieldset>
   </div>;
 }
 

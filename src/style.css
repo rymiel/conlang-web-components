@@ -5,6 +5,7 @@
 @import "./pages/SoundChangePage.css";
 @import "./components/dictionary.css";
 @import "./components/editor.css";
+@import "./components/PendingFieldset.css";
 @import "./site/render.css";
 @import "./site/display.css";
 @import "./site/stats.css";

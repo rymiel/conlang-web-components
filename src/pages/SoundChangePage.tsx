@@ -13,12 +13,14 @@ import {
   Tag,
   TextArea,
 } from "@blueprintjs/core";
-import { Fragment, ReactNode, SyntheticEvent, useContext, useEffect, useRef, useState } from "react";
+import { Fragment, ReactNode, useContext, useEffect, useRef, useState } from "react";
 import reactStringReplace from "react-string-replace";
 
+import PendingFieldset from "../components/PendingFieldset";
 import { Change, SoundChangeInstance, SoundChangeSteps } from "../lang/soundChange";
+import { useAction } from "../site/action";
 import { Dictionary, LangConfig, useSite } from "../site/context";
-import { showError, showSuccess } from "../site/toast";
+import { showSuccess } from "../site/toast";
 import { FullEntry } from "../site/types";
 
 function tags(s: string | null): ReactNode {
@@ -169,7 +171,7 @@ function Content({
   const [localInstance, setLocalInstance] = useState<SoundChangeInstance | null>(null);
   const [ignoreNoChanges, setIgnoreNoChanges] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [saving, runSave] = useAction();
   const [rulesWidth, setRulesWidth] = useState(0);
   const { refresh } = useContext(Dictionary);
   const { api } = useSite();
@@ -195,11 +197,9 @@ function Content({
     setRulesWidth(rulesRef.current?.clientWidth ?? 0);
   };
 
-  const finishEditing = (e: SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const finishEditing = (data: FormData) => {
     setEditing(false);
     setRulesWidth(0);
-    const data = new FormData(e.currentTarget);
     const rules = data.get("rules") as string;
     const before = changes.map(soundChangeToString).join("\n");
     if (before === rules) return;
@@ -208,50 +208,43 @@ function Content({
     setChanges(newChanges);
   };
 
-  const saveConfig = () => {
-    const newConfig = { ...soundChange.config, changes: changes };
-    setLoading(true);
-    api
-      .lang<string>(`/config/sound_change`, "POST", JSON.stringify(newConfig))
-      .then(() => {
-        showSuccess("Sound changes saved!");
-        setLocalInstance(null);
-        refresh();
-      })
-      .catch((err) => {
-        showError(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+  const saveConfig = () =>
+    runSave(async () => {
+      const newConfig = { ...soundChange.config, changes: changes };
+      await api.lang<string>(`/config/sound_change`, "POST", JSON.stringify(newConfig));
+      await refresh();
+      showSuccess("Sound changes saved!");
+      setLocalInstance(null);
+    });
 
   return <div className="sound-change">
     <div className="sound-change-rules" ref={rulesRef}>
-      {localInstance !== null && <>
-        <Button text="Forget changes" icon="trash" intent="danger" fill onClick={clearInstance} />
-        <Button text="Save config" icon="cloud-upload" intent="primary" fill onClick={saveConfig} loading={loading} />
-      </>}
-      {editing ? (
-        <form onSubmit={finishEditing}>
-          <Button text="Save changes" icon="tick" intent="success" type="submit" fill />
-          <TextArea
-            name="rules"
-            fill
-            rows={changes.length + 4}
-            defaultValue={changes.map(soundChangeToString).join("\n")}
-            inputRef={textareaRef}
-          />
-        </form>
-      ) : (
-        <>
-          <Button text="Edit rules" icon="edit" fill onClick={startEditing} />
-          {changes.map((c, i) => <span key={i}>
-            {i + 1}. <SoundChange change={c} />
-            <br />
-          </span>)}
-        </>
-      )}
+      <PendingFieldset pending={saving}>
+        {localInstance !== null && <>
+          <Button text="Forget changes" icon="trash" intent="danger" fill onClick={clearInstance} />
+          <Button text="Save config" icon="cloud-upload" intent="primary" fill onClick={saveConfig} loading={saving} />
+        </>}
+        {editing ? (
+          <form action={finishEditing}>
+            <Button text="Save changes" icon="tick" intent="success" type="submit" fill />
+            <TextArea
+              name="rules"
+              fill
+              rows={changes.length + 4}
+              defaultValue={changes.map(soundChangeToString).join("\n")}
+              inputRef={textareaRef}
+            />
+          </form>
+        ) : (
+          <>
+            <Button text="Edit rules" icon="edit" fill onClick={startEditing} />
+            {changes.map((c, i) => <span key={i}>
+              {i + 1}. <SoundChange change={c} />
+              <br />
+            </span>)}
+          </>
+        )}
+      </PendingFieldset>
     </div>
     <div className="sound-change-results">
       {localInstance === null ? (

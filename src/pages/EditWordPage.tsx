@@ -26,8 +26,10 @@ import {
   TranslationSectionEditor,
   useEditContext,
 } from "../components/editor";
+import PendingFieldset from "../components/PendingFieldset";
 import { RichText } from "../components/richText";
 import { WordSelect } from "../components/wordSelect";
+import { useAction } from "../site/action";
 import { Dictionary, useSite } from "../site/context";
 import { SectionTitle, SIMPLE_SECTIONS } from "../site/sections";
 import { FullEntry, FullMeaning, FullSection } from "../site/types";
@@ -36,17 +38,18 @@ function EntryData({ v }: { v: FullEntry }) {
   const edit = useEditContext();
   const dict = useContext(Dictionary);
   const { tag, api, generatedFields } = useSite();
+  const [deleting, runDelete] = useAction();
 
-  const doDelete = () => {
-    api.lang(`/word/${v.hash}`, "DELETE").then(() => {
-      dict.refresh();
+  const doDelete = () =>
+    runDelete(async () => {
+      await api.lang(`/word/${v.hash}`, "DELETE");
+      await dict.refresh();
       edit.closeDrawer();
     });
-  };
 
   const doEdit = () => edit.openDrawer(<EntryEditor existing={v} />);
 
-  return <>
+  return <PendingFieldset pending={deleting}>
     <BaseData v={v} />
     <InfoTag left="sol" right={v.sol} onClick={doEdit} />
     <InfoTag left="extra" right={v.extra} onClick={doEdit} />
@@ -72,8 +75,8 @@ function EntryData({ v }: { v: FullEntry }) {
       />
     </InfoSection>
     <SectionableData v={v} />
-    <Button intent="danger" icon="trash" text="Delete entry" onClick={doDelete} />
-  </>;
+    <Button intent="danger" icon="trash" text="Delete entry" onClick={doDelete} loading={deleting} />
+  </PendingFieldset>;
 }
 
 function MeaningData({ v }: { v: FullMeaning }) {
@@ -251,6 +254,7 @@ function EntryEditor({ existing }: { existing: FullEntry }) {
   const [gloss, setGloss] = useState(existing.gloss);
   const [fields, setFields] = useState(() => extraEditFields.map(([key]) => existing[key]));
   const as = existing.hash;
+  const [submitting, runSubmit] = useAction();
 
   const submit = () => {
     const data = {
@@ -261,27 +265,30 @@ function EntryEditor({ existing }: { existing: FullEntry }) {
       gloss: gloss === "" ? undefined : gloss,
       ...Object.fromEntries(extraEditFields.map(([key], i) => [key, fields[i] === "" ? undefined : fields[i]])),
     };
-    api.lang("/word", "POST", { as }, data).then(() => {
-      dict.refresh();
+    runSubmit(async () => {
+      await api.lang("/word", "POST", { as }, data);
+      await dict.refresh();
       edit.closeDrawer();
     });
   };
 
   return <div className="page-content">
-    <p>
-      Editing entry <Code>{as}</Code>.
-    </p>
-    <InputGroup onValueChange={setSol} defaultValue={sol} placeholder={language} />
-    <InputGroup onValueChange={setExtra} defaultValue={extra} placeholder="Extra" />
-    <InputGroup onValueChange={setGloss} defaultValue={gloss} placeholder="Gloss" />
-    {extraEditFields.map(([key, placeholder], i) => <InputGroup
-      key={key}
-      onValueChange={(value) => setFields((f) => f.map((old, j) => (j === i ? value : old)))}
-      defaultValue={fields[i]}
-      placeholder={placeholder}
-    />)}
-    <Checkbox onChange={(e) => setObsolete(e.currentTarget.checked)} defaultChecked={isObsolete} label="Obsolete" />
-    <Button fill intent="success" text="Submit" onClick={submit} />
+    <PendingFieldset pending={submitting}>
+      <p>
+        Editing entry <Code>{as}</Code>.
+      </p>
+      <InputGroup onValueChange={setSol} defaultValue={sol} placeholder={language} />
+      <InputGroup onValueChange={setExtra} defaultValue={extra} placeholder="Extra" />
+      <InputGroup onValueChange={setGloss} defaultValue={gloss} placeholder="Gloss" />
+      {extraEditFields.map(([key, placeholder], i) => <InputGroup
+        key={key}
+        onValueChange={(value) => setFields((f) => f.map((old, j) => (j === i ? value : old)))}
+        defaultValue={fields[i]}
+        placeholder={placeholder}
+      />)}
+      <Checkbox onChange={(e) => setObsolete(e.currentTarget.checked)} defaultChecked={isObsolete} label="Obsolete" />
+      <Button fill intent="success" text="Submit" onClick={submit} loading={submitting} />
+    </PendingFieldset>
   </div>;
 }
 
@@ -291,6 +298,8 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
   const { api } = useSite();
   const [rest, setRest] = useState(existing?.eng ?? "");
   const [prefix, setPrefix] = useState(existing?.prefix ?? "");
+  const [submitting, runSubmit] = useAction();
+  const [deleting, runDelete] = useAction();
   const as = existing?.hash;
 
   if (to === undefined && as === undefined) {
@@ -299,8 +308,9 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
 
   const doSubmit = () => {
     const eng = prefix === undefined || prefix === "" ? rest : `(${prefix}) ${rest}`;
-    api.lang("/meaning", "POST", { to, as }, { eng }).then(() => {
-      dict.refresh();
+    runSubmit(async () => {
+      await api.lang("/meaning", "POST", { to, as }, { eng });
+      await dict.refresh();
       edit.closeDrawer();
     });
   };
@@ -309,30 +319,34 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
     if (as === undefined) {
       throw new Error("Cannot delete nonexistent section");
     }
-    api.lang(`/meaning/${as}`, "DELETE").then(() => {
-      dict.refresh();
+    runDelete(async () => {
+      await api.lang(`/meaning/${as}`, "DELETE");
+      await dict.refresh();
       edit.closeDrawer();
     });
   };
 
   return <div className="page-content editor-sidebar">
-    {to && <p>
-      Adding new meaning to <Code>{to}</Code>.
-    </p>}
-    {as && <p>
-      Editing meaning <Code>{as}</Code>.
-    </p>}
-    <InputGroup onValueChange={setPrefix} defaultValue={prefix} placeholder="Prefix" />
-    <InputGroup onValueChange={setRest} defaultValue={rest} placeholder="English" />
-    <Button fill intent="success" text="Submit" onClick={doSubmit} />
-    {as && <Button
-      fill
-      className="editor-sidebar-delete"
-      intent="danger"
-      icon="trash"
-      text="Delete entry"
-      onClick={doDelete}
-    />}
+    <PendingFieldset pending={submitting || deleting}>
+      {to && <p>
+        Adding new meaning to <Code>{to}</Code>.
+      </p>}
+      {as && <p>
+        Editing meaning <Code>{as}</Code>.
+      </p>}
+      <InputGroup onValueChange={setPrefix} defaultValue={prefix} placeholder="Prefix" />
+      <InputGroup onValueChange={setRest} defaultValue={rest} placeholder="English" />
+      <Button fill intent="success" text="Submit" onClick={doSubmit} loading={submitting} />
+      {as && <Button
+        fill
+        className="editor-sidebar-delete"
+        intent="danger"
+        icon="trash"
+        text="Delete entry"
+        onClick={doDelete}
+        loading={deleting}
+      />}
+    </PendingFieldset>
   </div>;
 }
 

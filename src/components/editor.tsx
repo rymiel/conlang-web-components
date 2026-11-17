@@ -13,11 +13,13 @@ import { createContext, PropsWithChildren, ReactNode, useCallback, useContext, u
 import { useNavigate } from "react-router-dom";
 
 import { ApiBase, ApiSection } from "../apiTypes";
+import { useAction } from "../site/action";
 import { Dictionary, useSite } from "../site/context";
 import { showSuccess } from "../site/toast";
 import { FullEntry } from "../site/types";
 import GlossSelect from "./GlossSelect";
 import { coalesceInterlinearData, ILWord, InterlinearGloss, InterlinearLines, parseInterlinear } from "./interlinear";
+import PendingFieldset from "./PendingFieldset";
 
 export function InfoTag({
   left,
@@ -143,50 +145,56 @@ export function SectionEditor({ to, as, name, form, preview, buttons, data }: Se
   const edit = useEditContext();
   const dict = useContext(Dictionary);
   const { api } = useSite();
+  const [submitting, runSubmit] = useAction();
+  const [deleting, runDelete] = useAction();
 
   if (to === undefined && as === undefined) {
     throw new Error("One of `as` or `to` must be provided");
   }
 
-  const doSubmit = () => {
-    api.lang("/section", "POST", { to, as }, data()).then(() => {
-      dict.refresh();
+  const doSubmit = () =>
+    runSubmit(async () => {
+      await api.lang("/section", "POST", { to, as }, data());
+      await dict.refresh();
       edit.closeDrawer();
     });
-  };
 
   const doDelete = () => {
     if (as === undefined) {
       throw new Error("Cannot delete nonexistent section");
     }
-    api.lang(`/section/${as}`, "DELETE").then(() => {
-      dict.refresh();
+    runDelete(async () => {
+      await api.lang(`/section/${as}`, "DELETE");
+      await dict.refresh();
       edit.closeDrawer();
     });
   };
 
   return <div className="page-content editor-sidebar">
-    {to && <p>
-      Adding new {name} section to <Code>{to}</Code>.
-    </p>}
-    {as && <p>
-      Editing {name} section <Code>{as}</Code>.
-    </p>}
-    {form}
-    <ButtonGroup fill>
-      {buttons}
-      <Button fill intent="success" text="Submit" onClick={doSubmit} />
-    </ButtonGroup>
-    <Divider />
-    {preview}
-    {as && <Button
-      fill
-      className="editor-sidebar-delete"
-      intent="danger"
-      icon="trash"
-      text="Delete entry"
-      onClick={doDelete}
-    />}
+    <PendingFieldset pending={submitting || deleting}>
+      {to && <p>
+        Adding new {name} section to <Code>{to}</Code>.
+      </p>}
+      {as && <p>
+        Editing {name} section <Code>{as}</Code>.
+      </p>}
+      {form}
+      <ButtonGroup fill>
+        {buttons}
+        <Button fill intent="success" text="Submit" onClick={doSubmit} loading={submitting} />
+      </ButtonGroup>
+      <Divider />
+      {preview}
+      {as && <Button
+        fill
+        className="editor-sidebar-delete"
+        intent="danger"
+        icon="trash"
+        text="Delete entry"
+        onClick={doDelete}
+        loading={deleting}
+      />}
+    </PendingFieldset>
   </div>;
 }
 

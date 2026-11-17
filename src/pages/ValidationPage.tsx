@@ -2,6 +2,7 @@ import { Button, NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
+import { useAction } from "../site/action";
 import { LangConfig, useSite } from "../site/context";
 import { ValidationFailure } from "../site/types";
 import { useValidate } from "../site/validation";
@@ -13,7 +14,7 @@ export default function ValidationPage() {
   const candidates = useValidationCandidates();
   const validate = useValidate();
   const [fail, setFail] = useState<readonly ValidationFailure[] | null>(null);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, run] = useAction();
 
   let header;
   let footer;
@@ -23,14 +24,11 @@ export default function ValidationPage() {
       intent="success"
       text={`Run validation (${candidates.length} entries)`}
       fill
-      disabled={isLoading}
       loading={isLoading}
       onClick={() => {
         setFail(null);
-        setLoading(true);
-        validate(candidates, lang.soundChange).then((f) => {
-          setFail(f);
-          setLoading(false);
+        run(async () => {
+          setFail(await validate(candidates, lang.soundChange));
         });
       }}
     />;
