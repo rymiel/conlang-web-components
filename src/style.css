@@ -109,3 +109,7 @@ h4 .bp6-icon {
   font-weight: normal;
   margin-left: 1rem;
 }
+
+.bp6-input::placeholder {
+  color: #dce0e5;
+}
