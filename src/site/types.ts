@@ -89,8 +89,9 @@ export interface NewWordExtra {
 
 export interface ValidationCandidate {
   readonly key: string;
-  readonly sol: string;
   readonly label: string;
+  readonly value: string;
+  readonly link?: string;
   readonly entry?: FullEntry;
 }
 
@@ -128,6 +129,7 @@ export interface SiteDefinition {
   readonly draftClass?: (sol: string, extra: string) => string | null;
   readonly useNewWordExtra?: (sol: string, extra: string) => NewWordExtra;
   readonly useReverseLookup?: (entries: readonly FullEntry[]) => ReverseLookup;
+  readonly validationValue?: (word: string) => string;
   readonly useValidationCandidates?: () => readonly ValidationCandidate[];
   readonly validateLocal?: (candidates: readonly ValidationCandidate[]) => ValidationFailure[];
 }

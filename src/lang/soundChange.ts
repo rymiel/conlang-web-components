@@ -61,10 +61,6 @@ export class SoundChangeInstance {
     console.log(this.#changes, groups);
   }
 
-  public ipaWithoutSoundChange(word: string, flags: Flags = {}) {
-    return this.#initialize(word, flags);
-  }
-
   private singleWordSoundChange(word: string, flags: Flags = {}): string {
     word = this.#initialize(word, flags);
     word = gsub(word, this.#changes);

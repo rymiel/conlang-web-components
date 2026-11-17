@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 
 import { GenerationInstance } from "../lang/generation";
 import { SoundChangeInstance } from "../lang/soundChange";
-import { useData } from "../site/context";
+import { useData, useSite } from "../site/context";
 import { useValidate } from "../site/validation";
 
 function Content({ soundChange, generation }: { soundChange: SoundChangeInstance; generation: GenerationInstance }) {
+  const { validationValue } = useSite();
   const validate = useValidate();
   const [sylls, setSylls] = useState(1);
   const [history, setHistory] = useState(() => [generation.generateWord(1)]);
@@ -15,9 +16,9 @@ function Content({ soundChange, generation }: { soundChange: SoundChangeInstance
   const isValid = validity?.word === current ? validity.valid : undefined;
 
   useEffect(() => {
-    const candidate = { key: current, sol: current, label: `"${current}"` };
-    validate([candidate], soundChange).then((fail) => setValidity({ word: current, valid: fail.length === 0 }));
-  }, [current, soundChange, validate]);
+    const candidate = { key: current, label: `"${current}"`, value: validationValue(current) };
+    validate([candidate]).then((fail) => setValidity({ word: current, valid: fail.length === 0 }));
+  }, [current, validate, validationValue]);
 
   const generate = (s: number) => {
     const word = generation.generateWord(s);

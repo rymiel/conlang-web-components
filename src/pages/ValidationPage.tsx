@@ -3,13 +3,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAction } from "../site/action";
-import { useData, useSite } from "../site/context";
+import { useSite } from "../site/context";
 import { ValidationFailure } from "../site/types";
 import { useValidate } from "../site/validation";
-import { uri } from "../util";
 
 export default function ValidationPage() {
-  const { config: lang } = useData();
   const { useValidationCandidates } = useSite();
   const candidates = useValidationCandidates();
   const validate = useValidate();
@@ -23,7 +21,7 @@ export default function ValidationPage() {
   } else if (fail !== null) {
     footer = <ul>
       {fail.map(([c, reason], i) => <li key={i}>
-        <Link to={uri`/reverse/${c.sol}`}>{c.label}</Link>: {reason}
+        {c.link === undefined ? c.label : <Link to={c.link}>{c.label}</Link>}: {reason}
       </li>)}
     </ul>;
   }
@@ -37,7 +35,7 @@ export default function ValidationPage() {
       onClick={() => {
         setFail(null);
         run(async () => {
-          setFail(await validate(candidates, lang.soundChange));
+          setFail(await validate(candidates));
         });
       }}
     />

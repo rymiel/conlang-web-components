@@ -2,7 +2,8 @@ import { Tag } from "@blueprintjs/core";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
-import { useData } from "./context";
+import { uri } from "../util";
+import { useData, useSite } from "./context";
 import { createTransformConfig, createTransformDictionary } from "./transform";
 import {
   FullEntry,
@@ -40,7 +41,18 @@ function useDirectReverseLookup(entries: readonly FullEntry[]): ReverseLookup {
 
 function useEntryValidationCandidates(): readonly ValidationCandidate[] {
   const { entries } = useData();
-  return entries.map((e) => ({ key: e.hash, sol: e.sol, label: `"${e.sol}"`, entry: e }));
+  const { validationValue } = useSite();
+  return useMemo(
+    () =>
+      entries.map((e) => ({
+        key: e.hash,
+        label: `"${e.sol}"`,
+        value: validationValue(e.sol),
+        link: uri`/reverse/${e.sol}`,
+        entry: e,
+      })),
+    [entries, validationValue],
+  );
 }
 
 function useNoNewWordExtra(_sol: string, _extra: string): NewWordExtra {
@@ -57,6 +69,7 @@ export function defineSite({ languageConfig, deriveFields, ...site }: SiteDefini
     draftClass: () => null,
     useNewWordExtra: useNoNewWordExtra,
     useReverseLookup: useDirectReverseLookup,
+    validationValue: (word) => word,
     useValidationCandidates: useEntryValidationCandidates,
     validateLocal: () => [],
     ...site,
