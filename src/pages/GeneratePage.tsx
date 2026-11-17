@@ -8,41 +8,35 @@ import { useValidate } from "../site/validation";
 
 function Content({ soundChange, generation }: { soundChange: SoundChangeInstance; generation: GenerationInstance }) {
   const validate = useValidate();
-  const [current, setCurrent] = useState("");
-  const [isValid, setValid] = useState<boolean | undefined>(undefined);
   const [sylls, setSylls] = useState(1);
-  const [history, setHistory] = useState<string[]>([]);
+  const [history, setHistory] = useState(() => [generation.generateWord(1)]);
+  const [current, setCurrent] = useState(history[0]);
+  const [validity, setValidity] = useState<{ word: string; valid: boolean } | null>(null);
+  const isValid = validity?.word === current ? validity.valid : undefined;
 
   useEffect(() => {
-    if (current === "") {
-      setValid(undefined);
-      const word = generation.generateWord(sylls);
-      setCurrent(word);
-      setHistory((h) => [word, ...h]);
-    }
-  }, [current, generation, sylls]);
-
-  useEffect(() => {
-    if (current !== "") {
-      const candidate = { key: current, sol: current, label: `"${current}"` };
-      validate([candidate], soundChange).then((fail) => setValid(fail.length === 0));
-    }
+    const candidate = { key: current, sol: current, label: `"${current}"` };
+    validate([candidate], soundChange).then((fail) => setValidity({ word: current, valid: fail.length === 0 }));
   }, [current, soundChange, validate]);
 
-  const generate = () => setCurrent("");
+  const generate = (s: number) => {
+    const word = generation.generateWord(s);
+    setCurrent(word);
+    setHistory((h) => [word, ...h]);
+  };
   const changeSylls = (s: number) => {
     setSylls(s);
-    generate();
+    generate(s);
   };
 
   return <div>
     <ControlGroup vertical className="fit-width">
       <NumericInput onValueChange={changeSylls} value={sylls} min={1} />
-      <Button intent="primary" text="Generate" onClick={generate} />
+      <Button intent="primary" text="Generate" onClick={() => generate(sylls)} />
     </ControlGroup>
     <Divider />
-    <p>{current !== "" ? current : "..."}</p>
-    <p>{current !== "" ? soundChange.soundChange(current, { markStress: false }) : "..."}</p>
+    <p>{current}</p>
+    <p>{soundChange.soundChange(current, { markStress: false })}</p>
     <p>
       {isValid === undefined ? (
         <Tag intent="warning">Checking validity...</Tag>

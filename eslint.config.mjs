@@ -21,8 +21,7 @@ export default defineConfig(
     plugins: { "@blueprintjs": blueprint, "react-hooks": reactHooks },
     rules: {
       ...blueprint.configs.recommended.rules,
-      "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "warn",
+      ...reactHooks.configs.recommended.rules,
       "@typescript-eslint/no-deprecated": "error",
       semi: "warn",
       "react/no-access-state-in-setstate": "warn",

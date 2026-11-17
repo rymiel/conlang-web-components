@@ -44,6 +44,7 @@ export function UserProvider({ children }: PropsWithChildren) {
   }, [api]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     update();
 
     const id = setInterval(() => update(), 1_000 * 60 * 10);
