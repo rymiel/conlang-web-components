@@ -1,5 +1,17 @@
-import { BlueprintProvider, Classes, Divider, Drawer, DrawerSize, H1, H2, Icon } from "@blueprintjs/core";
-import { PropsWithChildren, StrictMode, useContext, useEffect, useState } from "react";
+import {
+  BlueprintProvider,
+  Classes,
+  Divider,
+  Drawer,
+  DrawerSize,
+  H1,
+  H2,
+  Icon,
+  NonIdealState,
+  Spinner,
+  SpinnerSize,
+} from "@blueprintjs/core";
+import { PropsWithChildren, StrictMode, Suspense, useContext, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   createBrowserRouter,
@@ -105,7 +117,11 @@ function App({ children, versions }: PropsWithChildren<{ versions: SiteVersions 
       </>}
       <div className="header-user">{user.user ? <Logout /> : <Login />}</div>
     </header>
-    <main id="main">{children ?? <Outlet />}</main>
+    <main id="main">
+      <Suspense fallback={<NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />}>
+        {children ?? <Outlet />}
+      </Suspense>
+    </main>
     <footer className={Classes.DARK}>
       <small>
         <p>

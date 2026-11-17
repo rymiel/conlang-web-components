@@ -1,18 +1,9 @@
-import {
-  Button,
-  ControlGroup,
-  Divider,
-  NonIdealState,
-  NumericInput,
-  Spinner,
-  SpinnerSize,
-  Tag,
-} from "@blueprintjs/core";
-import { useContext, useEffect, useState } from "react";
+import { Button, ControlGroup, Divider, NumericInput, Tag } from "@blueprintjs/core";
+import { useEffect, useState } from "react";
 
 import { GenerationInstance } from "../lang/generation";
 import { SoundChangeInstance } from "../lang/soundChange";
-import { LangConfig } from "../site/context";
+import { useData } from "../site/context";
 import { useValidate } from "../site/validation";
 
 function Content({ soundChange, generation }: { soundChange: SoundChangeInstance; generation: GenerationInstance }) {
@@ -71,17 +62,9 @@ function Content({ soundChange, generation }: { soundChange: SoundChangeInstance
 }
 
 export default function GeneratePage() {
-  const lang = useContext(LangConfig);
+  const { config: lang } = useData();
 
-  let content;
-
-  if (lang === null) {
-    content = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
-  } else {
-    content = <div className="page-content">
-      <Content soundChange={lang.soundChange} generation={lang.generation} />
-    </div>;
-  }
-
-  return content;
+  return <div className="page-content">
+    <Content soundChange={lang.soundChange} generation={lang.generation} />
+  </div>;
 }

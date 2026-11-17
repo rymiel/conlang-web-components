@@ -1,8 +1,8 @@
-import { Dialog, DialogBody, H4, HTMLTable, NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
-import { Fragment, useContext, useState } from "react";
+import { Dialog, DialogBody, H4, HTMLTable } from "@blueprintjs/core";
+import { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Dictionary } from "./context";
+import { useData } from "./context";
 import { FullEntry, SlotValues, SyllableSlot } from "./types";
 
 export function increment(m: Record<string, number>, k: string): Record<string, number> {
@@ -32,9 +32,7 @@ export function columns<T>(arr: T[], n: number): T[][] {
 }
 
 export function PartsContent() {
-  const { entries } = useContext(Dictionary);
-
-  if (!entries) return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
+  const { entries } = useData();
 
   const extraTally: Record<string, number> = {};
 
@@ -83,7 +81,7 @@ function MatchDialog({
   syllables,
   matchName,
 }: Omit<SyllableContentProps, "slots"> & { match: SlotMatch | null; close: () => void }) {
-  const entries = useContext(Dictionary).entries ?? [];
+  const { entries } = useData();
 
   if (match === null) return null;
 
@@ -107,10 +105,8 @@ function MatchDialog({
 }
 
 export function SyllableContent({ slots, syllables, matchName }: SyllableContentProps) {
-  const { entries } = useContext(Dictionary);
+  const { entries } = useData();
   const [match, setMatch] = useState<SlotMatch | null>(null);
-
-  if (!entries) return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
 
   const tallies = slots.map((slot) => seedTally(slot.values));
   for (const entry of entries) {

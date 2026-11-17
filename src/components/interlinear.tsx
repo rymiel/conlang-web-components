@@ -1,7 +1,7 @@
-import { ReactNode, useContext } from "react";
+import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
-import { LangConfig, useSite } from "../site/context";
+import { useData, useSite } from "../site/context";
 import { uri } from "../util";
 
 export type InterlinearLines = readonly [source: string, gloss: string, translation: string];
@@ -10,11 +10,11 @@ const ABBR_SEP = /([-.()<> ])/;
 const WORD_SEP = /([\u201c\u201d() \-,?!.])/;
 
 export function Abbr({ children }: { children: string }): ReactNode {
-  const config = useContext(LangConfig);
+  const { config } = useData();
   const parts = children.split(ABBR_SEP);
 
   return parts.map((i, j) => {
-    const abbr = config?.abbreviations[i];
+    const abbr = config.abbreviations[i];
     if (abbr === undefined) {
       return i;
     } else {
@@ -94,7 +94,7 @@ export function InterlinearGloss({
   script?: boolean;
   extra?: ReactNode;
 }) {
-  const config = useContext(LangConfig);
+  const { config } = useData();
   const { tag } = useSite();
 
   const { srcParts, srcWords, srcText, engParts, engWords } = coalesceInterlinearData(data);
@@ -121,7 +121,7 @@ export function InterlinearGloss({
 
   const body = <>
     {...parts}
-    <p className="interlinear-ipa">{config ? config.ipa(srcText) : "/.../"}</p>
+    <p className="interlinear-ipa">{config.ipa(srcText)}</p>
     <p className="interlinear-translation">{eng}</p>
   </>;
 
@@ -131,7 +131,7 @@ export function InterlinearGloss({
       {extra}
     </p>
     {script && <p className="interlinear-script fit-width" lang={tag}>
-      {config ? config.script(srcText) : "<...>"}
+      {config.script(srcText)}
     </p>}
     {indent ? (
       <dl>

@@ -1,8 +1,7 @@
-import { Icon, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
-import { useContext } from "react";
+import { Icon, Tag } from "@blueprintjs/core";
 
 import { DictionaryList, Meanings, RowRenderer } from "../components/dictionary";
-import { Dictionary } from "../site/context";
+import { useData } from "../site/context";
 import { ScriptCell, StatusIcons } from "../site/display";
 import { SectionTitle, SIMPLE_SECTIONS } from "../site/sections";
 
@@ -26,11 +25,7 @@ const rowRender: RowRenderer = (e) => ({
 });
 
 export default function DictionaryPage() {
-  const { entries } = useContext(Dictionary);
-
-  if (!entries) {
-    return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
-  }
+  const { entries } = useData();
 
   return <div className="page-content dictionary-page">
     <DictionaryList entries={entries} row={rowRender} />

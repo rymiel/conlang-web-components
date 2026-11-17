@@ -6,20 +6,17 @@ import {
   FormGroup,
   H3,
   HTMLTable,
-  NonIdealState,
   PopoverNext as Popover,
-  Spinner,
-  SpinnerSize,
   Tag,
   TextArea,
 } from "@blueprintjs/core";
-import { Fragment, ReactNode, useContext, useEffect, useRef, useState } from "react";
+import { Fragment, ReactNode, useEffect, useRef, useState } from "react";
 import reactStringReplace from "react-string-replace";
 
 import PendingFieldset from "../components/PendingFieldset";
 import { Change, SoundChangeInstance, SoundChangeSteps } from "../lang/soundChange";
 import { useAction } from "../site/action";
-import { Dictionary, LangConfig, useSite } from "../site/context";
+import { useData, useSite } from "../site/context";
 import { showSuccess } from "../site/toast";
 import { FullEntry } from "../site/types";
 
@@ -173,7 +170,7 @@ function Content({
   const [editing, setEditing] = useState(false);
   const [saving, runSave] = useAction();
   const [rulesWidth, setRulesWidth] = useState(0);
-  const { refresh } = useContext(Dictionary);
+  const { refresh } = useData();
   const { api } = useSite();
 
   const rulesRef = useRef<HTMLDivElement | null>(null);
@@ -302,19 +299,11 @@ function Content({
 }
 
 export default function SoundChangePage() {
-  const { entries } = useContext(Dictionary);
-  const config = useContext(LangConfig);
+  const { entries, config } = useData();
 
-  let content;
+  const makeLocal = (changes: readonly Change[]) => config.soundChange.copyWithChanges(changes);
 
-  if (entries === null || config === null) {
-    content = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
-  } else {
-    const makeLocal = (changes: readonly Change[]) => config.soundChange.copyWithChanges(changes);
-    content = <div className="page-content">
-      <Content entries={entries} soundChange={config.soundChange} makeLocal={makeLocal} />
-    </div>;
-  }
-
-  return content;
+  return <div className="page-content">
+    <Content entries={entries} soundChange={config.soundChange} makeLocal={makeLocal} />
+  </div>;
 }

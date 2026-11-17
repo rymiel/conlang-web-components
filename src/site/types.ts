@@ -37,9 +37,10 @@ export interface FullMeaning extends Omit<ApiMeaning, "sections"> {
 
 export interface FullSection extends ApiSection {}
 
-export interface DictionaryData {
-  entries: readonly FullEntry[] | null;
-  refresh: () => Promise<void>;
+export interface LangData {
+  readonly entries: readonly FullEntry[];
+  readonly config: LangConfigData;
+  readonly refresh: () => Promise<void>;
 }
 
 export interface LangConfigData extends LangConfigFields {
@@ -69,7 +70,7 @@ export interface ReverseResult {
 export interface ReverseLookup {
   readonly formsCount: string;
   readonly controls?: ReactElement;
-  readonly lookup: ((query: string) => ReverseResult) | null;
+  readonly lookup: (query: string) => ReverseResult;
 }
 
 export interface EntryStatus {
@@ -126,8 +127,8 @@ export interface SiteDefinition {
   readonly EntryContent?: FC<{ entry: FullEntry }>;
   readonly draftClass?: (sol: string, extra: string) => string | null;
   readonly useNewWordExtra?: (sol: string, extra: string) => NewWordExtra;
-  readonly useReverseLookup?: (entries: readonly FullEntry[] | null) => ReverseLookup;
-  readonly useValidationCandidates?: () => readonly ValidationCandidate[] | null;
+  readonly useReverseLookup?: (entries: readonly FullEntry[]) => ReverseLookup;
+  readonly useValidationCandidates?: () => readonly ValidationCandidate[];
   readonly validateLocal?: (candidates: readonly ValidationCandidate[]) => ValidationFailure[];
 }
 

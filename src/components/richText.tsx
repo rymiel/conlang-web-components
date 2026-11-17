@@ -2,12 +2,11 @@ import { Icon } from "@blueprintjs/core";
 import { Literal, PhrasingContent, type Root as RemarkRoot } from "mdast";
 import { findAndReplace } from "mdast-util-find-and-replace";
 import { Handlers } from "mdast-util-to-hast";
-import { useContext } from "react";
 import Markdown, { Components } from "react-markdown";
 import { Link } from "react-router-dom";
 import { type Plugin } from "unified";
 
-import { Dictionary } from "../site/context";
+import { useData } from "../site/context";
 import { FullEntry } from "../site/types";
 
 interface Missing extends Literal {
@@ -27,7 +26,7 @@ const WORD_LINK = /\[([A-Za-z0-9_-]+)(?:\(([^)]+)\))?\]/g;
 
 interface RemarkPluginOptions {
   on?: string;
-  entries: readonly FullEntry[] | null;
+  entries: readonly FullEntry[];
 }
 
 const remarkPlugin: Plugin<[RemarkPluginOptions], RemarkRoot> = function ({ on, entries }) {
@@ -35,7 +34,7 @@ const remarkPlugin: Plugin<[RemarkPluginOptions], RemarkRoot> = function ({ on, 
     findAndReplace(tree, [
       WORD_LINK,
       (m: string, id: string, label: string | undefined) => {
-        const entry = entries?.find((i) => i.hash === id);
+        const entry = entries.find((i) => i.hash === id);
         if (entry === undefined) {
           return { type: "missing", value: m };
         }
@@ -94,7 +93,7 @@ const components: Components = {
 };
 
 export function RichText({ text, on }: { text: string; on?: string }) {
-  const { entries } = useContext(Dictionary);
+  const { entries } = useData();
   return <Markdown
     remarkPlugins={[[remarkPlugin, { on, entries }]]}
     remarkRehypeOptions={{ handlers: toHastHandlers }}

@@ -1,8 +1,8 @@
 import { Tag } from "@blueprintjs/core";
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
-import { Dictionary } from "./context";
+import { useData } from "./context";
 import { createTransformConfig, createTransformDictionary } from "./transform";
 import {
   FullEntry,
@@ -25,21 +25,21 @@ function Terminal({ entry }: { entry: FullEntry }) {
   </>;
 }
 
-function useDirectReverseLookup(entries: readonly FullEntry[] | null): ReverseLookup {
-  const lookup = useMemo(() => {
-    if (entries === null) return null;
-    return (query: string): ReverseResult => {
-      const found = entries.filter((e) => e.sol === query);
-      return { items: found.map((entry) => <Terminal key={entry.hash} entry={entry} />), entries: found };
-    };
-  }, [entries]);
+function useDirectReverseLookup(entries: readonly FullEntry[]): ReverseLookup {
+  const lookup = useMemo(
+    () =>
+      (query: string): ReverseResult => {
+        const found = entries.filter((e) => e.sol === query);
+        return { items: found.map((entry) => <Terminal key={entry.hash} entry={entry} />), entries: found };
+      },
+    [entries],
+  );
 
-  return { formsCount: entries === null ? "..." : `${entries.length} lemmas`, lookup };
+  return { formsCount: `${entries.length} lemmas`, lookup };
 }
 
-function useEntryValidationCandidates(): readonly ValidationCandidate[] | null {
-  const { entries } = useContext(Dictionary);
-  if (entries === null) return null;
+function useEntryValidationCandidates(): readonly ValidationCandidate[] {
+  const { entries } = useData();
   return entries.map((e) => ({ key: e.hash, sol: e.sol, label: `"${e.sol}"`, entry: e }));
 }
 

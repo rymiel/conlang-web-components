@@ -1,8 +1,7 @@
 import { Button, MenuItem } from "@blueprintjs/core";
 import { ItemPredicate, ItemRenderer, Select } from "@blueprintjs/select";
-import { useContext } from "react";
 
-import { Dictionary } from "../site/context";
+import { useData } from "../site/context";
 import { FullEntry } from "../site/types";
 import { Abbr } from "./interlinear";
 
@@ -53,7 +52,7 @@ const renderEntry: ItemRenderer<FullEntry> = (entry, { handleClick, handleFocus,
 };
 
 export function WordSelect({ onSelect }: { onSelect: (entry: FullEntry) => void }) {
-  const { entries } = useContext(Dictionary);
+  const { entries } = useData();
   return <Select<FullEntry>
     // https://github.com/palantir/blueprint/pull/6999
     items={(entries || []) as FullEntry[]}
@@ -61,8 +60,7 @@ export function WordSelect({ onSelect }: { onSelect: (entry: FullEntry) => void 
     itemRenderer={renderEntry}
     noResults={<MenuItem disabled={true} text="No results." roleStructure="listoption" />}
     onItemSelect={onSelect}
-    disabled={entries === null}
   >
-    <Button icon="add" intent="primary" fill className="fill-height" disabled={entries === null} />
+    <Button icon="add" intent="primary" fill className="fill-height" />
   </Select>;
 }

@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 import { ApiBase, ApiSection } from "../apiTypes";
 import { useAction } from "../site/action";
-import { Dictionary, useSite } from "../site/context";
+import { useData, useSite } from "../site/context";
 import { showSuccess } from "../site/toast";
 import { FullEntry } from "../site/types";
 import GlossSelect from "./GlossSelect";
@@ -143,7 +143,7 @@ type SectionEditorProps = {
 };
 export function SectionEditor({ to, as, name, form, preview, buttons, data }: SectionEditorProps) {
   const edit = useEditContext();
-  const dict = useContext(Dictionary);
+  const { refresh } = useData();
   const { api } = useSite();
   const [submitting, runSubmit] = useAction();
   const [deleting, runDelete] = useAction();
@@ -155,7 +155,7 @@ export function SectionEditor({ to, as, name, form, preview, buttons, data }: Se
   const doSubmit = () =>
     runSubmit(async () => {
       await api.lang("/section", "POST", { to, as }, data());
-      await dict.refresh();
+      await refresh();
       edit.closeDrawer();
     });
 
@@ -165,7 +165,7 @@ export function SectionEditor({ to, as, name, form, preview, buttons, data }: Se
     }
     runDelete(async () => {
       await api.lang(`/section/${as}`, "DELETE");
-      await dict.refresh();
+      await refresh();
       edit.closeDrawer();
     });
   };

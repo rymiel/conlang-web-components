@@ -1,9 +1,9 @@
 import { HTMLTable, InputGroup } from "@blueprintjs/core";
-import { ReactNode, useCallback, useContext, useMemo, useState } from "react";
+import { ReactNode, useCallback, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Meaning } from "../providers/dictionary";
-import { LangConfig, useSite } from "../site/context";
+import { useData, useSite } from "../site/context";
 import { FullEntry } from "../site/types";
 import { AnchorButton } from "./button";
 import UserOnly from "./UserOnly";
@@ -35,8 +35,8 @@ export function Meanings({ meanings }: { meanings: Meaning[] }) {
 }
 
 export function ExtraCell({ entry }: { entry: FullEntry }) {
-  const config = useContext(LangConfig);
-  const name = config?.parts[entry.extra];
+  const { config } = useData();
+  const name = config.parts[entry.extra];
   const text = entry.class ? `${entry.extra}-${entry.class}` : entry.extra;
 
   if (name) {

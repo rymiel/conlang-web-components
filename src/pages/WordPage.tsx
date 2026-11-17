@@ -1,11 +1,11 @@
-import { Button, H2, H3, H4, Icon, IconSize, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
-import { Fragment, ReactElement, useContext, useEffect, useRef, useState } from "react";
+import { Button, H2, H3, H4, Icon, IconSize, NonIdealState, Tag } from "@blueprintjs/core";
+import { Fragment, ReactElement, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { coalesceInterlinearData, InterlinearGloss, parseInterlinear } from "../components/interlinear";
 import { RichText } from "../components/richText";
 import UserOnly from "../components/UserOnly";
-import { Dictionary, LangConfig, useSite } from "../site/context";
+import { useData, useSite } from "../site/context";
 import { partName, shortPartName, StatusTags } from "../site/display";
 import { SectionTitle, SIMPLE_SECTIONS } from "../site/sections";
 import { useExamples } from "../site/translations";
@@ -60,7 +60,6 @@ function useTranslationUsages(entry: FullEntry, entries: readonly FullEntry[]): 
   const { useReverseLookup } = useSite();
   const { lookup } = useReverseLookup(entries);
   const examples = useExamples(entries);
-  if (lookup === null) return [];
   const translations = examples.flatMap((e) => e.sections.map((s, i) => [e, s, i + 1] as const));
   const relevant = translations.filter(([_, s]) => {
     const { srcParts } = coalesceInterlinearData(parseInterlinear(s.content));
@@ -96,9 +95,9 @@ function LookupInfo({ entry, entries }: { entry: FullEntry; entries: readonly Fu
 }
 
 function LookupButton({ entry }: { entry: FullEntry }) {
-  const { entries } = useContext(Dictionary);
+  const { entries } = useData();
   const [run, setRun] = useState(false);
-  return run === false || entries === null ? (
+  return run === false ? (
     <Button text="Find usages" intent="primary" onClick={() => setRun(true)} />
   ) : (
     <LookupInfo entry={entry} entries={entries} />
@@ -106,7 +105,7 @@ function LookupButton({ entry }: { entry: FullEntry }) {
 }
 
 function WordPageContent({ entry, highlighted = false }: { entry: FullEntry; highlighted?: boolean }) {
-  const lang = useContext(LangConfig);
+  const { config: lang } = useData();
   const { EntryContent } = useSite();
   const ref = useRef<HTMLHeadingElement | null>(null);
 
@@ -116,7 +115,7 @@ function WordPageContent({ entry, highlighted = false }: { entry: FullEntry; hig
     }
   }, [highlighted]);
 
-  const partHeader = partName(lang?.parts ?? {}, entry.extra, entry.class);
+  const partHeader = partName(lang.parts, entry.extra, entry.class);
 
   return <>
     <H3 className="word-meaning" ref={ref}>
@@ -151,34 +150,27 @@ function WordPageContent({ entry, highlighted = false }: { entry: FullEntry; hig
 }
 
 export default function WordPage() {
-  const { entries } = useContext(Dictionary);
-  const lang = useContext(LangConfig);
+  const { entries, config: lang } = useData();
   const { word, num } = useParams() as { word: string; num?: string };
 
-  let content = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
+  const matching = entries.filter((e) => e.sol === word);
 
-  if (entries) {
-    const matching = entries.filter((e) => e.sol === word);
-
-    if (matching.length > 0) {
-      const parts = matching.map((i) => shortPartName(lang?.parts ?? {}, i.extra));
-      content = <div className="page-content word-page">
-        <nav className="word-page-toc">
-          <ol>
-            {parts.map((i, j) => <li key={j}>
-              <Link to={uri`/w/${word}/${j + 1}`}>{i}</Link>
-            </li>)}
-          </ol>
-        </nav>
-        <div className="content">
-          <WordPageHeader entry={matching[0]} /> {/* TODO: Be smarter about this? */}
-          {matching.map((m, i) => <WordPageContent key={m.hash} entry={m} highlighted={String(i + 1) == num} />)}
-        </div>
-      </div>;
-    } else {
-      content = <NonIdealState icon="error" title="Unknown word" description={word} />; // TODO
-    }
+  if (matching.length === 0) {
+    return <NonIdealState icon="error" title="Unknown word" description={word} />; // TODO
   }
 
-  return content;
+  const parts = matching.map((i) => shortPartName(lang.parts, i.extra));
+  return <div className="page-content word-page">
+    <nav className="word-page-toc">
+      <ol>
+        {parts.map((i, j) => <li key={j}>
+          <Link to={uri`/w/${word}/${j + 1}`}>{i}</Link>
+        </li>)}
+      </ol>
+    </nav>
+    <div className="content">
+      <WordPageHeader entry={matching[0]} /> {/* TODO: Be smarter about this? */}
+      {matching.map((m, i) => <WordPageContent key={m.hash} entry={m} highlighted={String(i + 1) == num} />)}
+    </div>
+  </div>;
 }

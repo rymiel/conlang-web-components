@@ -1,8 +1,8 @@
-import { Button, ControlGroup, Divider, InputGroup, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
-import { Fragment, memo, ReactNode, useContext, useState } from "react";
+import { Button, ControlGroup, Divider, InputGroup, NonIdealState, Tag } from "@blueprintjs/core";
+import { Fragment, memo, ReactNode, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { Dictionary, useSite } from "../site/context";
+import { useData, useSite } from "../site/context";
 import { ReverseResult } from "../site/types";
 import { uri } from "../util";
 
@@ -30,18 +30,18 @@ const ReverseContent = memo(function ReverseContent({
 });
 
 export default function ReversePage() {
-  const { entries } = useContext(Dictionary);
+  const { entries } = useData();
   const { query } = useParams();
   const navigate = useNavigate();
   const [search, setSearch] = useState(query ?? "");
   const { useReverseLookup } = useSite();
   const { formsCount, controls, lookup } = useReverseLookup(entries);
 
-  let content: ReactNode = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
+  let content: ReactNode;
 
   if (query === undefined) {
     content = <NonIdealState icon="search" />;
-  } else if (lookup) {
+  } else {
     // TODO: try to fuse words? not sure if possible to make efficient
     content = query.split(/[ -]/).map((i, j) => <Fragment key={j}>
       {j > 0 && <Divider />}

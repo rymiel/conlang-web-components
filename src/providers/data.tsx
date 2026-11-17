@@ -1,51 +1,55 @@
-import { PropsWithChildren, useCallback, useEffect, useRef, useState } from "react";
+import { PropsWithChildren, startTransition, useCallback, useEffect, useState } from "react";
 
 import { ApiData } from "../apiTypes";
-import { Dictionary, LangConfig, useSite } from "../site/context";
+import { DataContext, LoadedData, useSite } from "../site/context";
 import { showError } from "../site/toast";
-import { FullEntry, LangConfigData } from "../site/types";
+import { Site } from "../site/types";
+
+type Loader = Pick<Site, "api" | "transformConfig" | "transformDictionary">;
+
+function broadcastEtag(newEtag: string) {
+  try {
+    const oldEtag = localStorage.getItem("etag") ?? "undefined";
+    if (newEtag != oldEtag) {
+      console.log(`Broadcasting new data etag: ${oldEtag} -> ${newEtag}`);
+      localStorage.setItem("etag", newEtag);
+    }
+  } catch (err) {
+    if (err instanceof DOMException) {
+      showError(new Error(`Failed to sync: ${err.name}: ${err.message}`));
+    } else {
+      throw err;
+    }
+  }
+}
+
+async function loadData({ api, transformConfig, transformDictionary }: Loader): Promise<LoadedData> {
+  const data = await api.lang<ApiData>("/data");
+  const config = transformConfig(data.config ?? {});
+  const entries = transformDictionary(config, data);
+  broadcastEtag(data.etag ?? "undefined");
+  return { entries, config };
+}
 
 export function DataProvider({ children }: PropsWithChildren) {
-  const [entries, setEntries] = useState<FullEntry[] | null>(null);
-  const [config, setConfig] = useState<LangConfigData | null>(null);
-  const etag = useRef(localStorage.getItem("etag") ?? "undefined");
   const { api, transformConfig, transformDictionary } = useSite();
+  const [data, setData] = useState(() => loadData({ api, transformConfig, transformDictionary }));
 
   const refresh = useCallback(async () => {
+    const next = loadData({ api, transformConfig, transformDictionary });
     try {
-      const data = await api.lang<ApiData>("/data");
-      const config = transformConfig(data.config ?? {});
-      const entries = transformDictionary(config, data);
-      setEntries(entries);
-      setConfig(config);
-
-      try {
-        const newEtag = data.etag ?? "undefined";
-        if (newEtag != etag.current) {
-          console.log(`Broadcasting new data etag: ${etag.current} -> ${newEtag}`);
-          etag.current = newEtag;
-          localStorage.setItem("etag", newEtag);
-        }
-      } catch (err) {
-        if (err instanceof DOMException) {
-          showError(new Error(`Failed to sync: ${err.name}: ${err.message}`));
-        } else {
-          throw err;
-        }
-      }
+      await next;
     } catch (err) {
       showError(err);
+      return;
     }
+    startTransition(() => setData(next));
   }, [api, transformConfig, transformDictionary]);
 
   useEffect(() => {
-    refresh();
-  }, [refresh]);
-
-  useEffect(() => {
     const handle = (e: StorageEvent) => {
-      if (e.key === "etag" && e.newValue !== etag.current) {
-        console.log(`Synced new data etag: ${etag.current} -> ${e.newValue}`);
+      if (e.key === "etag") {
+        console.log(`Synced new data etag: ${e.oldValue} -> ${e.newValue}`);
         refresh();
       }
     };
@@ -53,7 +57,5 @@ export function DataProvider({ children }: PropsWithChildren) {
     return () => removeEventListener("storage", handle);
   }, [refresh]);
 
-  return <Dictionary value={{ entries, refresh }}>
-    <LangConfig value={config}>{children}</LangConfig>
-  </Dictionary>;
+  return <DataContext value={{ data, refresh }}>{children}</DataContext>;
 }

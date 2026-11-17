@@ -1,17 +1,17 @@
-import { Button, ControlGroup, HTMLSelect, InputGroup, NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
-import { useContext, useState } from "react";
+import { Button, ControlGroup, HTMLSelect, InputGroup } from "@blueprintjs/core";
+import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { ApiMeaning, ApiWord } from "../apiTypes";
 import PendingFieldset from "../components/PendingFieldset";
 import { useAction } from "../site/action";
-import { Dictionary, LangConfig, useSite } from "../site/context";
+import { useData, useSite } from "../site/context";
 import { partName } from "../site/display";
 import { LangConfigData } from "../site/types";
 import { uri } from "../util";
 
 function Editor({ lang }: { lang: LangConfigData }) {
-  const dict = useContext(Dictionary);
+  const { refresh } = useData();
   const { api, language, draftClass, useNewWordExtra } = useSite();
   const [query, _] = useSearchParams();
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ function Editor({ lang }: { lang: LangConfigData }) {
       for (const meaning of eng.split(";")) {
         await api.lang<ApiMeaning>("/meaning", "POST", { to: w.hash }, { eng: meaning.trim() });
       }
-      await dict.refresh();
+      await refresh();
       navigate(uri`/edit/${w.hash}`);
     });
 
@@ -62,13 +62,9 @@ function Editor({ lang }: { lang: LangConfigData }) {
 }
 
 export default function NewWordPage() {
-  const lang = useContext(LangConfig);
+  const { config: lang } = useData();
 
-  if (lang === null) {
-    return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
-  } else {
-    return <div className="page-content">
-      <Editor lang={lang} />
-    </div>;
-  }
+  return <div className="page-content">
+    <Editor lang={lang} />
+  </div>;
 }

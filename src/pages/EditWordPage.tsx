@@ -8,12 +8,10 @@ import {
   InputGroup,
   NonIdealState,
   PopoverNext as Popover,
-  Spinner,
-  SpinnerSize,
   Tag,
   TextArea,
 } from "@blueprintjs/core";
-import { PropsWithChildren, ReactElement, useCallback, useContext, useEffect, useState } from "react";
+import { PropsWithChildren, ReactElement, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { ApiBase, ApiSection } from "../apiTypes";
@@ -30,20 +28,20 @@ import PendingFieldset from "../components/PendingFieldset";
 import { RichText } from "../components/richText";
 import { WordSelect } from "../components/wordSelect";
 import { useAction } from "../site/action";
-import { Dictionary, useSite } from "../site/context";
+import { useData, useSite } from "../site/context";
 import { SectionTitle, SIMPLE_SECTIONS } from "../site/sections";
 import { FullEntry, FullMeaning, FullSection } from "../site/types";
 
 function EntryData({ v }: { v: FullEntry }) {
   const edit = useEditContext();
-  const dict = useContext(Dictionary);
+  const { refresh } = useData();
   const { tag, api, generatedFields } = useSite();
   const [deleting, runDelete] = useAction();
 
   const doDelete = () =>
     runDelete(async () => {
       await api.lang(`/word/${v.hash}`, "DELETE");
-      await dict.refresh();
+      await refresh();
       edit.closeDrawer();
     });
 
@@ -246,7 +244,7 @@ function TextSectionEditor({
 
 function EntryEditor({ existing }: { existing: FullEntry }) {
   const edit = useEditContext();
-  const dict = useContext(Dictionary);
+  const { refresh } = useData();
   const { api, language, extraEditFields } = useSite();
   const [sol, setSol] = useState(existing.sol);
   const [extra, setExtra] = useState(existing.extra);
@@ -267,7 +265,7 @@ function EntryEditor({ existing }: { existing: FullEntry }) {
     };
     runSubmit(async () => {
       await api.lang("/word", "POST", { as }, data);
-      await dict.refresh();
+      await refresh();
       edit.closeDrawer();
     });
   };
@@ -294,7 +292,7 @@ function EntryEditor({ existing }: { existing: FullEntry }) {
 
 function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }) {
   const edit = useEditContext();
-  const dict = useContext(Dictionary);
+  const { refresh } = useData();
   const { api } = useSite();
   const [rest, setRest] = useState(existing?.eng ?? "");
   const [prefix, setPrefix] = useState(existing?.prefix ?? "");
@@ -310,7 +308,7 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
     const eng = prefix === undefined || prefix === "" ? rest : `(${prefix}) ${rest}`;
     runSubmit(async () => {
       await api.lang("/meaning", "POST", { to, as }, { eng });
-      await dict.refresh();
+      await refresh();
       edit.closeDrawer();
     });
   };
@@ -321,7 +319,7 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
     }
     runDelete(async () => {
       await api.lang(`/meaning/${as}`, "DELETE");
-      await dict.refresh();
+      await refresh();
       edit.closeDrawer();
     });
   };
@@ -351,24 +349,18 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
 }
 
 export default function EditWordPage() {
-  const { entries } = useContext(Dictionary);
+  const { entries } = useData();
   const { hash, edit } = useParams() as { hash: string; edit?: string };
 
-  let content = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
+  const entry = entries.find((e) => e.hash === hash);
 
-  if (entries) {
-    const entry = entries.find((e) => e.hash === hash);
-
-    if (entry) {
-      content = <div className="page-content">
-        <EditWordPageContent entry={entry} active={edit}>
-          <EntryData v={entry} />
-        </EditWordPageContent>
-      </div>;
-    } else {
-      content = <NonIdealState icon="error" title="Unknown word" description={hash} />; // TODO
-    }
+  if (!entry) {
+    return <NonIdealState icon="error" title="Unknown word" description={hash} />; // TODO
   }
 
-  return content;
+  return <div className="page-content">
+    <EditWordPageContent entry={entry} active={edit}>
+      <EntryData v={entry} />
+    </EditWordPageContent>
+  </div>;
 }

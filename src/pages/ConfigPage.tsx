@@ -6,19 +6,16 @@ import {
   HTMLSelect,
   InputGroup,
   Intent,
-  NonIdealState,
   NumericInput,
   Pre,
   Section,
   SectionCard,
-  Spinner,
-  SpinnerSize,
   Switch,
   TagInput,
 } from "@blueprintjs/core";
 import { monoDarkTheme } from "@json-edit-react/themes";
 import { JsonEditor } from "json-edit-react";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { ApiConfig } from "../apiTypes";
@@ -34,7 +31,7 @@ import {
 import { DEFAULT_SOUND_CHANGE, SoundChangeConfig } from "../lang/soundChange";
 import { configOrEmpty, DEFAULT_KEY_VALUE, KeyValue } from "../providers/config";
 import { useAction } from "../site/action";
-import { Dictionary, LangConfig, useSite } from "../site/context";
+import { useData, useSite } from "../site/context";
 import { showSuccess } from "../site/toast";
 
 interface EditorProps<T> {
@@ -285,14 +282,9 @@ function Content({ config, refresh }: { config: ApiConfig; refresh: () => Promis
 }
 
 export default function ConfigPage() {
-  const { refresh } = useContext(Dictionary);
-  const lang = useContext(LangConfig);
+  const { config: lang, refresh } = useData();
 
-  if (lang === null) {
-    return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
-  } else {
-    return <div className="page-content">
-      <Content config={lang.config} refresh={refresh} />
-    </div>;
-  }
+  return <div className="page-content">
+    <Content config={lang.config} refresh={refresh} />
+  </div>;
 }

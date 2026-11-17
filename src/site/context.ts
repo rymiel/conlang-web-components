@@ -1,15 +1,26 @@
-import { createContext, useContext } from "react";
+import { createContext, use, useContext } from "react";
 
-import { DictionaryData, LangConfigData, Site } from "./types";
+import { FullEntry, LangConfigData, LangData, Site } from "./types";
 
-export const Dictionary = createContext<DictionaryData>({
-  entries: null,
-  refresh: () => {
-    throw new Error("No dictionary context provided");
-  },
-});
+export interface LoadedData {
+  readonly entries: readonly FullEntry[];
+  readonly config: LangConfigData;
+}
 
-export const LangConfig = createContext<LangConfigData | null>(null);
+interface DataContextValue {
+  readonly data: Promise<LoadedData>;
+  readonly refresh: () => Promise<void>;
+}
+
+export const DataContext = createContext<DataContextValue | null>(null);
+
+export function useData(): LangData {
+  const context = useContext(DataContext);
+  if (context === null) {
+    throw new Error("No data context provided");
+  }
+  return { ...use(context.data), refresh: context.refresh };
+}
 
 export const SiteContext = createContext<Site | null>(null);
 

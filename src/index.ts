@@ -26,8 +26,8 @@ export type {
   FullEntry,
   FullMeaning,
   FullSection,
-  DictionaryData,
   LangConfigData,
+  LangData,
   LanguageConfig,
   DerivedFields,
   GeneratedField,
@@ -45,7 +45,7 @@ export type {
   SiteDefinition,
   Site,
 } from "./site/types";
-export { Dictionary, LangConfig, useSite } from "./site/context";
+export { useData, useSite } from "./site/context";
 export { defineSite } from "./site/define";
 export { showError, showSuccess } from "./site/toast";
 export type { SiteVersions } from "./site/render";

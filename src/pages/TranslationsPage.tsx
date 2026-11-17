@@ -1,10 +1,9 @@
-import { NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { InterlinearGloss, parseInterlinear } from "../components/interlinear";
 import UserOnly from "../components/UserOnly";
-import { Dictionary, LangConfig } from "../site/context";
+import { useData } from "../site/context";
 import { useExamples } from "../site/translations";
 import { FullEntry, FullSection } from "../site/types";
 import { uri } from "../util";
@@ -18,7 +17,7 @@ function Translation({
   section: FullSection;
   highlighted: boolean;
 }) {
-  const lang = useContext(LangConfig);
+  const { config: lang } = useData();
   const ref = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -32,7 +31,7 @@ function Translation({
       data={parseInterlinear(section.content)}
       link
       indent
-      script={lang?.hasScript}
+      script={lang.hasScript}
       extra={
         <UserOnly>
           <span className="edit-link">
@@ -68,16 +67,10 @@ function Content({ entries, query }: { entries: readonly FullEntry[]; query: str
 }
 
 export default function TranslationsPage() {
-  const { entries } = useContext(Dictionary);
+  const { entries } = useData();
   const { query } = useParams();
 
-  let content = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
-
-  if (entries) {
-    content = <div className="page-content">
-      <Content entries={entries} query={query} />
-    </div>;
-  }
-
-  return content;
+  return <div className="page-content">
+    <Content entries={entries} query={query} />
+  </div>;
 }
