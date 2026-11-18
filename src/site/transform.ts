@@ -1,4 +1,5 @@
 import { ApiConfig, ApiData, ApiWord } from "../apiTypes";
+import { DEFAULT_DOCS } from "../lang/docs";
 import { DEFAULT_GENERATION, GenerationInstance } from "../lang/generation";
 import { configOrEmpty, DEFAULT_KEY_VALUE } from "../providers/config";
 import { entrySort, prefixSplit } from "../providers/dictionary";
@@ -14,10 +15,11 @@ export function createTransformConfig(
     const generation = new GenerationInstance(configOrEmpty(config.generation, DEFAULT_GENERATION));
     const abbreviations = configOrEmpty(config.abbr, DEFAULT_KEY_VALUE);
     const parts = configOrEmpty(config.parts, DEFAULT_KEY_VALUE);
+    const docs = configOrEmpty(config.docs, DEFAULT_DOCS).content;
     const lang = languageConfig(config);
     const ipa = (sentence: string) => lang.soundChange.soundChangeSentence(sentence);
 
-    return { ...lang, generation, abbreviations, parts, ipa, config };
+    return { ...lang, generation, abbreviations, parts, docs, ipa, config };
   };
 }
 

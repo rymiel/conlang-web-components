@@ -55,3 +55,36 @@
 .sound-change-editor input {
   font-family: monospace;
 }
+
+/* DocsEditor */
+
+.docs-editor {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.docs-editor textarea,
+.docs-editor-preview {
+  height: 75vh;
+}
+
+.docs-editor textarea {
+  font-family: monospace;
+  resize: none;
+}
+
+.docs-editor-preview {
+  overflow: auto;
+}
+
+@media (max-width: 690px) {
+  .docs-editor {
+    grid-template-columns: 1fr;
+  }
+
+  .docs-editor textarea,
+  .docs-editor-preview {
+    height: 50vh;
+  }
+}

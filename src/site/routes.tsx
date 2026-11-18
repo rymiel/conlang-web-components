@@ -3,6 +3,7 @@ import { RouteObject } from "react-router-dom";
 import UserOnly from "../components/UserOnly";
 import ConfigPage from "../pages/ConfigPage";
 import DictionaryPage from "../pages/DictionaryPage";
+import DocsPage from "../pages/DocsPage";
 import EditWordPage from "../pages/EditWordPage";
 import GeneratePage from "../pages/GeneratePage";
 import IdPage from "../pages/IdPage";
@@ -75,6 +76,11 @@ export const SHARED_ROUTES: readonly RouteObject[] = [
     path: "/translations/:query",
     handle: { title: "Translations" } satisfies RouteHandle,
     element: <TranslationsPage />,
+  },
+  {
+    path: "/docs",
+    handle: { title: "Docs" } satisfies RouteHandle,
+    element: <DocsPage />,
   },
   {
     path: "/stats",

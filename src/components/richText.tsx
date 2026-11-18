@@ -1,5 +1,5 @@
 import { Icon } from "@blueprintjs/core";
-import { Literal, PhrasingContent, type Root as RemarkRoot } from "mdast";
+import { Literal, PhrasingContent, RootContent, type Root as RemarkRoot } from "mdast";
 import { findAndReplace } from "mdast-util-find-and-replace";
 import { Handlers } from "mdast-util-to-hast";
 import Markdown, { Components } from "react-markdown";
@@ -23,6 +23,18 @@ declare module "mdast" {
 }
 
 const WORD_LINK = /\[([A-Za-z0-9_-]+)(?:\(([^)]+)\))?\]/g;
+const ESCAPED_BRACKET = "\uE000";
+
+function restoreEscapes(node: RemarkRoot | RootContent) {
+  if ("value" in node) {
+    const literal = node.type === "inlineCode" || node.type === "code" || node.type === "html";
+    node.value = node.value.replaceAll(ESCAPED_BRACKET, literal ? "\\[" : "[");
+  }
+  if ("url" in node) node.url = node.url.replaceAll(ESCAPED_BRACKET, "[");
+  if ("title" in node && node.title) node.title = node.title.replaceAll(ESCAPED_BRACKET, "[");
+  if ("alt" in node && node.alt) node.alt = node.alt.replaceAll(ESCAPED_BRACKET, "[");
+  if ("children" in node) node.children.forEach(restoreEscapes);
+}
 
 interface RemarkPluginOptions {
   on?: string;
@@ -50,6 +62,7 @@ const remarkPlugin: Plugin<[RemarkPluginOptions], RemarkRoot> = function ({ on, 
         return { type: "link", url: entry.link, children: linkText };
       },
     ]);
+    restoreEscapes(tree);
   };
 };
 
@@ -99,6 +112,6 @@ export function RichText({ text, on }: { text: string; on?: string }) {
     remarkRehypeOptions={{ handlers: toHastHandlers }}
     components={components}
   >
-    {text}
+    {text.replaceAll("\\[", ESCAPED_BRACKET)}
   </Markdown>;
 }

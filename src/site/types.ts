@@ -49,6 +49,7 @@ export interface LangConfigData extends LangConfigFields {
   generation: GenerationInstance;
   abbreviations: KeyValue;
   parts: KeyValue;
+  docs: string;
   ipa: (sentence: string) => string;
   script: (sentence: string) => string;
   hasScript: boolean;

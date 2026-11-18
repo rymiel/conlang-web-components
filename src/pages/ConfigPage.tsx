@@ -12,6 +12,7 @@ import {
   SectionCard,
   Switch,
   TagInput,
+  TextArea,
 } from "@blueprintjs/core";
 import { monoDarkTheme } from "@json-edit-react/themes";
 import { JsonEditor } from "json-edit-react";
@@ -19,7 +20,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { ApiConfig } from "../apiTypes";
+import { DocsView } from "../components/docs";
 import PendingFieldset from "../components/PendingFieldset";
+import { DEFAULT_DOCS, DocsConfig } from "../lang/docs";
 import {
   arrayIsEqualWeight,
   DEFAULT_GENERATION,
@@ -207,6 +210,14 @@ function SoundChangeEditor(props: EditorProps<SoundChangeConfig>) {
   </>;
 }
 
+function DocsEditor(props: EditorProps<DocsConfig>) {
+  const { data, setData } = subField(props, "content");
+  return <div className="docs-editor">
+    <TextArea value={data} onChange={(e) => setData(e.currentTarget.value)} fill />
+    <DocsView text={data} className="docs-editor-preview" />
+  </div>;
+}
+
 function Editor(props: TopLevelEditor) {
   switch (props.editorKey) {
     case "generation":
@@ -221,6 +232,8 @@ function Editor(props: TopLevelEditor) {
       return <KeyValueEditor {...configEntry(props, DEFAULT_KEY_VALUE)} />;
     case "sound_change":
       return <SoundChangeEditor {...configEntry(props, DEFAULT_SOUND_CHANGE)} />;
+    case "docs":
+      return <DocsEditor {...configEntry(props, DEFAULT_DOCS)} />;
     default:
       return <DefaultEditor {...props} />;
   }
@@ -264,6 +277,7 @@ function Content({ config, refresh }: { config: ApiConfig; refresh: () => Promis
           <option value="parts">parts</option>
           <option value="sound_change">sound_change</option>
           <option value="syllable">syllable</option>
+          <option value="docs">docs</option>
         </HTMLSelect>
         <Switch label="Inspect mode" onChange={(e) => setInspect(e.currentTarget.checked)} />
         {key !== "" && inspect === false && <Button
