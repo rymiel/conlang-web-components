@@ -78,6 +78,10 @@
   overflow: auto;
 }
 
+.docs-editor-preview > :first-child {
+  margin-top: 0;
+}
+
 @media (max-width: 690px) {
   .docs-editor {
     grid-template-columns: 1fr;
