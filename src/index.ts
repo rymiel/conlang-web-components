@@ -23,6 +23,7 @@ export type {
   OptionalEntryFields,
   LangEntryFields,
   LangConfigFields,
+  BaseEntry,
   FullEntry,
   FullMeaning,
   FullSection,
@@ -47,6 +48,7 @@ export type {
 } from "./site/types";
 export { useData, useSite } from "./site/context";
 export { defineSite } from "./site/define";
+export { transformEntries } from "./site/transform";
 export { showError, showSuccess } from "./site/toast";
 export type { SiteVersions } from "./site/render";
 export { renderSite } from "./site/render";

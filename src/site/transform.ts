@@ -4,7 +4,7 @@ import { DEFAULT_GENERATION, GenerationInstance } from "../lang/generation";
 import { configOrEmpty, DEFAULT_KEY_VALUE } from "../providers/config";
 import { entrySort, prefixSplit } from "../providers/dictionary";
 import { uri } from "../util";
-import { DerivedFields, FullEntry, LangConfigData, LanguageConfig } from "./types";
+import { BaseEntry, DerivedFields, FullEntry, LangConfigData, LanguageConfig } from "./types";
 
 type ApiDictionary = Pick<ApiData, "words" | "meanings" | "sections">;
 
@@ -23,26 +23,28 @@ export function createTransformConfig(
   };
 }
 
+export function transformEntries<T extends object>(d: ApiDictionary, derive: (word: ApiWord) => T): (BaseEntry & T)[] {
+  const mMeanings = d.meanings.map((meaning) => {
+    const [prefix, eng] = prefixSplit(meaning.eng);
+    const sections = meaning.sections.map((s) => d.sections.find((j) => j.hash === s)!);
+    return { ...meaning, eng, prefix, sections };
+  });
+  const mWords = d.words
+    .map((word) => {
+      const sections = word.sections.map((s) => d.sections.find((j) => j.hash === s)!);
+      const meanings = word.meanings.map((s) => mMeanings.find((j) => j.hash === s)!);
+      return { ...word, ...derive(word), sections, meanings };
+    })
+    .sort(entrySort);
+  return mWords.map((word, idx) => {
+    const matching = mWords.filter((j) => j.sol === word.sol);
+    const link = matching.length === 1 ? uri`/w/${word.sol}` : uri`/w/${word.sol}/${matching.indexOf(word) + 1}`;
+    return { ...word, link, index: idx + 1 };
+  });
+}
+
 export function createTransformDictionary(
   deriveFields: (lang: LangConfigData, word: ApiWord) => DerivedFields,
 ): (lang: LangConfigData, d: ApiDictionary) => FullEntry[] {
-  return (lang, d) => {
-    const mMeanings = d.meanings.map((meaning) => {
-      const [prefix, eng] = prefixSplit(meaning.eng);
-      const sections = meaning.sections.map((s) => d.sections.find((j) => j.hash === s)!);
-      return { ...meaning, eng, prefix, sections };
-    });
-    const mWords = d.words
-      .map((word) => {
-        const sections = word.sections.map((s) => d.sections.find((j) => j.hash === s)!);
-        const meanings = word.meanings.map((s) => mMeanings.find((j) => j.hash === s)!);
-        return { ...word, ...deriveFields(lang, word), sections, meanings };
-      })
-      .sort(entrySort);
-    return mWords.map((word, idx) => {
-      const matching = mWords.filter((j) => j.sol === word.sol);
-      const link = matching.length === 1 ? uri`/w/${word.sol}` : uri`/w/${word.sol}/${matching.indexOf(word) + 1}`;
-      return { ...word, link, index: idx + 1 };
-    });
-  };
+  return (lang, d) => transformEntries(d, (word) => deriveFields(lang, word));
 }

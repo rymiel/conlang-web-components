@@ -19,15 +19,18 @@ export interface LangEntryFields extends OptionalEntryFields {}
 
 export interface LangConfigFields {}
 
-export interface FullEntry extends Omit<ApiWord, "meanings" | "sections">, LangEntryFields {
-  disp: string;
-  /** Phonetic IPA transcription (narrow) [ ... ] */
-  ipa: string;
+export interface BaseEntry extends Omit<ApiWord, "meanings" | "sections"> {
   link: string;
   index: number;
 
   meanings: FullMeaning[];
   sections: FullSection[];
+}
+
+export interface FullEntry extends BaseEntry, LangEntryFields {
+  disp: string;
+  /** Phonetic IPA transcription (narrow) [ ... ] */
+  ipa: string;
 }
 
 export interface FullMeaning extends Omit<ApiMeaning, "sections"> {
