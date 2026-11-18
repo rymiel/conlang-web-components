@@ -2,12 +2,12 @@
   "compilerOptions": {
     "strict": true,
     "sourceMap": true,
-    "module": "NodeNext",
+    "module": "esnext",
     "target": "es2022",
     "jsx": "react-jsx",
     "outDir": "build/",
     "rootDir": "./src",
-    "moduleResolution": "nodenext",
+    "moduleResolution": "bundler",
     "noErrorTruncation": true,
     "declaration": true
   },

@@ -4,6 +4,7 @@
   "description": "",
   "license": "UNLICENSED",
   "author": "Emilia Kond",
+  "type": "module",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
